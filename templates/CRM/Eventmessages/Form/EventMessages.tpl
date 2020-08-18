@@ -53,7 +53,31 @@
 {literal}
 <script>
 cj(document).ready(function() {
-  // TODO: implement "always hide all empty rows except one";
+
+  /**
+   * Update the form so it never shows more than one 'empty' row
+   */
+  function hide_all_but_one_empty_rows() {
+    // first: show all:
+    cj("[name^=template_]")
+            .parent()
+            .parent()
+            .show();
+
+    // the hide all but one empty one
+    cj("[name^=template_]")
+            .filter(function() {return !cj(this).val();})
+            .slice(1)
+            .parent()
+            .parent()
+            .hide();
+  }
+
+  // attach the function to dropdown
+  cj("[name^=template_]").change(hide_all_but_one_empty_rows);
+
+  // and trigger once with buildup
+  hide_all_but_one_empty_rows();
 });
 </script>
 {/literal}
