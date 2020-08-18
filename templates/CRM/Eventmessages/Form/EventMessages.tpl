@@ -20,6 +20,32 @@
   </div>
 </div>
 
+<table>
+  <thead>
+    <tr>
+      <th>{$form.is_active_1.label}</th>
+      <th>{$form.from_1.label}</th>
+      <th>{$form.to_1.label}</th>
+      <th>{$form.template_1.label}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {foreach from=$rules_list item=rule_index}
+    <tr>
+      {capture assign=field_name}is_active_{$rule_index}{/capture}
+      <th>{$form.$field_name.html}</th>
+      {capture assign=field_name}from_{$rule_index}{/capture}
+      <th>{$form.$field_name.html}</th>
+      {capture assign=field_name}to_{$rule_index}{/capture}
+      <th>{$form.$field_name.html}</th>
+      {capture assign=field_name}template_{$rule_index}{/capture}
+      <th>{$form.$field_name.html}</th>
+    </tr>
+  {/foreach}
+  </tbody>
+</table>
+
 <div class="crm-submit-buttons">
 {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

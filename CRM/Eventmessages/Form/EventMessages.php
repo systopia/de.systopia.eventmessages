@@ -21,6 +21,8 @@ use CRM_Eventmessages_ExtensionUtil as E;
  */
 class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
 {
+    const MAX_RULE_COUNT = 20;
+
     /**
      * Set variables up before form is built.
      */
@@ -42,7 +44,45 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             'eventmessages_disable_default' => Civi::settings()->get('eventmessages_disable_default')
        ]);
 
-        // TODO: add message definition lines
+        // add message definition lines
+        $this->assign('rules_list', range(1, self::MAX_RULE_COUNT));
+        $status_list = $this->getParticipantStatusList();
+        $template_list = $this->getMessageTemplateList();
+        foreach (range(1, self::MAX_RULE_COUNT) as $index) {
+            $this->add(
+                'hidden',
+                "id_{$index}"
+            );
+            $this->add(
+                'checkbox',
+                "is_active_{$index}",
+                E::ts("Active?")
+            );
+            $this->add(
+                'select',
+                "from_{$index}",
+                E::ts("From Status"),
+                $status_list,
+                false,
+                ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'any']
+            );
+            $this->add(
+                'select',
+                "to_{$index}",
+                E::ts("To Status"),
+                $status_list,
+                false,
+                ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'any']
+            );
+            $this->add(
+                'select',
+                "template_{$index}",
+                E::ts("Message Template"),
+                $template_list,
+                true,
+                ['class' => 'huge crm-select2']
+            );
+        }
 
 
         parent::buildQuickForm();
@@ -66,6 +106,44 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         // TODO:
 
         parent::endPostProcess();
+    }
+
+    /**
+     * Get a list of the available participant statuses
+     */
+    protected function getParticipantStatusList() {
+        $list = [];
+        $query = civicrm_api3(
+            'ParticipantStatusType',
+            'get',
+            [
+                'option.limit' => 0,
+                'return'       => 'id,label',
+            ]
+        );
+        foreach ($query['values'] as $status) {
+            $list[$status['id']] = $status['label'];
+        }
+        return $list;
+    }
+
+    /**
+     * Get a list of the available participant statuses
+     */
+    protected function getMessageTemplateList() {
+        $list = ['' => E::ts("-please select-")];
+        $query = civicrm_api3(
+            'MessageTemplate',
+            'get',
+            [
+                'option.limit' => 0,
+                'return'       => 'id,msg_title',
+            ]
+        );
+        foreach ($query['values'] as $status) {
+            $list[$status['id']] = $status['msg_title'];
+        }
+        return $list;
     }
 
     /**
