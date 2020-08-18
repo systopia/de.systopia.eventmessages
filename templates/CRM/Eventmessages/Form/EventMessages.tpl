@@ -49,3 +49,11 @@
 <div class="crm-submit-buttons">
 {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
+
+{literal}
+<script>
+cj(document).ready(function() {
+  // TODO: implement "always hide all empty rows except one";
+});
+</script>
+{/literal}
