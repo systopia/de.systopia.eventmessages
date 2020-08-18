@@ -79,10 +79,34 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                 "template_{$index}",
                 E::ts("Message Template"),
                 $template_list,
-                true,
+                false,
                 ['class' => 'huge crm-select2']
             );
         }
+
+        // set current rule data
+        $rules = CRM_Eventmessages_Logic::getAllRules($this->_id);
+        foreach ($rules as $index => $rule) {
+            $i = $index + 1;
+            $this->setDefaults([
+               "id_{$i}"        => $rule['id'],
+               "is_active_{$i}" => $rule['is_active'],
+               "from_{$i}"      => $rule['from'],
+               "to_{$i}"        => $rule['to'],
+               "template_{$i}"  => $rule['template'],
+           ]);
+        }
+
+
+        $this->addButtons(
+            [
+                [
+                    'type'      => 'submit',
+                    'name'      => E::ts('Save'),
+                    'isDefault' => true,
+                ],
+            ]
+        );
 
 
         parent::buildQuickForm();
@@ -91,7 +115,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
     public function validate()
     {
         parent::validate();
-        // TODO
+        // TODO: validation rules?
         return (0 == count($this->_errors));
     }
 
@@ -102,8 +126,23 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         // store the settings
         Civi::settings()->set('eventmessages_disable_default', CRM_Utils_Array::value('eventmessages_disable_default', $values, false));
 
-        // copy the data
-        // TODO:
+        // extract rules
+        $rules = [];
+        foreach (range(1, self::MAX_RULE_COUNT) as $i) {
+            $rule = [
+                'id'        => CRM_Utils_Array::value("id_{$i}", $values, null),
+                'is_active' => CRM_Utils_Array::value("is_active_{$i}", $values, false),
+                'from'      => CRM_Utils_Array::value("from_{$i}", $values, []),
+                'to'        => CRM_Utils_Array::value("to_{$i}", $values, []),
+                'template'  => CRM_Utils_Array::value("template_{$i}", $values, null),
+            ];
+            if (!empty($rule['template'])) {
+                $rules[] = $rule;
+            }
+        }
+        CRM_Eventmessages_Logic::syncRules($this->_id, $rules);
+
+        $this->_action = CRM_Core_Action::UPDATE;
 
         parent::endPostProcess();
     }

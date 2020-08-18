@@ -114,7 +114,48 @@ class CRM_Eventmessages_Logic {
      *   list of rules, see ::getAllRules
      */
     public static function syncRules($event_id, $rules) {
-        // TODO: implement
+        // first: get all current rules by ID
+        $current_rules = [];
+        foreach (self::getAllRules($event_id) as $current_rule) {
+            $current_rules[$current_rule['id']] = $current_rule;
+        }
+
+        // now process the new rules
+        foreach ($rules as $new_rule) {
+            if (empty($new_rule['id'])) {
+                // this is a new rule -> insert
+                CRM_Core_DAO::executeQuery("
+                INSERT INTO civicrm_value_event_messages(entity_id,from_status,to_status,is_active,template_id)
+                VALUES (%1, %2, %3, %4, %5);
+                ", [
+                    1 => [$event_id, 'Integer'],
+                    2 => [implode(',', $new_rule['from']), 'String'],
+                    3 => [implode(',', $new_rule['to']), 'String'],
+                    4 => [empty($new_rule['active']) ? 0 : 1, 'Integer'],
+                    5 => [$new_rule['template'], 'Integer'],
+                ]);
+            } else {
+                // this is an update
+                CRM_Core_DAO::executeQuery("
+                    UPDATE civicrm_value_event_messages
+                    SET from_status = %2, to_status = %3, is_active = %4, template_id = %5
+                    WHERE id = %1;", [
+                    1 => [$new_rule['id'], 'Integer'],
+                    2 => [implode(',', $new_rule['from']), 'String'],
+                    3 => [implode(',', $new_rule['to']), 'String'],
+                    4 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
+                    5 => [$new_rule['template'], 'Integer'],
+                ]);
+                // remove from list
+                unset($current_rules[$new_rule['id']]);
+            }
+        }
+
+        // finally: delete all remaining rules
+        foreach ($current_rules as $rule_to_delete) {
+            CRM_Core_DAO::executeQuery("DELETE FROM civicrm_value_event_messages WHERE id = %1",
+                                       [1 => [$rule_to_delete['id'], 'String']]);
+        }
     }
 
     /**
@@ -155,5 +196,6 @@ class CRM_Eventmessages_Logic {
      */
     public static function sendMessageTo($participant_id, $context) {
         // TODO: implement. maybe just schedule...?
+        Civi::log()->debug("Send mail to {$participant_id}!");
     }
 }
