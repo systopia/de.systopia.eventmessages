@@ -20,6 +20,60 @@ use CRM_Eventmessages_ExtensionUtil as E;
  */
 class CRM_Eventmessages_Logic {
 
+    /** @var array stack of [participant_id, status_id] tuples */
+    protected static $record_stack = [];
+
+    /**
+     * Record a participant status before a change
+     *
+     * @param integer $participant_id
+     * @param array $participant_data
+     */
+    public static function recordPre($participant_id, $participant_data)
+    {
+        if (empty($participant_id)) {
+            // this is a new contact
+            array_push(self::$record_stack, [0, 0]);
+        } else {
+            if (empty($participant_data['status_id'])) {
+                $status_id = civicrm_api3('Participant', 'getvalue', [
+                    'id'     => $participant_id,
+                    'return' => 'status_id']);
+            } else {
+                $status_id = $participant_data['status_id'];
+            }
+            array_push(self::$record_stack, [$participant_id, $status_id]);
+        }
+    }
+
+    /**
+     * Record a participant status after a change, and trigger any matching rules
+     *
+     * @param integer $participant_id
+     * @param CRM_Event_BAO_Participant $participant_object
+     */
+    public static function recordPost($participant_id, $participant_object)
+    {
+        $record = array_pop(self::$record_stack);
+        if (empty($record[0]) || $record[0] == $participant_id) {
+            $old_status_id = $record[1];
+            if (isset($participant_object->status_id)) {
+                $new_status_id = $participant_object->status_id;
+            } else {
+                $new_status_id = civicrm_api3('Participant', 'getvalue', [
+                    'id'     => $participant_id,
+                    'return' => 'status_id']);
+            }
+
+            // check if there is a change
+            if ($old_status_id <> $new_status_id) {
+                CRM_Eventmessages_Logic::processStatusChange($participant_object->event_id, $old_status_id, $new_status_id, $participant_id);
+            }
+        } else {
+            Civi::log()->debug("EventMessages: inconsistent pre/post hooks.");
+        }
+    }
+
     /**
      * Get all active rules currently stored for the given event
      * Caution: this result is cached
@@ -172,15 +226,19 @@ class CRM_Eventmessages_Logic {
      */
     public static function processStatusChange($event_id, $from_status_id, $to_status_id, $participant_id) {
         $rules = self::getActiveRules($event_id);
-        if (in_array($from_status_id, $rules['from']) || empty($rules['from'])) {
-            // from status matches!
-            if (in_array($to_status_id, $rules['to']) || empty($rules['to'])) {
-                // to status matches, too:
-                self::sendMessageTo($participant_id, [
-                    'event_id' => $event_id,
-                    'from'     => $from_status_id,
-                    'to'       => $to_status_id,
-                ]);
+        foreach ($rules as $rule) {
+            if (in_array($from_status_id, $rule['from']) || empty($rule['from'])) {
+                // from status matches!
+                if (in_array($to_status_id, $rule['to']) || empty($rule['to'])) {
+                    // to status matches, too:
+                    self::sendMessageTo($participant_id, [
+                        'event_id' => $event_id,
+                        'from'     => $from_status_id,
+                        'to'       => $to_status_id,
+                        'rule'     => $rule,
+                    ]);
+                    // todo: match multiple rules?
+                }
             }
         }
     }

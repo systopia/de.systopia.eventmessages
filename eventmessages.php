@@ -167,3 +167,21 @@ function eventmessages_civicrm_tabset($tabsetName, &$tabs, $context)
         }
     }
 }
+
+/**
+ * Monitor Participant objects
+ */
+function eventmessages_civicrm_pre($op, $objectName, $id, &$params) {
+    if (($op == 'edit' || $op == 'create') && $objectName == 'Participant') {
+        CRM_Eventmessages_Logic::recordPre($id, $params);
+    }
+}
+
+/**
+ * Monitor Participant objects
+ */
+function eventmessages_civicrm_post($op, $objectName, $objectId, &$objectRef) {
+    if (($op == 'edit' || $op == 'create') && $objectName == 'Participant') {
+        CRM_Eventmessages_Logic::recordPost($objectId, $objectRef);
+    }
+}
