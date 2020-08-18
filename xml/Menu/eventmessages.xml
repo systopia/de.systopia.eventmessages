@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/event/manage/eventmessages</path>
+    <page_callback>CRM_Eventmessages_Form_EventMessages</page_callback>
+    <title>EventMessages</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>

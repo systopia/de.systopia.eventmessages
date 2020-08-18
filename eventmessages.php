@@ -153,3 +153,17 @@ function eventmessages_civicrm_entityTypes(&$entityTypes) {
 function eventmessages_civicrm_themes(&$themes) {
   _eventmessages_civix_civicrm_themes($themes);
 }
+
+/**
+ * Add event configuration tabs
+ */
+function eventmessages_civicrm_tabset($tabsetName, &$tabs, $context)
+{
+    if ($tabsetName == 'civicrm/event/manage') {
+        if (!empty($context['event_id'])) {
+            CRM_Eventmessages_Form_EventMessages::addToTabs($context['event_id'], $tabs);
+        } else {
+            CRM_Eventmessages_Form_EventMessages::addToTabs(null, $tabs);
+        }
+    }
+}
