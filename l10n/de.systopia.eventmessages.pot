@@ -1,0 +1,135 @@
+# Copyright CiviCRM LLC (c) 2004-2015
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: de.systopia.eventmessages\n"
+"POT-Creation-Date: 2020-08-24 20:45+0200\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Disable CiviCRM Default Messages"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Send From"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "-select-"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Reply To"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+#: resources/custom_group_event_messages_settings.json
+msgid "CC"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+#: resources/custom_group_event_messages_settings.json
+msgid "BCC"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Execute All Matching Rules?"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+#: resources/custom_group_event_messages.json
+msgid "Active?"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+#: resources/custom_group_event_messages.json
+msgid "From Status"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+#: resources/custom_group_event_messages.json
+msgid "To Status"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Message Template"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Save"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "-please select-"
+msgstr ""
+
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Event Communication"
+msgstr ""
+
+#: CRM/Eventmessages/Upgrader/Base.php
+msgid "Upgrade %1 to revision %2"
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/EventMessages.hlp
+msgid ""
+"Enabling this option will <strong>disable</strong> all of CiviCRM's default "
+"event communication."
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/EventMessages.hlp
+msgid ""
+"If this is enabled, <i>all</i> matching rules will be executed, and "
+"potentially multiple emails will be sent to the same person. If this is "
+"disabled, the processing will stop after the first matching rule."
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
+#: resources/custom_group_event_messages_settings.json
+msgid "Disable Default Messages"
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
+msgid "Help"
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
+msgid "Message Rules"
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
+msgid "Execute All Matching Rules"
+msgstr ""
+
+#: resources/custom_group_event_messages.json
+msgid "Event Message Rules"
+msgstr ""
+
+#: resources/custom_group_event_messages.json
+msgid "Template"
+msgstr ""
+
+#: resources/custom_group_event_messages_settings.json
+msgid "Event Messages Settings"
+msgstr ""
+
+#: resources/custom_group_event_messages_settings.json
+msgid "Execute All Rules"
+msgstr ""
+
+#: resources/custom_group_event_messages_settings.json
+msgid "Sender"
+msgstr ""
+
+#: resources/custom_group_event_messages_settings.json
+msgid "Reply-To"
+msgstr ""
