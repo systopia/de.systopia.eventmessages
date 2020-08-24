@@ -22,6 +22,14 @@ use CRM_Eventmessages_ExtensionUtil as E;
 class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
 {
     const MAX_RULE_COUNT = 20;
+    const SETTINGS_FIELDS = [
+        'event_messages_disable_default',
+        'event_messages_sender',
+        'event_messages_reply_to',
+        'event_messages_cc',
+        'event_messages_bcc',
+        'event_messages_execute_all_rules'
+    ];
 
     /**
      * Set variables up before form is built.
@@ -34,17 +42,63 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
 
     public function buildQuickForm()
     {
-        // add basic fields
+        // add settings fields
         $this->add(
             'checkbox',
-            'eventmessages_disable_default',
+            'event_messages_disable_default',
             E::ts("Disable CiviCRM Default Messages")
         );
-        $this->setDefaults([
-            'eventmessages_disable_default' => Civi::settings()->get('eventmessages_disable_default')
-       ]);
+        $this->add(
+            'select',
+            "event_messages_sender",
+            E::ts("Send From"),
+            $this->getSenderOptions(),
+            true,
+            ['class' => 'huge crm-select2', 'placeholder' => E::ts("-select-")]
+        );
+        $this->add(
+            'text',
+            "event_messages_reply_to",
+            E::ts("Reply To"),
+            ['class' => 'huge'],
+            false
+        );
+        $this->add(
+            'text',
+            "event_messages_cc",
+            E::ts("CC"),
+            ['class' => 'huge'],
+            false
+        );
+        $this->add(
+            'text',
+            "event_messages_bcc",
+            E::ts("BCC"),
+            ['class' => 'huge'],
+            false
+        );
+        $this->add(
+            'checkbox',
+            'event_messages_execute_all_rules',
+            E::ts("Execute All Matching Rules?")
+        );
+        // set defaults for these fields
+        $return_fields = [];
+        foreach (self::SETTINGS_FIELDS as $field_name) {
+            $return_fields[] = CRM_Eventmessages_CustomData::getCustomFieldKey('event_messages_settings', $field_name);
+        }
+        $event_defaults = civicrm_api3('Event', 'getsingle', [
+            'id'     => $this->_id,
+            'return' => implode(',', $return_fields)
+        ]);
+        foreach (self::SETTINGS_FIELDS as $field_name) {
+            $field_key = CRM_Eventmessages_CustomData::getCustomFieldKey('event_messages_settings', $field_name);
+            $this->setDefaults([
+                $field_name => CRM_Utils_Array::value($field_key, $event_defaults)
+            ]);
+        }
 
-        // add message definition lines
+        // add message rules block
         $this->assign('rules_list', range(1, self::MAX_RULE_COUNT));
         $status_list = $this->getParticipantStatusList();
         $template_list = $this->getMessageTemplateList();
@@ -124,7 +178,16 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         $values = $this->exportValues();
 
         // store the settings
-        Civi::settings()->set('eventmessages_disable_default', CRM_Utils_Array::value('eventmessages_disable_default', $values, false));
+        $event_update = ['id' => $this->_id];
+        foreach (self::SETTINGS_FIELDS as $field_name) {
+            $field_key = CRM_Eventmessages_CustomData::getCustomFieldKey(
+                'event_messages_settings',
+                $field_name
+            );
+            $event_update[$field_key] = CRM_Utils_Array::value($field_name, $values, '');
+        }
+        civicrm_api3('Event', 'create', $event_update);
+
 
         // extract rules
         $rules = [];
@@ -162,6 +225,26 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         );
         foreach ($query['values'] as $status) {
             $list[$status['id']] = $status['label'];
+        }
+        return $list;
+    }
+
+    /**
+     * Get a list of the available/allowed sender email addresses
+     */
+    protected function getSenderOptions() {
+        $list = [];
+        $query = civicrm_api3(
+            'OptionValue',
+            'get',
+            [
+                'option_group_id' => 'from_email_address',
+                'option.limit'    => 0,
+                'return'          => 'value,label',
+            ]
+        );
+        foreach ($query['values'] as $sender) {
+            $list[$sender['value']] = $sender['label'];
         }
         return $list;
     }

@@ -1,0 +1,21 @@
+{*-------------------------------------------------------+
+| SYSTOPIA Event Messages                                |
+| Copyright (C) 2020 SYSTOPIA                            |
+| Author: B. Endres (endres@systopia.de)                 |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++-------------------------------------------------------*}
+
+{htxt id='id-disable-default'}
+  <p>{ts domain="de.systopia.eventmessages"}Enabling this option will <strong>disable</strong> all of CiviCRM's default event communication.{/ts}</p>
+{/htxt}
+
+{htxt id='id-execute-all'}
+  <p>{ts domain="de.systopia.eventmessages"}If this is enabled, <i>all</i> matching rules will be executed, and potentially multiple emails will be sent to the same person. If this is disabled, the processing will stop after the first matching rule.{/ts}</p>
+{/htxt}

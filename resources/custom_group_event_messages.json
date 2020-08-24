@@ -2,7 +2,7 @@
   "_lookup": ["name"],
   "_translate": ["title"],
   "name": "event_messages",
-  "title": "Event Messages",
+  "title": "Event Message Rules",
   "extends": "Event",
   "collapse_display": "1",
   "is_active": "1",

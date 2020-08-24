@@ -12,14 +12,44 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*}
 
+<div id="help">
+  <div class="crm-clear-link">
+    {$form.event_messages_disable_default.html}
+    <label for="event_messages_disable_default">{$form.event_messages_disable_default.label}</label>
+    <a onclick='CRM.help("{ts domain="de.systopia.eventmessages"}Disable Default Messages{/ts}", {literal}{"id":"id-disable-default","file":"CRM\/Eventmessages\/Form\/EventMessages"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.eventmessages"}Help{/ts}" class="helpicon">&nbsp;</a></div>
+  </div>
+</div>
+
 <div>
   <div class="crm-section">
-    <div class="label">{$form.eventmessages_disable_default.label}</div>
-    <div class="content">{$form.eventmessages_disable_default.html}</div>
+    <div class="label">{$form.event_messages_sender.label}</div>
+    <div class="content">{$form.event_messages_sender.html}</div>
+    <div class="clear"></div>
+  </div>
+  <div class="crm-section">
+    <div class="label">{$form.event_messages_reply_to.label}</div>
+    <div class="content">{$form.event_messages_reply_to.html}</div>
+    <div class="clear"></div>
+  </div>
+  <div class="crm-section">
+    <div class="label">{$form.event_messages_cc.label}</div>
+    <div class="content">{$form.event_messages_cc.html}</div>
+    <div class="clear"></div>
+  </div>
+  <div class="crm-section">
+    <div class="label">{$form.event_messages_bcc.label}</div>
+    <div class="content">{$form.event_messages_bcc.html}</div>
     <div class="clear"></div>
   </div>
 </div>
 
+<h3>{ts domain="de.systopia.eventmessages"}Message Rules{/ts}</h3>
+<div id="help">
+  <div class="crm-clear-link">
+    {$form.event_messages_execute_all_rules.html}
+    <label for="event_messages_execute_all_rules">{$form.event_messages_execute_all_rules.label}</label>
+    <a onclick='CRM.help("{ts domain="de.systopia.eventmessages"}Execute All Matching Rules{/ts}", {literal}{"id":"id-execute-all","file":"CRM\/Eventmessages\/Form\/EventMessages"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.eventmessages"}Help{/ts}" class="helpicon">&nbsp;</a></div>
+</div>
 <table>
   <thead>
     <tr>

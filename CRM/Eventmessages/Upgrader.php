@@ -27,5 +27,19 @@ class CRM_Eventmessages_Upgrader extends CRM_Eventmessages_Upgrader_Base {
     {
         $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
         $customData->syncCustomGroup(E::path('resources/custom_group_event_messages.json'));
+        $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
     }
-}
+
+    /**
+     * Adding settings
+     *
+     * @return TRUE on success
+     * @throws Exception
+     */
+    public function upgrade_0001()
+    {
+        $this->ctx->log->info('Adding settings');
+        $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
+        $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
+        return true;
+    }}

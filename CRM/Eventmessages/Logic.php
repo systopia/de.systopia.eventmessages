@@ -226,34 +226,41 @@ class CRM_Eventmessages_Logic {
      */
     public static function processStatusChange($event_id, $from_status_id, $to_status_id, $participant_id) {
         $rules = self::getActiveRules($event_id);
+        $multi_match = self::isMultiMatch($event_id);
         foreach ($rules as $rule) {
             if (in_array($from_status_id, $rule['from']) || empty($rule['from'])) {
                 // from status matches!
                 if (in_array($to_status_id, $rule['to']) || empty($rule['to'])) {
                     // to status matches, too:
-                    self::sendMessageTo($participant_id, [
-                        'event_id' => $event_id,
-                        'from'     => $from_status_id,
-                        'to'       => $to_status_id,
-                        'rule'     => $rule,
+                    CRM_Eventmessages_SendMail::sendMessageTo([
+                        'participant_id' => $participant_id,
+                        'event_id'       => $event_id,
+                        'from'           => $from_status_id,
+                        'to'             => $to_status_id,
+                        'rule'           => $rule,
                     ]);
-                    // todo: match multiple rules?
+                    if (!$multi_match) {
+                        break;
+                    }
                 }
             }
         }
     }
 
     /**
-     * Triggers the actual sending of a message (or at least it's scheduling)
+     * Check if the given event ID allows multiple rule matches (and multiple emails to be sent)
      *
-     * @param integer $participant_id
-     *      participant ID
+     * @param integer $event_id
+     *   event ID
      *
-     * @param array $context
-     *      some context information
+     * @return boolean
+     *   is multimatch allowed in this event?
      */
-    public static function sendMessageTo($participant_id, $context) {
-        // TODO: implement. maybe just schedule...?
-        Civi::log()->debug("Send mail to {$participant_id}!");
+    public static function isMultiMatch($event_id)
+    {
+        $event_id = (int) $event_id;
+        $value = CRM_Core_DAO::singleValueQuery("
+            SELECT execute_all_rules FROM civicrm_value_event_messages_settings WHERE entity_id = {$event_id}");
+        return (boolean) $value;
     }
 }
