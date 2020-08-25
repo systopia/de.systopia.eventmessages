@@ -48,10 +48,10 @@ class CRM_Eventmessages_SendMail {
                     'id'        => $context['rule']['template'],
                     'toName'    => $data->contact_name,
                     'toEmail'   => $data->contact_email,
-                    'from'      => $event['event_messages_settings.event_messages_sender'],
-                    'replyTo'   => $event['event_messages_settings.event_messages_reply_to'],
-                    'cc'        => $event['event_messages_settings.event_messages_cc'],
-                    'bcc'       => $event['event_messages_settings.event_messages_bcc'],
+                    'from'      => CRM_Utils_Array::value('event_messages_settings.event_messages_sender', $event, ''),
+                    'replyTo'   => CRM_Utils_Array::value('event_messages_settings.event_messages_reply_to', $event, ''),
+                    'cc'        => CRM_Utils_Array::value('event_messages_settings.event_messages_cc', $event, ''),
+                    'bcc'       => CRM_Utils_Array::value('event_messages_settings.event_messages_bcc', $event, ''),
                     'contactId' => $data->contact_id,
                     'tplParams' => [
                         'event'       => $event,
@@ -132,7 +132,8 @@ class CRM_Eventmessages_SendMail {
         // check, if this is coming through CRM_Event_BAO_Event::sendMail
         $callstack = debug_backtrace();
         foreach ($callstack as $call) {
-            if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
+            if (isset($call['class']) && $call['class'] == 'CRM_Event_BAO_Event'
+                 && isset($call['function']) && $call['function'] == 'sendMail') {
                 // this is the one.
                 $participant_id = $call['args'][2];
                 if (self::suppressSystemEventMailsForParticipant($participant_id)) {
