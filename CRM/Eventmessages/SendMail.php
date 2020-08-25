@@ -30,16 +30,18 @@ class CRM_Eventmessages_SendMail {
         try {
             // load some stuff via SQL
             $event = self::getEventData($context['event_id']);
-            $data  = CRM_Core_DAO::executeQuery(self::buildDataQuery($context));
+            $data_query = self::buildDataQuery($context);
+            $data  = CRM_Core_DAO::executeQuery($data_query);
             if ($data->fetch()) {
-                // todo: do some checks?
+                // todo: do some more checks?
 
-                // template params
-                $params = $event;
-                $params['contact_id'] = $data->contact_id;
-                $params['event_id'] = $data->event_id;
-                $params['participant_id'] = $data->participant_id;
+                // load participant
+                $participant = civicrm_api3('Participant', 'getsingle', ['id' => $data->participant_id]);
+                CRM_Eventmessages_CustomData::labelCustomFields($participant);
 
+                // load contact
+                $contact = civicrm_api3('Contact', 'getsingle', ['id' => $data->contact_id]);
+                CRM_Eventmessages_CustomData::labelCustomFields($contact);
 
                 // and send the template via email
                 $email_data = [
@@ -51,7 +53,11 @@ class CRM_Eventmessages_SendMail {
                     'cc'        => $event['event_messages_settings.event_messages_cc'],
                     'bcc'       => $event['event_messages_settings.event_messages_bcc'],
                     'contactId' => $data->contact_id,
-                    'tplParams' => ['event' => $event],
+                    'tplParams' => [
+                        'event'       => $event,
+                        'participant' => $participant,
+                        'contact'     => $contact,
+                    ],
                 ];
                 civicrm_api3('MessageTemplate', 'send', $email_data);
 
@@ -59,7 +65,7 @@ class CRM_Eventmessages_SendMail {
                 Civi::log()->warning("Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set.");
             }
         } catch (Exception $ex) {
-            Civi::log()->warning("Couldn't send email to participant [{$participant_id}], error was: " . $ex->getMessage());
+            Civi::log()->warning("Couldn't send email to participant [{$context['participant_id']}], error was: " . $ex->getMessage());
         }
     }
 
@@ -98,7 +104,8 @@ class CRM_Eventmessages_SendMail {
                 SELECT 
                   email.email          AS contact_email,
                   contact.display_name AS contact_name,
-                  contact.id           AS contact_id
+                  contact.id           AS contact_id,
+                  participant.id       AS participant_id
                 FROM civicrm_participant   participant
                 INNER JOIN civicrm_contact contact  
                         ON contact.id = participant.contact_id
@@ -108,6 +115,7 @@ class CRM_Eventmessages_SendMail {
                 INNER JOIN civicrm_event   event
                         ON event.id = participant.event_id
                 WHERE participant.id = {$participant_id}
+                  AND (contact.is_deleted IS NULL OR contact.is_deleted = 0)
                 ORDER BY email.is_primary DESC, email.is_bulkmail ASC, email.is_billing ASC
             ";
     }

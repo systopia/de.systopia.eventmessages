@@ -108,8 +108,8 @@ class CRM_Eventmessages_Logic {
                 $rules[] = [
                     'id'        => $query->rule_id,
                     'is_active' => true,
-                    'from'      => explode(',', $query->from_status),
-                    'to'        => explode(',', $query->to_status),
+                    'from'      => empty($query->from_status) ? [] : explode(',', $query->from_status),
+                    'to'        => empty($query->to_status)   ? [] : explode(',', $query->to_status),
                     'template'  => $query->template_id,
                 ];
             }
@@ -148,8 +148,8 @@ class CRM_Eventmessages_Logic {
             $rules[] = [
                 'id'        => $query->rule_id,
                 'is_active' => $query->is_active,
-                'from'      => explode(',', $query->from_status),
-                'to'        => explode(',', $query->to_status),
+                'from'      => empty($query->from_status) ? [] : explode(',', $query->from_status),
+                'to'        => empty($query->to_status)   ? [] : explode(',', $query->to_status),
                 'template'  => $query->template_id,
             ];
         }
@@ -229,9 +229,9 @@ class CRM_Eventmessages_Logic {
         $multi_match = self::isMultiMatch($event_id);
         foreach ($rules as $rule) {
             if (in_array($from_status_id, $rule['from']) || empty($rule['from'])) {
-                // from status matches!
+                // 'from' status matches!
                 if (in_array($to_status_id, $rule['to']) || empty($rule['to'])) {
-                    // to status matches, too:
+                    // 'to' status matches, too: send message
                     CRM_Eventmessages_SendMail::sendMessageTo([
                         'participant_id' => $participant_id,
                         'event_id'       => $event_id,
