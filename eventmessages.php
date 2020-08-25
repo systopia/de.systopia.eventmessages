@@ -185,3 +185,12 @@ function eventmessages_civicrm_post($op, $objectName, $objectId, &$objectRef) {
         CRM_Eventmessages_Logic::recordPost($objectId, $objectRef);
     }
 }
+
+/**
+ * Implementation of hook_civicrm_alterMailer
+ *
+ * Replace the normal mailer with our custom mailer
+ */
+function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
+    CRM_Eventmessages_SendMail::suppressSystemEventMails($mailer);
+}

@@ -94,7 +94,7 @@ class CRM_Eventmessages_SendMail {
     protected static function buildDataQuery($context)
     {
         $participant_id = (int) $context['participant_id'];
-        $query = "
+        return "
                 SELECT 
                   email.email          AS contact_email,
                   contact.display_name AS contact_name,
@@ -110,7 +110,56 @@ class CRM_Eventmessages_SendMail {
                 WHERE participant.id = {$participant_id}
                 ORDER BY email.is_primary DESC, email.is_bulkmail ASC, email.is_billing ASC
             ";
+    }
 
-        return $query;
+    /**
+     * Make sure that CiviCRM event mails will be suppressed if the event is configured is this way
+     * This is achieved by swapping the mailer object for a dummy
+     *
+     * @param object $mailer
+     *      the currently used mailer, to be manipulated
+     */
+    public static function suppressSystemEventMails(&$mailer)
+    {
+        // check, if this is coming through CRM_Event_BAO_Event::sendMail
+        $callstack = debug_backtrace();
+        foreach ($callstack as $call) {
+            if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
+                // this is the one.
+                $participant_id = $call['args'][2];
+                if (self::suppressSystemEventMailsForParticipant($participant_id)) {
+                    // we are supposed to suppress emails for this participant/event,
+                    //   so let's do that by changing the mailer to a dummy
+                    $mailer = new class() {
+                        function send($recipients, $headers, $body) {
+                            $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
+                            Civi::log()->debug("Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
+                        }
+                    };
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * Check whether CiviCRM's native event notifications should be suppressed
+     *  for this participant/event
+     *
+     * @param integer $participant_id
+     *   the participant
+     *
+     * @return boolean
+     *   should the email be suppressed?
+     */
+    public static function suppressSystemEventMailsForParticipant($participant_id)
+    {
+        $participant_id = (int) $participant_id;
+        return (boolean) CRM_Core_DAO::singleValueQuery("
+            SELECT settings.disable_default
+            FROM civicrm_participant participant
+            LEFT JOIN civicrm_value_event_messages_settings settings
+                   ON settings.entity_id = participant.event_id
+            WHERE participant.id = {$participant_id}");
     }
 }
