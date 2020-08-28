@@ -194,3 +194,16 @@ function eventmessages_civicrm_post($op, $objectName, $objectId, &$objectRef) {
 function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
     CRM_Eventmessages_SendMail::suppressSystemEventMails($mailer);
 }
+
+/**
+ * Implementation of hook_civicrm_buildForm
+ *
+ *   inject some UI modifications into selected forms
+ */
+function eventmessages_civicrm_buildForm($formName, &$form) {
+    if ($formName == 'CRM_Event_Form_Participant') {
+        if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($form->_id)) {
+            CRM_Core_Resources::singleton()->addScriptUrl(E::url('js/event_form_participant_mods.js'));
+        }
+    }
+}
