@@ -35,13 +35,8 @@ class CRM_Eventmessages_Logic {
             // this is a new contact
             array_push(self::$record_stack, [0, 0]);
         } else {
-            if (empty($participant_data['status_id'])) {
-                $status_id = civicrm_api3('Participant', 'getvalue', [
-                    'id'     => $participant_id,
-                    'return' => 'status_id']);
-            } else {
-                $status_id = $participant_data['status_id'];
-            }
+            $participant_id = (int) $participant_id;
+            $status_id = CRM_Core_DAO::singleValueQuery("SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}");
             array_push(self::$record_stack, [$participant_id, $status_id]);
         }
     }
@@ -60,9 +55,7 @@ class CRM_Eventmessages_Logic {
             if (isset($participant_object->status_id)) {
                 $new_status_id = $participant_object->status_id;
             } else {
-                $new_status_id = civicrm_api3('Participant', 'getvalue', [
-                    'id'     => $participant_id,
-                    'return' => 'status_id']);
+                $new_status_id = CRM_Core_DAO::singleValueQuery("SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}");
             }
 
             // check if there is a change

@@ -132,23 +132,45 @@ class CRM_Eventmessages_SendMail {
         // check, if this is coming through CRM_Event_BAO_Event::sendMail
         $callstack = debug_backtrace();
         foreach ($callstack as $call) {
-            if (isset($call['class']) && $call['class'] == 'CRM_Event_BAO_Event'
-                 && isset($call['function']) && $call['function'] == 'sendMail') {
-                // this is the one.
-                $participant_id = $call['args'][2];
-                if (self::suppressSystemEventMailsForParticipant($participant_id)) {
-                    // we are supposed to suppress emails for this participant/event,
-                    //   so let's do that by changing the mailer to a dummy
-                    $mailer = new class() {
-                        function send($recipients, $headers, $body) {
-                            $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
-                            Civi::log()->debug("Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
-                        }
-                    };
-                    return;
+            if (isset($call['class']) && isset($call['function'])) {
+                if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
+                    // this is coming from CRM_Event_BAO_Event::sendMail
+                    $participant_id = $call['args'][2];
+                    if (self::suppressSystemEventMailsForParticipant($participant_id)) {
+                        $mailer = self::createDummyMailer($participant_id);
+                        return;
+                    }
+                }
+                if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
+                    // this is coming from the CRM_Event_Form_Participant form
+                    $participant_id = $call['object']->_id;
+                    if (self::suppressSystemEventMailsForParticipant($participant_id)) {
+                        $mailer = self::createDummyMailer($participant_id);
+                        return;
+                    }
                 }
             }
         }
+        Civi::log()->debug("mailing passed");
+    }
+
+    /**
+     * Generate a mailer, that would only write a line to the civicrm log
+     *   instead of actually sending out an email
+     *
+     * @param integer $participant_id
+     *   ID of the participant, for logging
+     *
+     * @return object CiviCRM mailer
+     */
+    protected static function createDummyMailer($participant_id)
+    {
+        return new class() {
+            function send($recipients, $headers, $body) {
+                $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
+                Civi::log()->debug("Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
+            }
+        };
     }
 
     /**
