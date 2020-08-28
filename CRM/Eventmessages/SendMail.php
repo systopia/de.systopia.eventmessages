@@ -54,9 +54,9 @@ class CRM_Eventmessages_SendMail {
                     'bcc'       => CRM_Utils_Array::value('event_messages_settings.event_messages_bcc', $event, ''),
                     'contactId' => $data->contact_id,
                     'tplParams' => [
-                        'event'       => $event,
-                        'participant' => $participant,
-                        'contact'     => $contact,
+                        'event'       => self::enhanceTokens($event),
+                        'participant' => self::enhanceTokens($participant),
+                        'contact'     => self::enhanceTokens($contact),
                     ],
                 ];
                 civicrm_api3('MessageTemplate', 'send', $email_data);
@@ -192,5 +192,28 @@ class CRM_Eventmessages_SendMail {
             LEFT JOIN civicrm_value_event_messages_settings settings
                    ON settings.entity_id = participant.event_id
             WHERE participant.id = {$participant_id}");
+    }
+
+    /**
+     * Some enhancements / beautification of the tokens passed to the
+     *   message templates
+     *
+     * @param array $tokens
+     *    current tokens
+     *
+     * @return array
+     *    enhanced tokens
+     */
+    public static function enhanceTokens($tokens)
+    {
+        // step 1: of all array data, offer a _string version
+        foreach (array_keys($tokens) as $token_name) {
+            if (is_array($tokens[$token_name])) {
+                $tokens["{$token_name}_string"] = implode(', ', $tokens[$token_name]);
+            }
+
+            // todo: more stuff?
+        }
+        return $tokens;
     }
 }
