@@ -56,6 +56,8 @@
       <th>{$form.is_active_1.label}</th>
       <th>{$form.from_1.label}</th>
       <th>{$form.to_1.label}</th>
+      <th>{$form.roles_1.label}</th>
+      <th>{$form.languages_1.label}</th>
       <th>{$form.template_1.label}</th>
     </tr>
   </thead>
@@ -68,6 +70,10 @@
       {capture assign=field_name}from_{$rule_index}{/capture}
       <th>{$form.$field_name.html}</th>
       {capture assign=field_name}to_{$rule_index}{/capture}
+      <th>{$form.$field_name.html}</th>
+      {capture assign=field_name}roles_{$rule_index}{/capture}
+      <th>{$form.$field_name.html}</th>
+      {capture assign=field_name}languages_{$rule_index}{/capture}
       <th>{$form.$field_name.html}</th>
       {capture assign=field_name}template_{$rule_index}{/capture}
       <th>{$form.$field_name.html}</th>

@@ -80,6 +80,8 @@ class CRM_Eventmessages_Logic {
      *    'is_active' => true
      *    'from'      => array of status_ids
      *    'to'        => array of status_ids
+     *    'languages' => array of languages
+     *    'roles'     => array of roles
      *    'template'  => Message Template ID
      * ]
      */
@@ -93,16 +95,21 @@ class CRM_Eventmessages_Logic {
                   id          AS rule_id,
                   from_status AS from_status,
                   to_status   AS to_status,
+                  languages   AS languages,
+                  roles       AS roles,
                   template_id AS template_id
-                FROM civicrm_value_event_messages
-                WHERE entity_id = {$event_id}
-                  AND is_active = 1");
+                FROM civicrm_event_message_rules
+                WHERE event_id = {$event_id}
+                  AND is_active = 1
+                ORDER BY weight ASC;");
             while ($query->fetch()) {
                 $rules[] = [
                     'id'        => $query->rule_id,
                     'is_active' => true,
                     'from'      => empty($query->from_status) ? [] : explode(',', $query->from_status),
                     'to'        => empty($query->to_status)   ? [] : explode(',', $query->to_status),
+                    'languages' => empty($query->languages)   ? [] : explode(',', $query->languages),
+                    'roles'     => empty($query->roles)       ? [] : explode(',', $query->roles),
                     'template'  => $query->template_id,
                 ];
             }
@@ -131,18 +138,23 @@ class CRM_Eventmessages_Logic {
         $query = CRM_Core_DAO::executeQuery("
                 SELECT
                   id          AS rule_id,
+                  is_active   AS is_active,
                   from_status AS from_status,
                   to_status   AS to_status,
-                  is_active   AS is_active,
+                  languages   AS languages,
+                  roles       AS roles,
                   template_id AS template_id
-                FROM civicrm_value_event_messages
-                WHERE entity_id = {$event_id}");
+                FROM civicrm_event_message_rules
+                WHERE event_id = {$event_id}
+                ORDER BY weight ASC;");
         while ($query->fetch()) {
             $rules[] = [
                 'id'        => $query->rule_id,
-                'is_active' => $query->is_active,
+                'is_active' => (int) $query->is_active,
                 'from'      => empty($query->from_status) ? [] : explode(',', $query->from_status),
                 'to'        => empty($query->to_status)   ? [] : explode(',', $query->to_status),
+                'languages' => empty($query->languages)   ? [] : explode(',', $query->languages),
+                'roles'     => empty($query->roles)       ? [] : explode(',', $query->roles),
                 'template'  => $query->template_id,
             ];
         }
@@ -168,30 +180,38 @@ class CRM_Eventmessages_Logic {
         }
 
         // now process the new rules
+        $weight = 0;
         foreach ($rules as $new_rule) {
+            $weight += 10;
             if (empty($new_rule['id'])) {
                 // this is a new rule -> insert
                 CRM_Core_DAO::executeQuery("
-                INSERT INTO civicrm_value_event_messages(entity_id,from_status,to_status,is_active,template_id)
-                VALUES (%1, %2, %3, %4, %5);
+                INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight)
+                VALUES (%1, %2, %3, %4, %5, %6, %7, %8);
                 ", [
                     1 => [$event_id, 'Integer'],
                     2 => [implode(',', $new_rule['from']), 'String'],
                     3 => [implode(',', $new_rule['to']), 'String'],
-                    4 => [empty($new_rule['active']) ? 0 : 1, 'Integer'],
-                    5 => [$new_rule['template'], 'Integer'],
+                    4 => [implode(',', $new_rule['languages']), 'String'],
+                    5 => [implode(',', $new_rule['roles']), 'String'],
+                    6 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
+                    7 => [$new_rule['template'], 'Integer'],
+                    8 => [$weight, 'Integer'],
                 ]);
             } else {
                 // this is an update
                 CRM_Core_DAO::executeQuery("
-                    UPDATE civicrm_value_event_messages
-                    SET from_status = %2, to_status = %3, is_active = %4, template_id = %5
+                    UPDATE civicrm_event_message_rules
+                    SET from_status = %2, to_status = %3, is_active = %4, template_id = %5, languages = %6, roles = %7, weight = %8
                     WHERE id = %1;", [
                     1 => [$new_rule['id'], 'Integer'],
                     2 => [implode(',', $new_rule['from']), 'String'],
                     3 => [implode(',', $new_rule['to']), 'String'],
                     4 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
                     5 => [$new_rule['template'], 'Integer'],
+                    6 => [implode(',', $new_rule['languages']), 'String'],
+                    7 => [implode(',', $new_rule['roles']), 'String'],
+                    8 => [$weight, 'Integer'],
                 ]);
                 // remove from list
                 unset($current_rules[$new_rule['id']]);
@@ -200,7 +220,7 @@ class CRM_Eventmessages_Logic {
 
         // finally: delete all remaining rules
         foreach ($current_rules as $rule_to_delete) {
-            CRM_Core_DAO::executeQuery("DELETE FROM civicrm_value_event_messages WHERE id = %1",
+            CRM_Core_DAO::executeQuery("DELETE FROM civicrm_event_message_rules WHERE id = %1",
                                        [1 => [$rule_to_delete['id'], 'String']]);
         }
     }

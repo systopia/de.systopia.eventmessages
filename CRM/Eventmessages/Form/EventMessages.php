@@ -21,7 +21,7 @@ use CRM_Eventmessages_ExtensionUtil as E;
  */
 class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
 {
-    const MAX_RULE_COUNT = 20;
+    const MAX_RULE_COUNT = 50;
     const SETTINGS_FIELDS = [
         'event_messages_disable_default',
         'event_messages_sender',
@@ -102,6 +102,8 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         $this->assign('rules_list', range(1, self::MAX_RULE_COUNT));
         $status_list = $this->getParticipantStatusList();
         $template_list = $this->getMessageTemplateList();
+        $languages_list = $this->getLanguagesList();
+        $roles_list = $this->getRolesList();
         foreach (range(1, self::MAX_RULE_COUNT) as $index) {
             $this->add(
                 'hidden',
@@ -130,6 +132,22 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             );
             $this->add(
                 'select',
+                "languages_{$index}",
+                E::ts("Preferred Language"),
+                $languages_list,
+                false,
+                ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'any']
+            );
+            $this->add(
+                'select',
+                "roles_{$index}",
+                E::ts("Roles"),
+                $roles_list,
+                false,
+                ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'any']
+            );
+            $this->add(
+                'select',
                 "template_{$index}",
                 E::ts("Message Template"),
                 $template_list,
@@ -147,6 +165,8 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                "is_active_{$i}" => $rule['is_active'],
                "from_{$i}"      => $rule['from'],
                "to_{$i}"        => $rule['to'],
+               "roles_{$i}"     => $rule['roles'],
+               "languages_{$i}" => $rule['languages'],
                "template_{$i}"  => $rule['template'],
            ]);
         }
@@ -194,10 +214,13 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         foreach (range(1, self::MAX_RULE_COUNT) as $i) {
             $rule = [
                 'id'        => CRM_Utils_Array::value("id_{$i}", $values, null),
-                'is_active' => CRM_Utils_Array::value("is_active_{$i}", $values, false),
+                'is_active' => (int) CRM_Utils_Array::value("is_active_{$i}", $values, false),
                 'from'      => CRM_Utils_Array::value("from_{$i}", $values, []),
                 'to'        => CRM_Utils_Array::value("to_{$i}", $values, []),
+                'languages' => CRM_Utils_Array::value("languages_{$i}", $values, []),
+                'roles'     => CRM_Utils_Array::value("roles_{$i}", $values, []),
                 'template'  => CRM_Utils_Array::value("template_{$i}", $values, null),
+                'weight'    => (10 + count($rules) * 10)
             ];
             if (!empty($rule['template'])) {
                 $rules[] = $rule;
@@ -264,6 +287,46 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         );
         foreach ($query['values'] as $status) {
             $list[$status['id']] = $status['msg_title'];
+        }
+        return $list;
+    }
+
+    /**
+     * Get a list of the available participant roles
+     */
+    protected function getRolesList() {
+        $list = [];
+        $query = civicrm_api3(
+            'OptionValue',
+            'get',
+            [
+                'option_group_id' => 'participant_role',
+                'option.limit'    => 0,
+                'return'          => 'value,label',
+            ]
+        );
+        foreach ($query['values'] as $role) {
+            $list[$role['value']] = $role['label'];
+        }
+        return $list;
+    }
+
+    /**
+     * Get a list of the available participant languages
+     */
+    protected function getLanguagesList() {
+        $list = [];
+        $query = civicrm_api3(
+            'OptionValue',
+            'get',
+            [
+                'option_group_id' => 'languages',
+                'option.limit'    => 0,
+                'return'          => 'value,label',
+            ]
+        );
+        foreach ($query['values'] as $language) {
+            $list[$language['value']] = $language['label'];
         }
         return $list;
     }
