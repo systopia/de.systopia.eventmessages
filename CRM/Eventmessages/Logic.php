@@ -244,16 +244,19 @@ class CRM_Eventmessages_Logic {
             if (in_array($from_status_id, $rule['from']) || empty($rule['from'])) {
                 // 'from' status matches!
                 if (in_array($to_status_id, $rule['to']) || empty($rule['to'])) {
-                    // 'to' status matches, too: send message
-                    CRM_Eventmessages_SendMail::sendMessageTo([
-                        'participant_id' => $participant_id,
-                        'event_id'       => $event_id,
-                        'from'           => $from_status_id,
-                        'to'             => $to_status_id,
-                        'rule'           => $rule,
-                    ]);
-                    if (!$multi_match) {
-                        break;
+                    // 'to' status matches, too!
+                    if (self::participantMatchesLanguageAndRole($rule, $event_id, $participant_id)) {
+                        // everything checks out, go for it!
+                        CRM_Eventmessages_SendMail::sendMessageTo([
+                              'participant_id' => $participant_id,
+                              'event_id'       => $event_id,
+                              'from'           => $from_status_id,
+                              'to'             => $to_status_id,
+                              'rule'           => $rule,
+                        ]);
+                        if (!$multi_match) {
+                            break;
+                        }
                     }
                 }
             }
@@ -275,5 +278,127 @@ class CRM_Eventmessages_Logic {
         $value = CRM_Core_DAO::singleValueQuery("
             SELECT execute_all_rules FROM civicrm_value_event_messages_settings WHERE entity_id = {$event_id}");
         return (boolean) $value;
+    }
+
+    /**
+     * Check if the participant matches the language and role rules as well
+     *
+     * @param array $rule
+     *   rule data
+     * @param integer $event_id
+     *    the event
+     * @param integer $participant_id
+     *    the participant
+     *
+     * @return bool
+     *    true, if the contact matches the rule's language and role filters
+     */
+    public static function participantMatchesLanguageAndRole($rule, $event_id, $participant_id)
+    {
+        if (!empty($rule['languages'])) {
+            // we'll have to check the language
+            $participant_language = self::getParticipantLanguage($participant_id);
+            if ($participant_language) {
+                if (!in_array($participant_language, $rule['languages'])) {
+                    return false;
+                }
+            }
+        }
+
+        if (!empty($rule['roles'])) {
+            // we'll have to check the roles
+            $participant_roles = self::getParticipantRoles($participant_id);
+            if (empty(array_intersect($participant_roles, $rule['roles']))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the participant's preferred language.
+     * Caution: cached
+     *
+     * @param integer $participant_id
+     *
+     * @return string
+     *   language key
+     */
+    protected static function getParticipantLanguage($participant_id)
+    {
+        $participant_id = (int) $participant_id;
+        static $language_cache = [];
+        if (!isset($language_cache[$participant_id])) {
+            $preferred_language = CRM_Core_DAO::singleValueQuery("
+             SELECT contact.preferred_language 
+             FROM civicrm_participant participant
+             LEFT JOIN civicrm_contact contact
+                    ON contact.id = participant.contact_id
+             WHERE participant.id = {$participant_id}");
+            if (empty($preferred_language)) {
+                $language_cache[$participant_id] = '';
+            } else {
+                $language_cache[$participant_id] = $preferred_language;
+            }
+        }
+        return $language_cache[$participant_id];
+    }
+
+    /**
+     * Get the participant's roles
+     * Caution: cached
+     *
+     * @param integer $participant_id
+     *
+     * @return array
+     *   roles
+     */
+    protected static function getParticipantRoles($participant_id)
+    {
+        $participant_id = (int) $participant_id;
+        static $roles_cache = [];
+        if (!isset($roles_cache[$participant_id])) {
+            $roles = CRM_Core_DAO::singleValueQuery("
+             SELECT role_id
+             FROM civicrm_participant
+             WHERE id = {$participant_id}");
+            if (empty($roles)) {
+                $roles_cache[$participant_id] = [];
+            } else {
+                $roles_cache[$participant_id] = CRM_Utils_Array::explodePadded($roles);
+            }
+        }
+        return $roles_cache[$participant_id];
+    }
+
+    /**
+     * Copy all rules from one table
+     * @param integer $source_event_id
+     *   the source event, from which the rules are copied
+     * @param $target_event_id
+     *   the target event, where the rules are copied to
+     */
+    public static function copyRules($source_event_id, $target_event_id)
+    {
+        $source_event_id = (int) $source_event_id;
+        $target_event_id = (int) $target_event_id;
+        if ($source_event_id && $target_event_id) {
+            CRM_Core_DAO::executeQuery("
+            INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight)
+            SELECT * FROM
+                (SELECT 
+                    {$target_event_id} AS event_id,
+                    from_status        AS from_status,
+                    to_status          AS to_status,
+                    languages          AS languages,
+                    roles              AS roles,
+                    is_active          AS is_active,
+                    template_id        AS template_id,
+                    weight             AS weight
+                FROM civicrm_event_message_rules
+                WHERE event_id = {$source_event_id}) tmp_table
+            ");
+        }
     }
 }

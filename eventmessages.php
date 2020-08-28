@@ -207,3 +207,26 @@ function eventmessages_civicrm_buildForm($formName, &$form) {
         }
     }
 }
+/**
+ * Implementation of hook_civicrm_copy
+ *
+ *   inject some UI modifications into selected forms
+ */
+function eventmessages_civicrm_copy($objectName, &$object) {
+    if ($objectName == 'Event') {
+        // we have the new event ID...
+        $new_event_id = $object->id;
+
+        // ...unfortunately, we have to dig up the original event ID:
+        $callstack = debug_backtrace();
+        foreach ($callstack as $call) {
+            if (isset($call['class']) && isset($call['function'])) {
+                if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'copy') {
+                    // this should be it:
+                    $original_event_id = $call['args'][0];
+                    CRM_Eventmessages_Logic::copyRules($original_event_id, $new_event_id);
+                }
+            }
+        }
+    }
+}
