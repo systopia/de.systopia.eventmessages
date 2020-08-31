@@ -276,7 +276,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
      * Get a list of the available participant statuses
      */
     protected function getMessageTemplateList() {
-        $list = ['' => E::ts("-please select-")];
+        $list = ['' => E::ts("-mandatory-")];
         $query = civicrm_api3(
             'MessageTemplate',
             'get',
