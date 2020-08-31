@@ -12,85 +12,106 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*}
 
-<div id="help">
-  <div class="crm-clear-link">
-    {$form.event_messages_disable_default.html}
-    <label for="event_messages_disable_default">{$form.event_messages_disable_default.label}</label>
-    <a onclick='CRM.help("{ts domain="de.systopia.eventmessages"}Disable Default Messages{/ts}", {literal}{"id":"id-disable-default","file":"CRM\/Eventmessages\/Form\/EventMessages"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.eventmessages"}Help{/ts}" class="helpicon">&nbsp;</a></div>
-  </div>
-</div>
+<div class="crm-block crm-form-block crm-event-manage-eventmessages-form-block">
 
-<div>
-  <div class="crm-section">
-    <div class="label">{$form.event_messages_sender.label}</div>
-    <div class="content">{$form.event_messages_sender.html}</div>
-    <div class="clear"></div>
+  <div class="crm-submit-buttons">
+      {include file="CRM/common/formButtons.tpl" location="top"}
   </div>
-  <div class="crm-section">
-    <div class="label">{$form.event_messages_reply_to.label}</div>
-    <div class="content">{$form.event_messages_reply_to.html}</div>
-    <div class="clear"></div>
-  </div>
-  <div class="crm-section">
-    <div class="label">{$form.event_messages_cc.label}</div>
-    <div class="content">{$form.event_messages_cc.html}</div>
-    <div class="clear"></div>
-  </div>
-  <div class="crm-section">
-    <div class="label">{$form.event_messages_bcc.label}</div>
-    <div class="content">{$form.event_messages_bcc.html}</div>
-    <div class="clear"></div>
-  </div>
-</div>
 
-<h3>{ts domain="de.systopia.eventmessages"}Message Rules{/ts}</h3>
-<div id="help">
-  <div class="crm-clear-link">
-    {$form.event_messages_execute_all_rules.html}
-    <label for="event_messages_execute_all_rules">{$form.event_messages_execute_all_rules.label}</label>
-    <a onclick='CRM.help("{ts domain="de.systopia.eventmessages"}Execute All Matching Rules{/ts}", {literal}{"id":"id-execute-all","file":"CRM\/Eventmessages\/Form\/EventMessages"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.eventmessages"}Help{/ts}" class="helpicon">&nbsp;</a></div>
-</div>
-<div class="eventmessages-rules-list">
-  {foreach from=$rules_list item=rule_index}
-  <div class="eventmessages-rule eventmessages-rule-{$rule_index}">
-    <table class="eventmessages-rule">
-      <tr>
-        <td>
-          {capture assign=field_name}template_{$rule_index}{/capture}
-          {$form.$field_name.label}{$form.$field_name.html}
-        </td>
-        <td>
-          {capture assign=field_name}is_active_{$rule_index}{/capture}
-          {$form.$field_name.label}{$form.$field_name.html}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          {capture assign=field_name}from_{$rule_index}{/capture}
-          {$form.$field_name.label}{$form.$field_name.html}
-        </td>
-        <td>
-          {capture assign=field_name}to_{$rule_index}{/capture}
-          {$form.$field_name.label}{$form.$field_name.html}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          {capture assign=field_name}roles_{$rule_index}{/capture}
-          {$form.$field_name.label}{$form.$field_name.html}
-        </td>
-        <td>
-          {capture assign=field_name}languages_{$rule_index}{/capture}
-          {$form.$field_name.label}{$form.$field_name.html}
-        </td>
-      </tr>
-    </table>
-  </div>
-  {/foreach}
-</div>
+  <table class="form-layout-compressed">
 
-<div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="bottom"}
+    <tr class="crm-event-manage-eventmessages-form-block-event_messages_disable_default">
+      <td class="label">{$form.event_messages_disable_default.label}  {help id="id-disable-default" title=$form.event_messages_disable_default.label}</td>
+      <td>{$form.event_messages_disable_default.html}</td>
+    </tr>
+
+    <tr class="crm-event-manage-eventmessages-form-block-event_messages_sender">
+      <td class="label">{$form.event_messages_sender.label}</td>
+      <td>{$form.event_messages_sender.html}</td>
+    </tr>
+
+    <tr class="crm-event-manage-eventmessages-form-block-event_messages_reply_to">
+      <td class="label">{$form.event_messages_reply_to.label}</td>
+      <td>{$form.event_messages_reply_to.html}</td>
+    </tr>
+
+    <tr class="crm-event-manage-eventmessages-form-block-event_messages_cc">
+      <td class="label">{$form.event_messages_cc.label}</td>
+      <td>{$form.event_messages_cc.html}</td>
+    </tr>
+
+    <tr class="crm-event-manage-eventmessages-form-block-event_messages_bcc">
+      <td class="label">{$form.event_messages_bcc.label}</td>
+      <td>{$form.event_messages_bcc.html}</td>
+    </tr>
+
+  </table>
+
+  <div class="crm-block crm-manage-events crm-accordion-wrapper">
+    <div class="crm-accordion-header">{ts domain="de.systopia.eventmessages"}Message Rules{/ts}</div>
+    <div class="crm-accordion-body">
+      <table class="form-layout-compressed">
+
+        <tr class="crm-event-manage-eventmessages-form-block-event_messages_execute_all_rules">
+          <td class="label">{$form.event_messages_execute_all_rules.label} {help id="id-execute-all" title=$form.event_messages_execute_all_rules.label}</td>
+          <td>{$form.event_messages_execute_all_rules.html}</td>
+        </tr>
+
+      </table>
+
+      <div class="eventmessages-rules-list">
+          {foreach from=$rules_list item=rule_index}
+            <div class="eventmessages-rule eventmessages-rule-{$rule_index}">
+              <table class="form-layout-compressed">
+
+                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-template">
+                    {capture assign=field_name}template_{$rule_index}{/capture}
+                  <td class="label">{$form.$field_name.label}</td>
+                  <td>{$form.$field_name.html}</td>
+                </tr>
+
+                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-is_active">
+                    {capture assign=field_name}is_active_{$rule_index}{/capture}
+                  <td class="label">{$form.$field_name.label}</td>
+                  <td>{$form.$field_name.html}</td>
+                </tr>
+
+                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-from">
+                    {capture assign=field_name}from_{$rule_index}{/capture}
+                  <td class="label">{$form.$field_name.label}</td>
+                  <td>{$form.$field_name.html}</td>
+                </tr>
+
+                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-to">
+                    {capture assign=field_name}to_{$rule_index}{/capture}
+                  <td class="label">{$form.$field_name.label}</td>
+                  <td>{$form.$field_name.html}</td>
+                </tr>
+
+                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-roles">
+                    {capture assign=field_name}roles_{$rule_index}{/capture}
+                  <td class="label">{$form.$field_name.label}</td>
+                  <td>{$form.$field_name.html}</td>
+                </tr>
+
+                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-languages">
+                    {capture assign=field_name}languages_{$rule_index}{/capture}
+                  <td class="label">{$form.$field_name.label}</td>
+                  <td>{$form.$field_name.html}</td>
+                </tr>
+
+              </table>
+            </div>
+          {/foreach}
+
+      </div>
+    </div>
+  </div>
+
+  <div class="crm-submit-buttons">
+      {include file="CRM/common/formButtons.tpl" location="bottom"}
+  </div>
+
 </div>
 
 {literal}
@@ -101,17 +122,18 @@ cj(document).ready(function() {
    * Update the form so it never shows more than one 'empty' row
    */
   function hide_all_but_one_empty_rows() {
-    // first: show all:
-    cj("[name^=template_]")
-            .parent().parent().parent().parent().parent()
-            .show();
+    // Show all rule blocks, ...
+    cj('.eventmessages-rule')
+      .show();
 
-    // the hide all but one empty one
+    // ... then hide all but one empty block.
     cj("[name^=template_]")
-            .filter(function() {return !cj(this).val();})
-            .slice(1)
-            .parent().parent().parent().parent().parent()
-            .hide();
+      .filter(function () {
+        return !cj(this).val();
+      })
+      .closest('.eventmessages-rule')
+      .not(':first')
+      .hide();
   }
 
   // attach the function to dropdown
