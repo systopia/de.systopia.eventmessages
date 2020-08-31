@@ -322,11 +322,11 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             [
                 'option_group_id' => 'languages',
                 'option.limit'    => 0,
-                'return'          => 'value,label',
+                'return'          => 'name,label',
             ]
         );
         foreach ($query['values'] as $language) {
-            $list[$language['value']] = $language['label'];
+            $list[$language['name']] = $language['label'];
         }
         return $list;
     }
