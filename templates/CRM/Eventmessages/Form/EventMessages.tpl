@@ -50,37 +50,44 @@
     <label for="event_messages_execute_all_rules">{$form.event_messages_execute_all_rules.label}</label>
     <a onclick='CRM.help("{ts domain="de.systopia.eventmessages"}Execute All Matching Rules{/ts}", {literal}{"id":"id-execute-all","file":"CRM\/Eventmessages\/Form\/EventMessages"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.eventmessages"}Help{/ts}" class="helpicon">&nbsp;</a></div>
 </div>
-<table>
-  <thead>
-    <tr>
-      <th>{$form.is_active_1.label}</th>
-      <th>{$form.from_1.label}</th>
-      <th>{$form.to_1.label}</th>
-      <th>{$form.roles_1.label}</th>
-      <th>{$form.languages_1.label}</th>
-      <th>{$form.template_1.label}</th>
-    </tr>
-  </thead>
-
-  <tbody>
+<div class="eventmessages-rules-list">
   {foreach from=$rules_list item=rule_index}
-    <tr>
-      {capture assign=field_name}is_active_{$rule_index}{/capture}
-      <th>{$form.$field_name.html}</th>
-      {capture assign=field_name}from_{$rule_index}{/capture}
-      <th>{$form.$field_name.html}</th>
-      {capture assign=field_name}to_{$rule_index}{/capture}
-      <th>{$form.$field_name.html}</th>
-      {capture assign=field_name}roles_{$rule_index}{/capture}
-      <th>{$form.$field_name.html}</th>
-      {capture assign=field_name}languages_{$rule_index}{/capture}
-      <th>{$form.$field_name.html}</th>
-      {capture assign=field_name}template_{$rule_index}{/capture}
-      <th>{$form.$field_name.html}</th>
-    </tr>
+  <div class="eventmessages-rule eventmessages-rule-{$rule_index}">
+    <table class="eventmessages-rule">
+      <tr>
+        <td>
+          {capture assign=field_name}template_{$rule_index}{/capture}
+          {$form.$field_name.label}{$form.$field_name.html}
+        </td>
+        <td>
+          {capture assign=field_name}is_active_{$rule_index}{/capture}
+          {$form.$field_name.label}{$form.$field_name.html}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {capture assign=field_name}from_{$rule_index}{/capture}
+          {$form.$field_name.label}{$form.$field_name.html}
+        </td>
+        <td>
+          {capture assign=field_name}to_{$rule_index}{/capture}
+          {$form.$field_name.label}{$form.$field_name.html}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {capture assign=field_name}roles_{$rule_index}{/capture}
+          {$form.$field_name.label}{$form.$field_name.html}
+        </td>
+        <td>
+          {capture assign=field_name}languages_{$rule_index}{/capture}
+          {$form.$field_name.label}{$form.$field_name.html}
+        </td>
+      </tr>
+    </table>
+  </div>
   {/foreach}
-  </tbody>
-</table>
+</div>
 
 <div class="crm-submit-buttons">
 {include file="CRM/common/formButtons.tpl" location="bottom"}
@@ -96,16 +103,14 @@ cj(document).ready(function() {
   function hide_all_but_one_empty_rows() {
     // first: show all:
     cj("[name^=template_]")
-            .parent()
-            .parent()
+            .parent().parent().parent().parent().parent()
             .show();
 
     // the hide all but one empty one
     cj("[name^=template_]")
             .filter(function() {return !cj(this).val();})
             .slice(1)
-            .parent()
-            .parent()
+            .parent().parent().parent().parent().parent()
             .hide();
   }
 

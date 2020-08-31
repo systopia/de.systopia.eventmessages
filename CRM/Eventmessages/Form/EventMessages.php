@@ -182,7 +182,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             ]
         );
 
-
+        Civi::resources()->addStyleUrl(E::url('css/eventmessages_form.css'));
         parent::buildQuickForm();
     }
 

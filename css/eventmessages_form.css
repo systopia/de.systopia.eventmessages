@@ -1,0 +1,29 @@
+/*-------------------------------------------------------+
+| SYSTOPIA Event Messages                                |
+| Copyright (C) 2020 SYSTOPIA                            |
+| Author: B. Endres (endres@systopia.de)                 |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++--------------------------------------------------------*/
+
+div.eventmessages-rule {
+    border: 2px solid #a1a1a1;
+    padding: 10px 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius:15px;
+}
+
+table.eventmessages-rule {
+    padding: 10px 10px;
+}
+
+div.eventmessages-rule label {
+    display:block;
+}
