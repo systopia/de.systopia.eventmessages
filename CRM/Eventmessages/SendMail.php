@@ -133,6 +133,10 @@ class CRM_Eventmessages_SendMail {
         $callstack = debug_backtrace();
         foreach ($callstack as $call) {
             if (isset($call['class']) && isset($call['function'])) {
+                if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
+                    // this is coming from us => fine
+                    return;
+                }
                 if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
                     // this is coming from CRM_Event_BAO_Event::sendMail
                     $participant_id = $call['args'][2];
@@ -151,7 +155,14 @@ class CRM_Eventmessages_SendMail {
                 }
             }
         }
-        Civi::log()->debug("mailing passed");
+
+        // print stacktrace
+        // TODO: remove
+        $stack_trace = 'StackTrace: ';
+        foreach ($callstack as $call) {
+            $stack_trace .=  "{$call['file']}:{$call['line']} ";
+        }
+        Civi::log()->debug("CiviCRM Core mailing allowed. {$stack_trace}");
     }
 
     /**
