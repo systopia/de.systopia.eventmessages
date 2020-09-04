@@ -120,12 +120,12 @@ class CRM_Eventmessages_SendMail
                 $callstack = debug_backtrace();
                 foreach ($callstack as $call) {
                     if (isset($call['class']) && isset($call['function'])) {
-                        // check for emails coming through CRM_Event_BAO_Event::sendMessageTo
-                        if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMail') {
+                        // 1. check for emails coming through CRM_Event_BAO_Event::sendMessageTo
+                        if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
                             break; // these are ours, continue to send
                         }
 
-                        // check for emails coming through CRM_Event_BAO_Event::sendMail
+                        // 2. check for emails coming through CRM_Event_BAO_Event::sendMail
                         if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
                             $participant_id = $call['args'][2];
                             if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
@@ -136,7 +136,8 @@ class CRM_Eventmessages_SendMail
                             break; // no suppression, continue to send
                         }
 
-                        // check for mails coming from from the CRM_Event_Form_Participant form
+                        // 3. check for mails coming from from the CRM_Event_Form_Participant form
+                        //  note that this also triggers our own messages, but that was already dealt with in 1.
                         if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
                             $participant_id = $call['object']->_id;
                             if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
