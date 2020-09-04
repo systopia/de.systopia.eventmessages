@@ -144,6 +144,7 @@ class CRM_Eventmessages_SendMail {
                     // this is coming from CRM_Event_BAO_Event::sendMail
                     $participant_id = $call['args'][2];
                     if (self::suppressSystemEventMailsForParticipant($participant_id)) {
+                        CRM_Eventmessages_SendMail::$mailing_suppressed = true;
                         $mailer = self::createDummyMailer($mailer);
                     }
                     return;
@@ -152,6 +153,7 @@ class CRM_Eventmessages_SendMail {
                     // this is coming from the CRM_Event_Form_Participant form
                     $participant_id = $call['object']->_id;
                     if (self::suppressSystemEventMailsForParticipant($participant_id)) {
+                        CRM_Eventmessages_SendMail::$mailing_suppressed = true;
                         $mailer = self::createDummyMailer($mailer);
                     }
                     return;
