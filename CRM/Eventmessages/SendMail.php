@@ -63,6 +63,7 @@ class CRM_Eventmessages_SendMail
                 ];
 
                 // send the mail
+                Civi::log()->debug("EventMessages: Sending eventmessages mail to '{$data->contact_email}'");
                 civicrm_api3('MessageTemplate', 'send', $email_data);
 
             } else {
