@@ -191,28 +191,56 @@ class CRM_Eventmessages_SendMail {
      *  for this participant/event
      *
      * @param integer $participant_id
-     *   the participant
+     *   the participant ID
+     *
+     * @param integer $event_id
+     *   the event ID
      *
      * @return boolean
      *   should the email be suppressed?
      */
-    public static function suppressSystemEventMailsForParticipant($participant_id)
+    public static function suppressSystemEventMailsForParticipant($participant_id, $event_id = null)
     {
-        static $cached_results = [];
+        static $cached_event_results = [];
+        static $cached_participant_results = [];
+
+        // if an event ID is given, use that
+        $event_id = (int) $event_id;
+        if ($event_id) {
+            if (!isset($cached_event_results[$event_id])) {
+                $cached_event_results[$event_id] = (boolean) CRM_Core_DAO::singleValueQuery("
+                    SELECT settings.disable_default
+                    FROM civicrm_value_event_messages_settings settings
+                    WHERE settings.entity_id = {$event_id}");
+
+                // TODO: remove logging
+                Civi::log()->debug("EventMessages: suppress system messages for event [{$event_id}]: " .
+                                   ($cached_event_results[$event_id] ? 'yes' : 'no'));
+            }
+            return $cached_event_results[$event_id];
+        }
+
+        // otherwise, we have to work with the participant
         $participant_id = (int) $participant_id;
-        if (!isset($cached_results[$participant_id])) {
-            $cached_results[$participant_id] = (boolean) CRM_Core_DAO::singleValueQuery("
+        if ($participant_id) {
+            if (!isset($cached_participant_results[$participant_id])) {
+                $cached_participant_results[$participant_id] = (boolean) CRM_Core_DAO::singleValueQuery("
                 SELECT settings.disable_default
                 FROM civicrm_participant participant
                 LEFT JOIN civicrm_value_event_messages_settings settings
                        ON settings.entity_id = participant.event_id
                 WHERE participant.id = {$participant_id}");
 
-            // TODO: remove logging
-            Civi::log()->debug("EventMessages: suppress system messages for participant [{$participant_id}]: " .
-                               ($cached_results[$participant_id] ? 'yes' : 'no'));
+                // TODO: remove logging
+                Civi::log()->debug("EventMessages: suppress system messages for participant [{$participant_id}]: " .
+                                   ($cached_participant_results[$participant_id] ? 'yes' : 'no'));
+            }
+            return $cached_participant_results[$participant_id];
         }
-        return $cached_results[$participant_id];
+
+        // TODO: remove logging
+        Civi::log()->debug("EventMessages: suppression of system messages unknown, no IDs submitted");
+        return false;
     }
 
     /**

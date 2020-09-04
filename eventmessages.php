@@ -202,8 +202,16 @@ function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
  */
 function eventmessages_civicrm_buildForm($formName, &$form) {
     if ($formName == 'CRM_Event_Form_Participant') {
-        if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($form->_id)) {
-            CRM_Core_Resources::singleton()->addScriptUrl(E::url('js/event_form_participant_mods.js'));
+        if (!empty($form->_id)) {
+            // this should be an existing participant
+            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($form->_id)) {
+                CRM_Core_Resources::singleton()->addScriptUrl(E::url('js/event_form_participant_no_system_mails.js'));
+            }
+        } else {
+            // this would be a new participant, so we need a more sophisticated form
+            $disabled_field = CRM_Eventmessages_CustomData::getCustomFieldKey('event_messages_settings', 'event_messages_disable_default');
+            CRM_Core_Resources::singleton()->addVars('eventmessages', ['suppression_field' => $disabled_field]);
+            CRM_Core_Resources::singleton()->addScriptUrl(E::url('js/event_form_new_participant_mods.js'));
         }
     }
 }
