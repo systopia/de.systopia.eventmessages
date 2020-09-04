@@ -193,7 +193,7 @@ function eventmessages_civicrm_post($op, $objectName, $objectId, &$objectRef) {
  */
 function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
     Civi::log()->debug("EventMessages: booting mail system");
-    CRM_Eventmessages_SendMail::suppressSystemEventMails($mailer);
+    CRM_Eventmessages_SendMail::suppressSystemMails($mailer);
 }
 
 /**

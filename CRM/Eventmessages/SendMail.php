@@ -19,6 +19,8 @@ use CRM_Eventmessages_ExtensionUtil as E;
  * Basic Logic for sending the actual email
  */
 class CRM_Eventmessages_SendMail {
+    /** @var bool suppression of general mailings */
+    public static $mailing_suppressed = FALSE;
 
     /**
      * Triggers the actual sending of a message (or at least it's scheduling)
@@ -59,7 +61,12 @@ class CRM_Eventmessages_SendMail {
                         'contact'     => self::enhanceTokens($contact),
                     ],
                 ];
+
+                // send the mail
+                $suppression_status = self::$mailing_suppressed;
+                self::$mailing_suppressed = false;
                 civicrm_api3('MessageTemplate', 'send', $email_data);
+                self::$mailing_suppressed = $suppression_status;
 
             } else {
                 Civi::log()->warning("Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set.");
@@ -127,33 +134,27 @@ class CRM_Eventmessages_SendMail {
      * @param object $mailer
      *      the currently used mailer, to be manipulated
      */
-    public static function suppressSystemEventMails(&$mailer)
+    public static function suppressSystemMails(&$mailer)
     {
         // check, if this is coming through CRM_Event_BAO_Event::sendMail
         $callstack = debug_backtrace();
         foreach ($callstack as $call) {
             if (isset($call['class']) && isset($call['function'])) {
-                if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
-                    // this is coming from us => fine
-                    // TODO: remove
-                    Civi::log()->debug("EventMessages: CiviCRM Core mailing passed (because it's us sending)");
-                    return;
-                }
                 if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
                     // this is coming from CRM_Event_BAO_Event::sendMail
                     $participant_id = $call['args'][2];
                     if (self::suppressSystemEventMailsForParticipant($participant_id)) {
-                        $mailer = self::createDummyMailer($participant_id);
-                        return;
+                        $mailer = self::createDummyMailer($mailer);
                     }
+                    return;
                 }
                 if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
                     // this is coming from the CRM_Event_Form_Participant form
                     $participant_id = $call['object']->_id;
                     if (self::suppressSystemEventMailsForParticipant($participant_id)) {
-                        $mailer = self::createDummyMailer($participant_id);
-                        return;
+                        $mailer = self::createDummyMailer($mailer);
                     }
+                    return;
                 }
             }
         }
@@ -174,14 +175,26 @@ class CRM_Eventmessages_SendMail {
      * @param integer $participant_id
      *   ID of the participant, for logging
      *
+     * @param object $current_mailer
+     *   the currently used mailer
+     *
      * @return object CiviCRM mailer
      */
-    protected static function createDummyMailer($participant_id)
+    protected static function createDummyMailer($current_mailer)
     {
-        return new class() {
+        return new class($current_mailer) {
+            public function __construct($current_mailer)
+            {
+                $this->current_mailer = $current_mailer;
+            }
+
             function send($recipients, $headers, $body) {
-                $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
-                Civi::log()->debug("EventMessages: Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
+                if (CRM_Eventmessages_SendMail::$mailing_suppressed) {
+                    $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
+                    Civi::log()->debug("EventMessages: Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
+                } else {
+                    $this->current_mailer->send($recipients, $headers, $body);
+                }
             }
         };
     }
