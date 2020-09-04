@@ -135,6 +135,8 @@ class CRM_Eventmessages_SendMail {
             if (isset($call['class']) && isset($call['function'])) {
                 if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
                     // this is coming from us => fine
+                    // TODO: remove
+                    Civi::log()->debug("EventMessages: CiviCRM Core mailing passed (because it's us sending)");
                     return;
                 }
                 if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
@@ -162,7 +164,7 @@ class CRM_Eventmessages_SendMail {
         foreach ($callstack as $call) {
             $stack_trace .=  "{$call['file']}:{$call['line']} ";
         }
-        Civi::log()->debug("CiviCRM Core mailing allowed. {$stack_trace}");
+        Civi::log()->debug("EventMessages: CiviCRM Core mailing passed: {$stack_trace}");
     }
 
     /**
@@ -179,7 +181,7 @@ class CRM_Eventmessages_SendMail {
         return new class() {
             function send($recipients, $headers, $body) {
                 $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
-                Civi::log()->debug("Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
+                Civi::log()->debug("EventMessages: Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
             }
         };
     }
