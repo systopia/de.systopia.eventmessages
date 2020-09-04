@@ -20,7 +20,7 @@ cj(document).ready(function () {
    */
   function eventmessages_hide_message_panel() {
     // hide the whole fieldset und unset the checkboxes
-    cj("fieldset#send_confirmation_receipt")
+    cj("fieldset#send_confirmation_receipt,fieldset#email-receipt,div#notify")
       .hide()
       .find(".crm-form-checkbox")
       .prop('checked', '')
