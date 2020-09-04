@@ -12,6 +12,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+/** page-wide variable to define whether CiviCRM event communications should be hidden */
 let event_communications_hidden = 0;
 
 cj(document).ready(function () {
@@ -45,9 +46,8 @@ cj(document).ready(function () {
   eventmessages_trigger_update_mail_panel();
 
   /**
-   * Will hide the 'send confirmation receipt' section
-   *  of the participant form, if the event has
-   *  disabled CiviCRM's default communications
+   * Will hide the various CiviCRM's default communications
+   *  if the event_communications_hidden is set
    */
   function eventmessages_hide_message_panel() {
     if (event_communications_hidden) {

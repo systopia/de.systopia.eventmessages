@@ -192,6 +192,7 @@ function eventmessages_civicrm_post($op, $objectName, $objectId, &$objectRef) {
  * Replace the normal mailer with our custom mailer
  */
 function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
+    Civi::log()->debug("EventMessages: booting mail system");
     CRM_Eventmessages_SendMail::suppressSystemEventMails($mailer);
 }
 
