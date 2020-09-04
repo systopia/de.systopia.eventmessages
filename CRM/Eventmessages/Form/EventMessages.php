@@ -282,6 +282,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             'get',
             [
                 'option.limit' => 0,
+                'is_default'   => 1, // otherwise it won't be sent by MessageTemplate.send
                 'return'       => 'id,msg_title',
             ]
         );
