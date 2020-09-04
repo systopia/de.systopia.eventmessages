@@ -129,6 +129,7 @@ class CRM_Eventmessages_SendMail
                         if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
                             $participant_id = $call['args'][2];
                             if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                Civi::log()->debug("EventMessages: CRM_Event_BAO_Event::sendMail detected!");
                                 $this->logDroppedMail($recipients, $headers, $body);
                                 return; // don't send
                             }
@@ -139,6 +140,7 @@ class CRM_Eventmessages_SendMail
                         if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
                             $participant_id = $call['object']->_id;
                             if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                Civi::log()->debug("EventMessages: CRM_Event_Form_Participant::submit detected!");
                                 $this->logDroppedMail($recipients, $headers, $body);
                                 return; // don't send
                             }
