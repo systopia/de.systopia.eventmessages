@@ -18,9 +18,8 @@ use CRM_Eventmessages_ExtensionUtil as E;
 /**
  * Basic Logic for sending the actual email
  */
-class CRM_Eventmessages_SendMail {
-    /** @var bool suppression of general mailings */
-    public static $mailing_suppressed = FALSE;
+class CRM_Eventmessages_SendMail
+{
 
     /**
      * Triggers the actual sending of a message (or at least it's scheduling)
@@ -28,7 +27,8 @@ class CRM_Eventmessages_SendMail {
      * @param array $context
      *      some context information, see processStatusChange
      */
-    public static function sendMessageTo($context) {
+    public static function sendMessageTo($context)
+    {
         try {
             // load some stuff via SQL
             $event = self::getEventData($context['event_id']);
@@ -63,10 +63,7 @@ class CRM_Eventmessages_SendMail {
                 ];
 
                 // send the mail
-                $suppression_status = self::$mailing_suppressed;
-                self::$mailing_suppressed = false;
                 civicrm_api3('MessageTemplate', 'send', $email_data);
-                self::$mailing_suppressed = $suppression_status;
 
             } else {
                 Civi::log()->warning("Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set.");
@@ -98,105 +95,69 @@ class CRM_Eventmessages_SendMail {
     }
 
     /**
-     * Build an SQL query to fetch the right data set,
-     *  including contact_name, contact_id, contact_email
-     *
-     * @param array $context
-     *      some context information, see processStatusChange
-     */
-    protected static function buildDataQuery($context)
-    {
-        $participant_id = (int) $context['participant_id'];
-        return "
-                SELECT 
-                  email.email          AS contact_email,
-                  contact.display_name AS contact_name,
-                  contact.id           AS contact_id,
-                  participant.id       AS participant_id
-                FROM civicrm_participant   participant
-                INNER JOIN civicrm_contact contact  
-                        ON contact.id = participant.contact_id
-                INNER JOIN civicrm_email   email
-                        ON email.contact_id = contact.id
-                        AND (email.on_hold IS NULL OR email.on_hold = 0)  
-                INNER JOIN civicrm_event   event
-                        ON event.id = participant.event_id
-                WHERE participant.id = {$participant_id}
-                  AND (contact.is_deleted IS NULL OR contact.is_deleted = 0)
-                ORDER BY email.is_primary DESC, email.is_bulkmail ASC, email.is_billing ASC
-            ";
-    }
-
-    /**
      * Make sure that CiviCRM event mails will be suppressed if the event is configured is this way
-     * This is achieved by swapping the mailer object for a dummy
+     * This is achieved by wrapping the mailer object in a filter class
      *
      * @param object $mailer
      *      the currently used mailer, to be manipulated
      */
     public static function suppressSystemMails(&$mailer)
     {
-        // check, if this is coming through CRM_Event_BAO_Event::sendMail
-        $callstack = debug_backtrace();
-        foreach ($callstack as $call) {
-            if (isset($call['class']) && isset($call['function'])) {
-                if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
-                    // this is coming from CRM_Event_BAO_Event::sendMail
-                    $participant_id = $call['args'][2];
-                    if (self::suppressSystemEventMailsForParticipant($participant_id)) {
-                        CRM_Eventmessages_SendMail::$mailing_suppressed = true;
-                        $mailer = self::createDummyMailer($mailer);
-                    }
-                    return;
-                }
-                if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
-                    // this is coming from the CRM_Event_Form_Participant form
-                    $participant_id = $call['object']->_id;
-                    if (self::suppressSystemEventMailsForParticipant($participant_id)) {
-                        CRM_Eventmessages_SendMail::$mailing_suppressed = true;
-                        $mailer = self::createDummyMailer($mailer);
-                    }
-                    return;
-                }
-            }
-        }
-
-        // print stacktrace
-        // TODO: remove
-        $stack_trace = 'StackTrace: ';
-        foreach ($callstack as $call) {
-            $stack_trace .=  "{$call['file']}:{$call['line']} ";
-        }
-        Civi::log()->debug("EventMessages: CiviCRM Core mailing passed: {$stack_trace}");
-    }
-
-    /**
-     * Generate a mailer, that would only write a line to the civicrm log
-     *   instead of actually sending out an email
-     *
-     * @param integer $participant_id
-     *   ID of the participant, for logging
-     *
-     * @param object $current_mailer
-     *   the currently used mailer
-     *
-     * @return object CiviCRM mailer
-     */
-    protected static function createDummyMailer($current_mailer)
-    {
-        return new class($current_mailer) {
-            public function __construct($current_mailer)
+        $mailer = new class($mailer) {
+            public function __construct($mailer)
             {
-                $this->current_mailer = $current_mailer;
+                $this->mailer = $mailer;
             }
 
-            function send($recipients, $headers, $body) {
-                if (CRM_Eventmessages_SendMail::$mailing_suppressed) {
-                    $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
-                    Civi::log()->debug("EventMessages: Suppressed CiviCRM Event mail for recipients '{$recipient_list}'");
-                } else {
-                    $this->current_mailer->send($recipients, $headers, $body);
+            /**
+             * Implement the mailer's send function, so that
+             *   system mails from events with active suppression will be dropped
+             */
+            function send($recipients, $headers, $body)
+            {
+                // go through the call stack, and see where this is coming from
+                $callstack = debug_backtrace();
+                foreach ($callstack as $call) {
+                    if (isset($call['class']) && isset($call['function'])) {
+                        // check for emails coming through CRM_Event_BAO_Event::sendMessageTo
+                        if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMail') {
+                            break; // these are ours, continue to send
+                        }
+
+                        // check for emails coming through CRM_Event_BAO_Event::sendMail
+                        if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'sendMail') {
+                            $participant_id = $call['args'][2];
+                            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                $this->logDroppedMail($recipients, $headers, $body);
+                                return; // don't send
+                            }
+                            break; // no suppression, continue to send
+                        }
+
+                        // check for mails coming from from the CRM_Event_Form_Participant form
+                        if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
+                            $participant_id = $call['object']->_id;
+                            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                $this->logDroppedMail($recipients, $headers, $body);
+                                return; // don't send
+                            }
+                            break; // no suppression, continue to send
+                        }
+                    }
                 }
+
+                // we're done filtering -> send it already
+                $this->mailer->send($recipients, $headers, $body);
+            }
+
+            /**
+             * If we really drop/suppress a system mail, let's at least
+             *   log something...
+             */
+            function logDroppedMail($recipients, $headers, $body)
+            {
+                $recipient_list = is_array($recipients) ? implode(';', $recipients) : $recipients;
+                Civi::log()->debug("EventMessages: Suppressed CiviCRM event mail for recipients '{$recipient_list}'");
             }
         };
     }
@@ -279,5 +240,39 @@ class CRM_Eventmessages_SendMail {
             // todo: more stuff?
         }
         return $tokens;
+    }
+
+
+    /**
+     * Build an SQL query to fetch the right data set,
+     *  including contact_name, contact_id, contact_email
+     *
+     * @param array $context
+     *      some context information, see processStatusChange
+     *
+     * @return string
+     *      sql query to gather the data required for generating an email
+     */
+    protected static function buildDataQuery($context)
+    {
+        $participant_id = (int) $context['participant_id'];
+        return "
+                SELECT 
+                  email.email          AS contact_email,
+                  contact.display_name AS contact_name,
+                  contact.id           AS contact_id,
+                  participant.id       AS participant_id
+                FROM civicrm_participant   participant
+                INNER JOIN civicrm_contact contact  
+                        ON contact.id = participant.contact_id
+                INNER JOIN civicrm_email   email
+                        ON email.contact_id = contact.id
+                        AND (email.on_hold IS NULL OR email.on_hold = 0)  
+                INNER JOIN civicrm_event   event
+                        ON event.id = participant.event_id
+                WHERE participant.id = {$participant_id}
+                  AND (contact.is_deleted IS NULL OR contact.is_deleted = 0)
+                ORDER BY email.is_primary DESC, email.is_bulkmail ASC, email.is_billing ASC
+            ";
     }
 }
