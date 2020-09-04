@@ -198,13 +198,21 @@ class CRM_Eventmessages_SendMail {
      */
     public static function suppressSystemEventMailsForParticipant($participant_id)
     {
+        static $cached_results = [];
         $participant_id = (int) $participant_id;
-        return (boolean) CRM_Core_DAO::singleValueQuery("
-            SELECT settings.disable_default
-            FROM civicrm_participant participant
-            LEFT JOIN civicrm_value_event_messages_settings settings
-                   ON settings.entity_id = participant.event_id
-            WHERE participant.id = {$participant_id}");
+        if (!isset($cached_results[$participant_id])) {
+            $cached_results[$participant_id] = (boolean) CRM_Core_DAO::singleValueQuery("
+                SELECT settings.disable_default
+                FROM civicrm_participant participant
+                LEFT JOIN civicrm_value_event_messages_settings settings
+                       ON settings.entity_id = participant.event_id
+                WHERE participant.id = {$participant_id}");
+
+            // TODO: remove logging
+            Civi::log()->debug("EventMessages: suppress system messages for participant [{$participant_id}]: " .
+                               ($cached_results[$participant_id] ? 'yes' : 'no'));
+        }
+        return $cached_results[$participant_id];
     }
 
     /**
