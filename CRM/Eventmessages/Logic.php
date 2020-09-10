@@ -14,11 +14,13 @@
 +--------------------------------------------------------*/
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use \Civi\RemoteEvent\Event\GetResultEvent as GetResultEvent;
 
 /**
  * Basic Logic for the event messages
  */
-class CRM_Eventmessages_Logic {
+class CRM_Eventmessages_Logic
+{
 
     /** @var array stack of [participant_id, status_id] tuples */
     protected static $record_stack = [];
@@ -35,8 +37,10 @@ class CRM_Eventmessages_Logic {
             // this is a new contact
             array_push(self::$record_stack, [0, 0]);
         } else {
-            $participant_id = (int) $participant_id;
-            $status_id = CRM_Core_DAO::singleValueQuery("SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}");
+            $participant_id = (int)$participant_id;
+            $status_id = CRM_Core_DAO::singleValueQuery(
+                "SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}"
+            );
             array_push(self::$record_stack, [$participant_id, $status_id]);
         }
     }
@@ -55,12 +59,19 @@ class CRM_Eventmessages_Logic {
             if (isset($participant_object->status_id)) {
                 $new_status_id = $participant_object->status_id;
             } else {
-                $new_status_id = CRM_Core_DAO::singleValueQuery("SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}");
+                $new_status_id = CRM_Core_DAO::singleValueQuery(
+                    "SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}"
+                );
             }
 
             // check if there is a change
             if ($old_status_id <> $new_status_id) {
-                CRM_Eventmessages_Logic::processStatusChange($participant_object->event_id, $old_status_id, $new_status_id, $participant_id);
+                CRM_Eventmessages_Logic::processStatusChange(
+                    $participant_object->event_id,
+                    $old_status_id,
+                    $new_status_id,
+                    $participant_id
+                );
             }
         } else {
             Civi::log()->debug("EventMessages: inconsistent pre/post hooks.");
@@ -85,12 +96,14 @@ class CRM_Eventmessages_Logic {
      *    'template'  => Message Template ID
      * ]
      */
-    public static function getActiveRules($event_id) {
-        $event_id = (int) $event_id;
+    public static function getActiveRules($event_id)
+    {
+        $event_id = (int)$event_id;
         static $rules_cache = [];
         if (!isset($rules_cache[$event_id])) {
             $rules = [];
-            $query = CRM_Core_DAO::executeQuery("
+            $query = CRM_Core_DAO::executeQuery(
+                "
                 SELECT
                   id          AS rule_id,
                   from_status AS from_status,
@@ -101,16 +114,17 @@ class CRM_Eventmessages_Logic {
                 FROM civicrm_event_message_rules
                 WHERE event_id = {$event_id}
                   AND is_active = 1
-                ORDER BY weight ASC;");
+                ORDER BY weight ASC;"
+            );
             while ($query->fetch()) {
                 $rules[] = [
-                    'id'        => $query->rule_id,
+                    'id' => $query->rule_id,
                     'is_active' => true,
-                    'from'      => empty($query->from_status) ? [] : explode(',', $query->from_status),
-                    'to'        => empty($query->to_status)   ? [] : explode(',', $query->to_status),
-                    'languages' => empty($query->languages)   ? [] : explode(',', $query->languages),
-                    'roles'     => empty($query->roles)       ? [] : explode(',', $query->roles),
-                    'template'  => $query->template_id,
+                    'from' => empty($query->from_status) ? [] : explode(',', $query->from_status),
+                    'to' => empty($query->to_status) ? [] : explode(',', $query->to_status),
+                    'languages' => empty($query->languages) ? [] : explode(',', $query->languages),
+                    'roles' => empty($query->roles) ? [] : explode(',', $query->roles),
+                    'template' => $query->template_id,
                 ];
             }
             $rules_cache[$event_id] = $rules;
@@ -133,9 +147,11 @@ class CRM_Eventmessages_Logic {
      *    'template'  => Message Template ID
      * ]
      */
-    public static function getAllRules($event_id) {
+    public static function getAllRules($event_id)
+    {
         $rules = [];
-        $query = CRM_Core_DAO::executeQuery("
+        $query = CRM_Core_DAO::executeQuery(
+            "
                 SELECT
                   id          AS rule_id,
                   is_active   AS is_active,
@@ -146,16 +162,17 @@ class CRM_Eventmessages_Logic {
                   template_id AS template_id
                 FROM civicrm_event_message_rules
                 WHERE event_id = {$event_id}
-                ORDER BY weight ASC;");
+                ORDER BY weight ASC;"
+        );
         while ($query->fetch()) {
             $rules[] = [
-                'id'        => $query->rule_id,
-                'is_active' => (int) $query->is_active,
-                'from'      => empty($query->from_status) ? [] : explode(',', $query->from_status),
-                'to'        => empty($query->to_status)   ? [] : explode(',', $query->to_status),
-                'languages' => empty($query->languages)   ? [] : explode(',', $query->languages),
-                'roles'     => empty($query->roles)       ? [] : explode(',', $query->roles),
-                'template'  => $query->template_id,
+                'id' => $query->rule_id,
+                'is_active' => (int)$query->is_active,
+                'from' => empty($query->from_status) ? [] : explode(',', $query->from_status),
+                'to' => empty($query->to_status) ? [] : explode(',', $query->to_status),
+                'languages' => empty($query->languages) ? [] : explode(',', $query->languages),
+                'roles' => empty($query->roles) ? [] : explode(',', $query->roles),
+                'template' => $query->template_id,
             ];
         }
         return $rules;
@@ -172,7 +189,8 @@ class CRM_Eventmessages_Logic {
      * @param array $rules
      *   list of rules, see ::getAllRules
      */
-    public static function syncRules($event_id, $rules) {
+    public static function syncRules($event_id, $rules)
+    {
         // first: get all current rules by ID
         $current_rules = [];
         foreach (self::getAllRules($event_id) as $current_rule) {
@@ -185,34 +203,40 @@ class CRM_Eventmessages_Logic {
             $weight += 10;
             if (empty($new_rule['id'])) {
                 // this is a new rule -> insert
-                CRM_Core_DAO::executeQuery("
+                CRM_Core_DAO::executeQuery(
+                    "
                 INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight)
                 VALUES (%1, %2, %3, %4, %5, %6, %7, %8);
-                ", [
-                    1 => [$event_id, 'Integer'],
-                    2 => [implode(',', $new_rule['from']), 'String'],
-                    3 => [implode(',', $new_rule['to']), 'String'],
-                    4 => [implode(',', $new_rule['languages']), 'String'],
-                    5 => [implode(',', $new_rule['roles']), 'String'],
-                    6 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
-                    7 => [$new_rule['template'], 'Integer'],
-                    8 => [$weight, 'Integer'],
-                ]);
+                ",
+                    [
+                        1 => [$event_id, 'Integer'],
+                        2 => [implode(',', $new_rule['from']), 'String'],
+                        3 => [implode(',', $new_rule['to']), 'String'],
+                        4 => [implode(',', $new_rule['languages']), 'String'],
+                        5 => [implode(',', $new_rule['roles']), 'String'],
+                        6 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
+                        7 => [$new_rule['template'], 'Integer'],
+                        8 => [$weight, 'Integer'],
+                    ]
+                );
             } else {
                 // this is an update
-                CRM_Core_DAO::executeQuery("
+                CRM_Core_DAO::executeQuery(
+                    "
                     UPDATE civicrm_event_message_rules
                     SET from_status = %2, to_status = %3, is_active = %4, template_id = %5, languages = %6, roles = %7, weight = %8
-                    WHERE id = %1;", [
-                    1 => [$new_rule['id'], 'Integer'],
-                    2 => [implode(',', $new_rule['from']), 'String'],
-                    3 => [implode(',', $new_rule['to']), 'String'],
-                    4 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
-                    5 => [$new_rule['template'], 'Integer'],
-                    6 => [implode(',', $new_rule['languages']), 'String'],
-                    7 => [implode(',', $new_rule['roles']), 'String'],
-                    8 => [$weight, 'Integer'],
-                ]);
+                    WHERE id = %1;",
+                    [
+                        1 => [$new_rule['id'], 'Integer'],
+                        2 => [implode(',', $new_rule['from']), 'String'],
+                        3 => [implode(',', $new_rule['to']), 'String'],
+                        4 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
+                        5 => [$new_rule['template'], 'Integer'],
+                        6 => [implode(',', $new_rule['languages']), 'String'],
+                        7 => [implode(',', $new_rule['roles']), 'String'],
+                        8 => [$weight, 'Integer'],
+                    ]
+                );
                 // remove from list
                 unset($current_rules[$new_rule['id']]);
             }
@@ -220,8 +244,10 @@ class CRM_Eventmessages_Logic {
 
         // finally: delete all remaining rules
         foreach ($current_rules as $rule_to_delete) {
-            CRM_Core_DAO::executeQuery("DELETE FROM civicrm_event_message_rules WHERE id = %1",
-                                       [1 => [$rule_to_delete['id'], 'String']]);
+            CRM_Core_DAO::executeQuery(
+                "DELETE FROM civicrm_event_message_rules WHERE id = %1",
+                [1 => [$rule_to_delete['id'], 'String']]
+            );
         }
     }
 
@@ -237,7 +263,8 @@ class CRM_Eventmessages_Logic {
      * @param integer $participant_id
      *      participant ID
      */
-    public static function processStatusChange($event_id, $from_status_id, $to_status_id, $participant_id) {
+    public static function processStatusChange($event_id, $from_status_id, $to_status_id, $participant_id)
+    {
         $rules = self::getActiveRules($event_id);
         $multi_match = self::isMultiMatch($event_id);
         foreach ($rules as $rule) {
@@ -247,13 +274,15 @@ class CRM_Eventmessages_Logic {
                     // 'to' status matches, too!
                     if (self::participantMatchesLanguageAndRole($rule, $event_id, $participant_id)) {
                         // everything checks out, go for it!
-                        CRM_Eventmessages_SendMail::sendMessageTo([
-                              'participant_id' => $participant_id,
-                              'event_id'       => $event_id,
-                              'from'           => $from_status_id,
-                              'to'             => $to_status_id,
-                              'rule'           => $rule,
-                        ]);
+                        CRM_Eventmessages_SendMail::sendMessageTo(
+                            [
+                                'participant_id' => $participant_id,
+                                'event_id' => $event_id,
+                                'from' => $from_status_id,
+                                'to' => $to_status_id,
+                                'rule' => $rule,
+                            ]
+                        );
                         if (!$multi_match) {
                             break;
                         }
@@ -274,10 +303,12 @@ class CRM_Eventmessages_Logic {
      */
     public static function isMultiMatch($event_id)
     {
-        $event_id = (int) $event_id;
-        $value = CRM_Core_DAO::singleValueQuery("
-            SELECT execute_all_rules FROM civicrm_value_event_messages_settings WHERE entity_id = {$event_id}");
-        return (boolean) $value;
+        $event_id = (int)$event_id;
+        $value = CRM_Core_DAO::singleValueQuery(
+            "
+            SELECT execute_all_rules FROM civicrm_value_event_messages_settings WHERE entity_id = {$event_id}"
+        );
+        return (boolean)$value;
     }
 
     /**
@@ -327,15 +358,17 @@ class CRM_Eventmessages_Logic {
      */
     protected static function getParticipantLanguage($participant_id)
     {
-        $participant_id = (int) $participant_id;
+        $participant_id = (int)$participant_id;
         static $language_cache = [];
         if (!isset($language_cache[$participant_id])) {
-            $preferred_language = CRM_Core_DAO::singleValueQuery("
+            $preferred_language = CRM_Core_DAO::singleValueQuery(
+                "
              SELECT contact.preferred_language 
              FROM civicrm_participant participant
              LEFT JOIN civicrm_contact contact
                     ON contact.id = participant.contact_id
-             WHERE participant.id = {$participant_id}");
+             WHERE participant.id = {$participant_id}"
+            );
             if (empty($preferred_language)) {
                 $language_cache[$participant_id] = '';
             } else {
@@ -356,13 +389,15 @@ class CRM_Eventmessages_Logic {
      */
     protected static function getParticipantRoles($participant_id)
     {
-        $participant_id = (int) $participant_id;
+        $participant_id = (int)$participant_id;
         static $roles_cache = [];
         if (!isset($roles_cache[$participant_id])) {
-            $roles = CRM_Core_DAO::singleValueQuery("
+            $roles = CRM_Core_DAO::singleValueQuery(
+                "
              SELECT role_id
              FROM civicrm_participant
-             WHERE id = {$participant_id}");
+             WHERE id = {$participant_id}"
+            );
             if (empty($roles)) {
                 $roles_cache[$participant_id] = [];
             } else {
@@ -374,6 +409,7 @@ class CRM_Eventmessages_Logic {
 
     /**
      * Copy all rules from one table
+     *
      * @param integer $source_event_id
      *   the source event, from which the rules are copied
      * @param $target_event_id
@@ -381,10 +417,11 @@ class CRM_Eventmessages_Logic {
      */
     public static function copyRules($source_event_id, $target_event_id)
     {
-        $source_event_id = (int) $source_event_id;
-        $target_event_id = (int) $target_event_id;
+        $source_event_id = (int)$source_event_id;
+        $target_event_id = (int)$target_event_id;
         if ($source_event_id && $target_event_id) {
-            CRM_Core_DAO::executeQuery("
+            CRM_Core_DAO::executeQuery(
+                "
             INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight)
             SELECT * FROM
                 (SELECT 
@@ -398,7 +435,25 @@ class CRM_Eventmessages_Logic {
                     weight             AS weight
                 FROM civicrm_event_message_rules
                 WHERE event_id = {$source_event_id}) tmp_table
-            ");
+            "
+            );
+        }
+    }
+
+    /**
+     * Strip the event data from RemoteEvent.get calls
+     *
+     * @param GetResultEvent $result
+     */
+    public static function stripEventMessageData(GetResultEvent $result)
+    {
+        $events = &$result->getEventData();
+        foreach ($events as &$event) {
+            foreach (array_keys($event) as $key) {
+                if (substr($key, 0, 23) == 'event_messages_settings') {
+                    unset($event[$key]);
+                }
+            }
         }
     }
 }
