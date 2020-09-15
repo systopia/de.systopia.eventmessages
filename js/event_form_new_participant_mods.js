@@ -31,11 +31,12 @@ cj(document).ready(function () {
         return: suppression_field_name
       }).done(function (result) {
           if (result.is_error) {
-            console.log("comms should be hidden (error)");
+            // console.log("comms should be hidden (error)");
+            // console.log("comms should be hidden (error)");
             event_communications_hidden = 0;
           }
           else {
-            console.log("comms should be hidden: " + result.suppression_field_name);
+            // console.log("comms should be hidden: " + result.suppression_field_name);
             event_communications_hidden = result.suppression_field_name;
           }
         eventmessages_trigger_update_message_panel();
@@ -66,7 +67,7 @@ cj(document).ready(function () {
   function eventmessages_hide_message_panel() {
     if (event_communications_hidden) {
       // hide the whole fieldset und unset the checkboxes
-      console.log("hide stuff");
+      // console.log("hide stuff");
       cj("fieldset#send_confirmation_receipt,fieldset#email-receipt,div#notify")
         .hide()
         .find(".crm-form-checkbox")
@@ -74,7 +75,7 @@ cj(document).ready(function () {
         .change();
     } else {
       // show the fieldset
-      console.log("show stuff");
+      // console.log("show stuff");
       cj("fieldset#send_confirmation_receipt,fieldset#email-receipt,div#notify")
         .show()
         .change();
