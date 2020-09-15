@@ -58,7 +58,10 @@ cj(document).ready(function () {
 
     // run with a delay
     clearTimeout(event_communications_job_timer);
-    event_communications_job_timer = setTimeout(eventmessages_hide_message_panel, 10);
+    event_communications_job_timer = setTimeout(function() {
+      clearTimeout(event_communications_job_timer);
+      eventmessages_hide_message_panel();
+    }, 25);
   }
 
   /**
