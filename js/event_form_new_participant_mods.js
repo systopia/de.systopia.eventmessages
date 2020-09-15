@@ -32,12 +32,12 @@ cj(document).ready(function () {
       }).done(function (result) {
           if (result.is_error) {
             // console.log("comms should be hidden (error)");
-            // console.log("comms should be hidden (error)");
             event_communications_hidden = 0;
           }
           else {
-            // console.log("comms should be hidden: " + result.suppression_field_name);
-            event_communications_hidden = result.suppression_field_name;
+            console.log("comms should be hidden: " + result.suppression_field_name);
+            event_communications_hidden = (suppression_field_name in result) ?
+              result.suppression_field_name : 0;
           }
         eventmessages_trigger_update_message_panel();
         });
@@ -53,10 +53,10 @@ cj(document).ready(function () {
    *  first immediately and then with a timer
    */
   function eventmessages_trigger_update_message_panel() {
-    // run right away
+    // run once right away
     eventmessages_hide_message_panel();
 
-    // but also schedule run with a delay
+    // but also schedule run with a delay, because there are race conditions
     setTimeout(eventmessages_hide_message_panel, 25);
   }
 
