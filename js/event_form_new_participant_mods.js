@@ -85,10 +85,10 @@ cj(document).ready(function () {
   eventmessages_trigger_update_mail_panel();
 
   // but also call, when loading (of some subsection) is completed
-  cj(document).on('ajaxComplete', eventmessages_trigger_update_mail_panel);
+  cj(document).on('ajaxComplete', eventmessages_hide_message_panel);
 
   // make sure it will be unassigned
   cj(document).on('crmPopupClose', function () {
-    cj(document).off('ajaxComplete', eventmessages_trigger_update_mail_panel);
+    cj(document).off('ajaxComplete', eventmessages_hide_message_panel);
   });
 });
