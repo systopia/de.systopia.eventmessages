@@ -14,8 +14,6 @@
 
 /** page-wide variable to define whether CiviCRM event communications should be hidden */
 let event_communications_hidden = 0;
-let event_communications_job_timer;
-
 
 cj(document).ready(function () {
 
@@ -33,9 +31,11 @@ cj(document).ready(function () {
         return: suppression_field_name
       }).done(function (result) {
           if (result.is_error) {
+            console.log("comms should be hidden");
             event_communications_hidden = 0;
           }
           else {
+            console.log("comms should be hidden: " + result[suppression_field_name]);
             event_communications_hidden = result[suppression_field_name];
           }
         eventmessages_trigger_update_message_panel();
@@ -56,12 +56,8 @@ cj(document).ready(function () {
     // run right away
     eventmessages_hide_message_panel();
 
-    // run with a delay
-    clearTimeout(event_communications_job_timer);
-    event_communications_job_timer = setTimeout(function() {
-      clearTimeout(event_communications_job_timer);
-      eventmessages_hide_message_panel();
-    }, 25);
+    // but also schedule run with a delay
+    setTimeout(eventmessages_hide_message_panel, 25);
   }
 
   /**
@@ -69,9 +65,6 @@ cj(document).ready(function () {
    *  if the event_communications_hidden is set
    */
   function eventmessages_hide_message_panel() {
-    // stop timer
-    clearTimeout(event_communications_job_timer);
-
     if (event_communications_hidden) {
       // hide the whole fieldset und unset the checkboxes
       console.log("hide stuff");
