@@ -35,9 +35,8 @@ cj(document).ready(function () {
             event_communications_hidden = 0;
           }
           else {
-            console.log("comms should be hidden: " + result);
-            console.log(suppression_field_name);
-            event_communications_hidden = result[suppression_field_name];
+            console.log("comms should be hidden: " + result.suppression_field_name);
+            event_communications_hidden = result.suppression_field_name;
           }
         eventmessages_trigger_update_message_panel();
         });
