@@ -42,7 +42,7 @@ cj(document).ready(function () {
   }
   // add trigger and run once
   cj("input[name=event_id]").change(eventmessages_trigger_update_mail_panel);
-  cj("input[name=status_id]").change(eventmessages_hide_message_panel);
+  cj("select[name=status_id]").change(eventmessages_hide_message_panel);
   eventmessages_trigger_update_mail_panel();
 
   /**
