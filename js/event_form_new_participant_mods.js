@@ -30,15 +30,15 @@ cj(document).ready(function () {
         id: event_id,
         return: suppression_field_name
       }).done(function (result) {
+          console.log("result is: " + result);
           if (result.is_error) {
             // console.log("comms should be hidden (error)");
             event_communications_hidden = 0;
           }
           else {
             console.log("suppression field name is: " + suppression_field_name);
-            console.log("comms should be hidden: " + result[suppression_field_name]);
-            event_communications_hidden = (suppression_field_name in result) ?
-              result[suppression_field_name] : 0;
+            console.log("comms should be hidden: " + result.suppression_field_name);
+            event_communications_hidden = result.suppression_field_name;
           }
         eventmessages_trigger_update_message_panel();
         });
