@@ -29,8 +29,7 @@ cj(document).ready(function () {
       CRM.api3('Event', 'getsingle', {
         id: event_id,
         return: suppression_field_name
-      })
-        .done(function (result) {
+      }).done(function (result) {
           if (result.is_error) {
             event_communications_hidden = 0;
           }
@@ -43,7 +42,7 @@ cj(document).ready(function () {
   }
   // add trigger and run once
   cj("input[name=event_id]").change(eventmessages_trigger_update_mail_panel);
-  cj("input[name=status_id]").change(eventmessages_trigger_update_mail_panel);
+  cj("input[name=status_id]").change(eventmessages_hide_message_panel);
   eventmessages_trigger_update_mail_panel();
 
   /**
@@ -53,6 +52,7 @@ cj(document).ready(function () {
   function eventmessages_hide_message_panel() {
     if (event_communications_hidden) {
       // hide the whole fieldset und unset the checkboxes
+      console.log("hide stuff");
       cj("fieldset#send_confirmation_receipt,fieldset#email-receipt,div#notify")
         .hide()
         .find(".crm-form-checkbox")
@@ -60,6 +60,7 @@ cj(document).ready(function () {
         .change();
     } else {
       // show the fieldset
+      console.log("show stuff");
       cj("fieldset#send_confirmation_receipt,fieldset#email-receipt,div#notify")
         .show()
         .change();
