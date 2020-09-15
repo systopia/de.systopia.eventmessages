@@ -66,6 +66,9 @@ cj(document).ready(function () {
    *  if the event_communications_hidden is set
    */
   function eventmessages_hide_message_panel() {
+    // stop timer
+    clearTimeout(event_communications_job_timer);
+
     if (event_communications_hidden) {
       // hide the whole fieldset und unset the checkboxes
       console.log("hide stuff");
