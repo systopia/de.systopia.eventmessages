@@ -22,7 +22,7 @@ cj(document).ready(function () {
    *  whether event messages are suppressed for this event,
    *  If so, the 'send message' panel will be hidden
    */
-  function eventmessages_trigger_update_mail_panel() {
+  function eventmessages_trigger_pull_event_data() {
     let event_id = cj("input[name=event_id]").val();
     if (event_id) {
       let suppression_field_name = CRM.vars.eventmessages.suppression_field;
@@ -44,7 +44,7 @@ cj(document).ready(function () {
     }
   }
   // add triggers
-  cj("input[name=event_id]").change(eventmessages_trigger_update_mail_panel);
+  cj("input[name=event_id]").change(eventmessages_trigger_pull_event_data);
   cj("select[name=status_id]").change(eventmessages_trigger_update_message_panel);
 
   /**
@@ -83,7 +83,7 @@ cj(document).ready(function () {
   }
 
   // trigger the event_id change once
-  eventmessages_trigger_update_mail_panel();
+  eventmessages_trigger_pull_event_data();
 
   // but also call, when loading (of some subsection) is completed
   cj(document).on('ajaxComplete', eventmessages_hide_message_panel);
