@@ -45,7 +45,6 @@ cj(document).ready(function () {
   // add trigger and run once
   cj("input[name=event_id]").change(eventmessages_trigger_update_mail_panel);
   cj("select[name=status_id]").change(eventmessages_trigger_update_message_panel);
-  eventmessages_trigger_update_mail_panel();
 
   /**
    * This function will trigger the update of the message panel
