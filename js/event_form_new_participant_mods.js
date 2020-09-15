@@ -37,8 +37,11 @@ cj(document).ready(function () {
           }
           else {
             console.log("suppression field name is: " + suppression_field_name);
-            console.log("comms should be hidden: " + result.suppression_field_name);
-            event_communications_hidden = result.suppression_field_name;
+            if (result.suppression_field_name) {
+              event_communications_hidden = result.suppression_field_name;
+            } else {
+              event_communications_hidden = 0;
+            }
           }
         eventmessages_trigger_update_message_panel();
         });
