@@ -35,6 +35,7 @@ cj(document).ready(function () {
             event_communications_hidden = 0;
           }
           else {
+            console.log("suppression field name is: " + suppression_field_name);
             console.log("comms should be hidden: " + result.suppression_field_name);
             event_communications_hidden = (suppression_field_name in result) ?
               result.suppression_field_name : 0;
