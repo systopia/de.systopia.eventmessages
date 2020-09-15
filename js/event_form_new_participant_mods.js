@@ -14,6 +14,8 @@
 
 /** page-wide variable to define whether CiviCRM event communications should be hidden */
 let event_communications_hidden = 0;
+let event_communications_job_timer;
+
 
 cj(document).ready(function () {
 
@@ -36,14 +38,28 @@ cj(document).ready(function () {
           else {
             event_communications_hidden = result[suppression_field_name];
           }
-          eventmessages_hide_message_panel();
+        eventmessages_trigger_update_message_panel();
         });
     }
   }
   // add trigger and run once
   cj("input[name=event_id]").change(eventmessages_trigger_update_mail_panel);
-  cj("select[name=status_id]").change(eventmessages_hide_message_panel);
+  cj("select[name=status_id]").change(eventmessages_trigger_update_message_panel);
   eventmessages_trigger_update_mail_panel();
+
+  /**
+   * This function will trigger the update of the message panel
+   *  Due to some race conditions, this will be done twice -
+   *  first immediately and then with a timer
+   */
+  function eventmessages_trigger_update_message_panel() {
+    // run right away
+    eventmessages_hide_message_panel();
+
+    // run with a delay
+    clearTimeout(event_communications_job_timer);
+    event_communications_job_timer = setTimeout(eventmessages_hide_message_panel, 10);
+  }
 
   /**
    * Will hide the various CiviCRM's default communications
@@ -68,13 +84,13 @@ cj(document).ready(function () {
   }
 
   // trigger the event_id change once
-  eventmessages_hide_message_panel();
+  eventmessages_trigger_update_mail_panel();
 
   // but also call, when loading (of some subsection) is completed
-  cj(document).on('ajaxComplete', eventmessages_hide_message_panel);
+  cj(document).on('ajaxComplete', eventmessages_trigger_update_mail_panel);
 
   // make sure it will be unassigned
   cj(document).on('crmPopupClose', function () {
-    cj(document).off('ajaxComplete', eventmessages_hide_message_panel);
+    cj(document).off('ajaxComplete', eventmessages_trigger_update_mail_panel);
   });
 });
