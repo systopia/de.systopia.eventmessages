@@ -31,18 +31,19 @@ cj(document).ready(function () {
         return: suppression_field_name
       }).done(function (result) {
           if (result.is_error) {
-            console.log("comms should be hidden");
+            console.log("comms should be hidden (error)");
             event_communications_hidden = 0;
           }
           else {
-            console.log("comms should be hidden: " + result[suppression_field_name]);
+            console.log("comms should be hidden: " + result);
+            console.log(suppression_field_name);
             event_communications_hidden = result[suppression_field_name];
           }
         eventmessages_trigger_update_message_panel();
         });
     }
   }
-  // add trigger and run once
+  // add triggers
   cj("input[name=event_id]").change(eventmessages_trigger_update_mail_panel);
   cj("select[name=status_id]").change(eventmessages_trigger_update_message_panel);
 
