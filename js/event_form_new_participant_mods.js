@@ -38,8 +38,10 @@ cj(document).ready(function () {
           else {
             console.log("suppression field name is: " + suppression_field_name);
             if (result.suppression_field_name) {
+              console.log("suppression is " + result.suppression_field_name);
               event_communications_hidden = result.suppression_field_name;
             } else {
+              console.log("suppression is 0");
               event_communications_hidden = 0;
             }
           }
