@@ -23,7 +23,7 @@ cj(document).ready(function () {
    *  If so, the 'send message' panel will be hidden
    */
   function eventmessages_trigger_pull_event_data() {
-    let event_id = cj("input[name=event_id]").val();
+    let event_id = cj("input[name=event_id]").last().val();
     if (event_id) {
       let suppression_field_name = CRM.vars.eventmessages.suppression_field;
       CRM.api3('Event', 'getsingle', {
