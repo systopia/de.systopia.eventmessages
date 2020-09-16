@@ -66,7 +66,7 @@
 
                 <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-template">
                     {capture assign=field_name}template_{$rule_index}{/capture}
-                  <td class="label">{$form.$field_name.label}</td>
+                  <td class="label">{$form.$field_name.label}  {help id="id-token-help" title="Token List"}</td>
                   <td>{$form.$field_name.html}</td>
                 </tr>
 

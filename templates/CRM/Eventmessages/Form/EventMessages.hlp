@@ -19,3 +19,8 @@
 {htxt id='id-execute-all'}
   <p>{ts domain="de.systopia.eventmessages"}If this is enabled, <i>all</i> matching rules will be executed, and potentially multiple emails will be sent to the same person. If this is disabled, the processing will stop after the first matching rule.{/ts}</p>
 {/htxt}
+
+{htxt id='id-token-help'}
+  {capture assign=token_url}{crmURL p="civicrm/eventmessages/tokenlist"}{/capture}
+  <p>{ts domain="de.systopia.eventmessages" 1=$token_url}Did you know that you can find a list of all tokens available in the email templates <a class="crm-popup" href="%1">HERE</a>?{/ts}</p>
+{/htxt}

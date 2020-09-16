@@ -6,4 +6,10 @@
     <title>EventMessages</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/eventmessages/tokenlist</path>
+    <page_callback>CRM_Eventmessages_Page_TokenList</page_callback>
+    <title>EventMessages Token List</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

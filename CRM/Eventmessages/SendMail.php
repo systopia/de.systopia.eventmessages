@@ -14,6 +14,7 @@
 +--------------------------------------------------------*/
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use \Civi\EventMessages\MessageTokens as MessageTokens;
 
 /**
  * Basic Logic for sending the actual email
@@ -45,6 +46,13 @@ class CRM_Eventmessages_SendMail
                 $contact = civicrm_api3('Contact', 'getsingle', ['id' => $data->contact_id]);
                 CRM_Eventmessages_CustomData::labelCustomFields($contact);
 
+                // collect tokens
+                $message_tokens = new MessageTokens();
+                $message_tokens->setToken('event', $event);
+                $message_tokens->setToken('participant', $participant);
+                $message_tokens->setToken('contact', $contact);
+                Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
+
                 // and send the template via email
                 $email_data = [
                     'id'        => $context['rule']['template'],
@@ -55,11 +63,7 @@ class CRM_Eventmessages_SendMail
                     'cc'        => CRM_Utils_Array::value('event_messages_settings.event_messages_cc', $event, ''),
                     'bcc'       => CRM_Utils_Array::value('event_messages_settings.event_messages_bcc', $event, ''),
                     'contactId' => $data->contact_id,
-                    'tplParams' => [
-                        'event'       => self::enhanceTokens($event),
-                        'participant' => self::enhanceTokens($participant),
-                        'contact'     => self::enhanceTokens($contact),
-                    ],
+                    'tplParams' => $message_tokens->getTokens(),
                 ];
 
                 // send the mail
@@ -222,30 +226,6 @@ class CRM_Eventmessages_SendMail
         Civi::log()->debug("EventMessages: suppression of system messages unknown, no IDs submitted");
         return false;
     }
-
-    /**
-     * Some enhancements / beautification of the tokens passed to the
-     *   message templates
-     *
-     * @param array $tokens
-     *    current tokens
-     *
-     * @return array
-     *    enhanced tokens
-     */
-    public static function enhanceTokens($tokens)
-    {
-        // step 1: of all array data, offer a _string version
-        foreach (array_keys($tokens) as $token_name) {
-            if (is_array($tokens[$token_name])) {
-                $tokens["{$token_name}_string"] = implode(', ', $tokens[$token_name]);
-            }
-
-            // todo: more stuff?
-        }
-        return $tokens;
-    }
-
 
     /**
      * Build an SQL query to fetch the right data set,
