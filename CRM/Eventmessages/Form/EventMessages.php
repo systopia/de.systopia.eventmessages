@@ -359,6 +359,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             $tabs['eventmessages'] = [
                 'title' => E::ts("Event Communication"),
                 'url'   => 'civicrm/event/manage/eventmessages',
+                'field' => 'id',
             ];
         }
     }
