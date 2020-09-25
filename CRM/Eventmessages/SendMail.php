@@ -66,10 +66,10 @@ class CRM_Eventmessages_SendMail
                     'tplParams' => $message_tokens->getTokens(),
                 ];
 
-                // resolve/beautify sender (use label instead of value of the option_value)
+                // resolve/beautify sender (use name instead of value of the option_value)
                 try {
                     $email_data['from'] = civicrm_api3('OptionValue', 'getvalue', [
-                        'return'          => 'label',
+                        'return'          => 'name',
                         'option_group_id' => 'from_email_address',
                         'value'           => $email_data['from']
                     ]);
