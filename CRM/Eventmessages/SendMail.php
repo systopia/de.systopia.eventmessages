@@ -66,6 +66,18 @@ class CRM_Eventmessages_SendMail
                     'tplParams' => $message_tokens->getTokens(),
                 ];
 
+                // resolve/beautify sender (use label instead of value of the option_value)
+                try {
+                    $email_data['from'] = civicrm_api3('OptionValue', 'getvalue', [
+                        'return'          => 'label',
+                        'option_group_id' => 'from_email_address',
+                        'value'           => $email_data['from']
+                    ]);
+                } catch (CiviCRM_API3_Exception $ex) {
+                    Civi::log()->debug("EventMessages: Couldn't beautify sender email '{$email_data['from']}', error was " . $ex->getMessage());
+                }
+
+
                 // send the mail
                 Civi::log()->debug("EventMessages: Sending eventmessages mail to '{$data->contact_email}'");
                 civicrm_api3('MessageTemplate', 'send', $email_data);
