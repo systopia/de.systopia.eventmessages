@@ -256,20 +256,12 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
      * Get a list of the available/allowed sender email addresses
      */
     protected function getSenderOptions() {
-        $list = [];
-        $query = civicrm_api3(
-            'OptionValue',
-            'get',
-            [
-                'option_group_id' => 'from_email_address',
-                'option.limit'    => 0,
-                'return'          => 'value,label',
-            ]
-        );
-        foreach ($query['values'] as $sender) {
-            $list[$sender['value']] = $sender['label'];
+        $dropdown_list = [];
+        $from_email_addresses = CRM_Core_OptionGroup::values('from_email_address');
+        foreach ($from_email_addresses as $key => $from_email_address) {
+            $dropdown_list[$key] = htmlentities($from_email_address);
         }
-        return $list;
+        return $dropdown_list;
     }
 
     /**
