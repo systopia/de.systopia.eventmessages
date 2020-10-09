@@ -1,8 +1,10 @@
 # de.systopia.eventmessages
-
+## Scope
 ![Screenshot](/images/screenshot.png)
 
-(*FIXME: In one or two paragraphs, describe what the extension does and why one would download it. *)
+This extension provides an alternative way to send confirmation emails for CiviCRM Events. It creates an additional tab within CiviCRM Events that allows you to define different message templates to be sent based on conditions (including the participants status, role and prefered language). It will also allow you to suppress CiviCRM's regular emails.  
+
+It aims at providing an easier way to adapt event confirmation mails than editing teh system workflow messages provided by CiviCRM.
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
