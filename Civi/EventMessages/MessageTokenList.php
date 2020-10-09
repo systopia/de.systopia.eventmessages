@@ -68,6 +68,9 @@ class MessageTokenList extends Event
      */
     protected function addDefaultTokens()
     {
+        $disabled_tokens_data = file_get_contents(E::path('resources/disabled_tokens.list'));
+        $disabled_tokens = explode("\n", $disabled_tokens_data);
+
         $entities = [
             'Contact'     => 'contact',
             'Event'       => 'event',
@@ -88,10 +91,13 @@ class MessageTokenList extends Event
                     $field['name'] = "{$group_name}.{$field_specs['name']}";
                 }
 
-                $this->addToken('$'."{$prefix}.{$field['name']}", $description);
-                // add the enhanced tokens
-                if (!empty($field['serialize'])) {
-                    $this->addToken('$'."{$prefix}.{$field['name']}_string", "{$description} (String)");
+                $token_name = "{$prefix}.{$field['name']}";
+                if (!in_array($token_name, $disabled_tokens)) {
+                    $this->addToken('$'.$token_name, $description);
+                    // add the enhanced tokens
+                    if (!empty($field['serialize'])) {
+                        $this->addToken('$'."{$token_name}_string", "{$description} (String)");
+                    }
                 }
             }
         }
