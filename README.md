@@ -1,7 +1,6 @@
 # Configurable Event Emails
 
 ## Scope
-(/images/CiviCRM_Event_Communication.png)
 
 This extension provides an alternative way to send confirmation emails for CiviCRM Events. It creates an additional tab within CiviCRM Events that allows you to define different message templates to be sent based on conditions (including the participants status, role and preferred language). It will also allow you to suppress CiviCRM's regular emails.  
 
@@ -40,6 +39,8 @@ cv en eventmessages
 
 ## Usage
 
+![Screenshot](/images/CiviCRM_Event_Communication.png)
+
 After installing and activating the extension a new tab "Event Communication" will be available in the event configuration UI. You can choose to disable all CiviEvent confirmation mails for the event at hand which is recomendended for most use cases.
 
 Set your sender's cc, bcc and reply to addresses as desired and create at least one message rule. Message rules will use regular CiviCRM message templates so make sure to set up at least one template before defining rules.
@@ -51,5 +52,4 @@ You should be able to use most contact token in the message templates. A list of
 
 ## Known Issues
 
-This extension can send emails whenever an event registration is created or updated, including regular CiviEvent registration forms. You will be able to use many of CiviCRM's regular token as well as some special token provided by the extension. However some token and other data that can be found in CiviCRM's default confirmation mails wont work out of the box. 
-
+This extension can send emails whenever an event registration is created or updated, including regular CiviEvent registration forms. You will be able to use many of CiviCRM's regular token as well as some special token provided by the extension. However some token and other data that can be found in CiviCRM's default confirmation mails wont work out of the box. This particularly affects payment information for events with online paymenst and/or partipant fees.
