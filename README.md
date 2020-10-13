@@ -14,7 +14,7 @@ The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
 This extension has not yet been published for installation via the web UI.
 
-Sysadmins and developers can download the `.zip` file [HIER](https://github.com/systopia/de.systopia.eventmessages/releases), and unpack it in CiviCRM's extension folder. 
+Sysadmins and developers can download the `.zip` file [HERE](https://github.com/systopia/de.systopia.eventmessages/releases), and unpack it in CiviCRM's extension folder. 
 The extension can then be enabled in the user interface.
 
 ## Configuration
