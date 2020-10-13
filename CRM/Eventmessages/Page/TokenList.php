@@ -25,7 +25,7 @@ class CRM_Eventmessages_Page_TokenList extends CRM_Core_Page
         // collect all tokens
         $message_tokens = new MessageTokenList();
         Civi::dispatcher()->dispatch('civi.eventmessages.tokenlist', $message_tokens);
-        $this->assign('token_list', $message_tokens->getTokens());
+        $this->assign('token_list', $message_tokens->getTokens(true));
 
         parent::run();
     }

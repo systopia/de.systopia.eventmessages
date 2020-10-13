@@ -40,11 +40,17 @@ class MessageTokenList extends Event
     /**
      * Get all tokens
      *
+     * @param boolean $ordered
+     *   if true, will sort the list before returning
+     *
      * @return array
      *   token key => token description (html)
      */
-    public function getTokens()
+    public function getTokens($ordered = false)
     {
+        if ($ordered) {
+            ksort($this->token_list);
+        }
         return $this->token_list;
     }
 
@@ -101,5 +107,15 @@ class MessageTokenList extends Event
                 }
             }
         }
+
+        // add additional stuff that the API returns, but doesn't list in getfields
+        $this->addToken('$participant.status',                     E::ts("Participant Status"));
+        $this->addToken('$participant.role',                       E::ts("Participant Role"));
+        $this->addToken('$participant.participant_register_date',  E::ts("Participant Registration Time / Date"));
+        $this->addToken('$participant.participant_source',         E::ts("Participant Source"));
+        $this->addToken('$participant.participant_note',           E::ts("Participant Note"));
+        $this->addToken('$participant.participant_fee_level',      E::ts("Participant Fee Level"));
+        $this->addToken('$participant.participant_fee_amount',     E::ts("Participant Fee Amount"));
+        $this->addToken('$participant.participant_fee_currency',   E::ts("Participant Fee Currency"));
     }
 }

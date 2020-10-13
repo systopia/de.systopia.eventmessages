@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: de.systopia.eventmessages\n"
-"POT-Creation-Date: 2020-10-13 18:51+0200\n"
+"POT-Creation-Date: 2020-10-13 20:08+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
@@ -91,6 +91,38 @@ msgstr ""
 #: Civi/EventMessages/MessageTokenList.php
 msgid "no description available"
 msgstr "es liegt keine Beschreibung vor"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Status"
+msgstr "Teilnehmerstatus"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Role"
+msgstr "Teilnehmerrolle"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Registration Time / Date"
+msgstr "Teilnehmer Registrierungszeitpunkt"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Source"
+msgstr "Teilnehmer (Bezugs-)Quelle"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Note"
+msgstr "Teilnehmer Notiz"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Fee Level"
+msgstr "Teilnehmer Gebührenstufe"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Fee Amount"
+msgstr "Teilnehmergebühr: Betrag"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Participant Fee Currency"
+msgstr "Teilnehmergebühr: Währung"
 
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 msgid ""
