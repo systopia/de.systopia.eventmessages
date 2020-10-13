@@ -6,40 +6,16 @@ This extension provides an alternative way to send confirmation emails for CiviC
 
 It aims at providing an easier way to adapt event confirmation mails than editing the system workflow messages provided by CiviCRM.
 
+![Screenshot](images/CiviCRM_Event_Communication.png)
+
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
-## Requirements
-
-* PHP v7.0+
-* CiviCRM 5.2.x
-
-## Installation (Web UI)
+## Installation
 
 This extension has not yet been published for installation via the web UI.
 
-## Installation (CLI, Zip)
-
-Sysadmins and developers may download the `.zip` file for this extension and
-install it with the command-line tool [cv](https://github.com/civicrm/cv).
-
-```bash
-cd <extension-dir>
-cv dl de.systopia.eventmessages@https://github.com/FIXME/de.systopia.eventmessages/archive/master.zip
-```
-
-## Installation (CLI, Git)
-
-Sysadmins and developers may clone the [Git](https://en.wikipedia.org/wiki/Git) repo for this extension and
-install it with the command-line tool [cv](https://github.com/civicrm/cv).
-
-```bash
-git clone https://github.com/FIXME/de.systopia.eventmessages.git
-cv en eventmessages
-```
-
-## Usage
-
-![Screenshot](/images/CiviCRM_Event_Communication.png)
+Sysadmins and developers can download the `.zip` file [HIER](https://github.com/systopia/de.systopia.eventmessages/releases), and unpack it in CiviCRM's extension folder. 
+The extension can then be enabled in the user interface.
 
 After installing and activating the extension a new tab "Event Communication" will be available in the event configuration UI. You can choose to disable all CiviEvent confirmation mails for the event at hand which is recomendended for most use cases.
 
@@ -53,3 +29,8 @@ You should be able to use most contact token in the message templates. A list of
 ## Known Issues
 
 This extension can send emails whenever an event registration is created or updated, including regular CiviEvent registration forms. You will be able to use many of CiviCRM's regular token as well as some special token provided by the extension. However some token and other data that can be found in CiviCRM's default confirmation mails wont work out of the box. This particularly affects payment information for events with online paymenst and/or partipant fees.
+
+## Requirements
+
+* PHP v7.0+
+* CiviCRM 5.2.x
