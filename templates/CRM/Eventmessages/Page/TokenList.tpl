@@ -13,7 +13,10 @@
 +-------------------------------------------------------*}
 
 {crmScope extensionKey='de.systopia.eventmessages'}
-  <h3>{ts}This is a list of all <i>possible</i> tokens to be used in the EventMessages emails.{/ts}</h3>
+  <h3>
+    {ts}This is a list of all <i>possible</i> tokens to be used in the EventMessages emails.{/ts}
+    {ts}Of course CiviCRM's standard E-Mail tokens can be used as well.{/ts}
+  </h3>
 
   <table>
     <thead>

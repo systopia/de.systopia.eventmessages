@@ -12,6 +12,7 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*}
 
+{crmScope extensionKey='de.systopia.eventmessages'}
 <div class="crm-block crm-form-block crm-event-manage-eventmessages-form-block">
 
   <div class="crm-submit-buttons">
@@ -48,7 +49,7 @@
   </table>
 
   <div class="crm-block crm-manage-events crm-accordion-wrapper">
-    <div class="crm-accordion-header">{ts domain="de.systopia.eventmessages"}Message Rules{/ts}</div>
+    <div class="crm-accordion-header">{ts}Message Rules{/ts}</div>
     <div class="crm-accordion-body">
       <table class="form-layout-compressed">
 
@@ -66,7 +67,8 @@
 
                 <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-template">
                     {capture assign=field_name}template_{$rule_index}{/capture}
-                  <td class="label">{$form.$field_name.label}  {help id="id-token-help" title="Token List"}</td>
+                    {capture assign=token_list_title}{ts}Token List{/ts}{/capture}
+                  <td class="label">{$form.$field_name.label}  {help id="id-token-help" title=$token_list_title}</td>
                   <td>{$form.$field_name.html}</td>
                 </tr>
 
@@ -113,6 +115,7 @@
   </div>
 
 </div>
+{/crmScope}
 
 {literal}
 <script>
