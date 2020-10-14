@@ -41,6 +41,11 @@ class CRM_Eventmessages_SendMail
                 // load participant
                 $participant = civicrm_api3('Participant', 'getsingle', ['id' => $data->participant_id]);
                 CRM_Eventmessages_CustomData::labelCustomFields($participant);
+                // a small extension for the tokens
+                $participant['participant_roles'] = is_array($participant['participant_role']) ?
+                    $participant['participant_role'] : [$participant['participant_role']];
+                $participant['participant_role_ids'] = is_array($participant['participant_role_id']) ?
+                    $participant['participant_role_id'] : [$participant['participant_role_id']];
 
                 // load contact
                 $contact = civicrm_api3('Contact', 'getsingle', ['id' => $data->contact_id]);
