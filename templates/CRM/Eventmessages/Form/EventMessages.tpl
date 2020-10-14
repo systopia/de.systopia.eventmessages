@@ -22,7 +22,7 @@
   <table class="form-layout-compressed">
 
     <tr class="crm-event-manage-eventmessages-form-block-event_messages_disable_default">
-      <td class="label">{$form.event_messages_disable_default.label}  {help id="id-disable-default" title=$form.event_messages_disable_default.label}</td>
+      <td class="label">{$form.event_messages_disable_default.label}&nbsp;{help id="id-disable-default" title=$form.event_messages_disable_default.label}</td>
       <td>{$form.event_messages_disable_default.html}</td>
     </tr>
 
@@ -32,17 +32,20 @@
     </tr>
 
     <tr class="crm-event-manage-eventmessages-form-block-event_messages_reply_to">
-      <td class="label">{$form.event_messages_reply_to.label}</td>
+      {capture assign=help_title}{ts}Reply To{/ts}{/capture}
+      <td class="label">{$form.event_messages_reply_to.label}&nbsp;{help id="id-replyto-help" title=$help_title}</td>
       <td>{$form.event_messages_reply_to.html}</td>
     </tr>
 
     <tr class="crm-event-manage-eventmessages-form-block-event_messages_cc">
-      <td class="label">{$form.event_messages_cc.label}</td>
+      {capture assign=help_title}{ts}CC{/ts}{/capture}
+      <td class="label">{$form.event_messages_cc.label}&nbsp;{help id="id-cc-help" title=$help_title}</td>
       <td>{$form.event_messages_cc.html}</td>
     </tr>
 
     <tr class="crm-event-manage-eventmessages-form-block-event_messages_bcc">
-      <td class="label">{$form.event_messages_bcc.label}</td>
+      {capture assign=help_title}{ts}BCC{/ts}{/capture}
+      <td class="label">{$form.event_messages_bcc.label}&nbsp;{help id="id-bcc-help" title=$help_title}</td>
       <td>{$form.event_messages_bcc.html}</td>
     </tr>
 
@@ -54,7 +57,7 @@
       <table class="form-layout-compressed">
 
         <tr class="crm-event-manage-eventmessages-form-block-event_messages_execute_all_rules">
-          <td class="label">{$form.event_messages_execute_all_rules.label} {help id="id-execute-all" title=$form.event_messages_execute_all_rules.label}</td>
+          <td class="label">{$form.event_messages_execute_all_rules.label}&nbsp;{help id="id-execute-all" title=$form.event_messages_execute_all_rules.label}</td>
           <td>{$form.event_messages_execute_all_rules.html}</td>
         </tr>
 
@@ -68,7 +71,7 @@
                 <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-template">
                     {capture assign=field_name}template_{$rule_index}{/capture}
                     {capture assign=token_list_title}{ts}Token List{/ts}{/capture}
-                  <td class="label">{$form.$field_name.label}  {help id="id-token-help" title=$token_list_title}</td>
+                  <td class="label">{$form.$field_name.label}&nbsp;{help id="id-token-help" title=$token_list_title}</td>
                   <td>{$form.$field_name.html}</td>
                 </tr>
 

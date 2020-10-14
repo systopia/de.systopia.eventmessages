@@ -24,3 +24,18 @@
   {capture assign=token_url}{crmURL p="civicrm/eventmessages/tokenlist"}{/capture}
   <p>{ts domain="de.systopia.eventmessages" 1=$token_url}Did you know that you can find a list of all tokens available in the email templates <a class="crm-popup" href="%1">HERE</a>?{/ts}</p>
 {/htxt}
+
+{htxt id='id-replyto-help'}
+  <p>{ts domain="de.systopia.eventmessages"}Make sure that the email address contained exists, otherwise the email might not be sent out at all.{/ts}</p>
+{/htxt}
+
+{htxt id='id-cc-help'}
+  <p>{ts domain="de.systopia.eventmessages"}Make sure that the email address contained exists, otherwise the email might not be sent out at all.{/ts}</p>
+  <p>{ts domain="de.systopia.eventmessages"}Also be aware that CC and BCC might not work properly with the <code>mail()</code> and <code>sendmail</code> CiviCRM outbound email configurations.{/ts}</p>
+{/htxt}
+
+{htxt id='id-bcc-help'}
+  <p>{ts domain="de.systopia.eventmessages"}Make sure that the email address contained exists, otherwise the email might not be sent out at all.{/ts}</p>
+  <p>{ts domain="de.systopia.eventmessages"}Also be aware that CC and BCC might not work properly with the <code>mail()</code> and <code>sendmail</code> CiviCRM outbound email configurations.{/ts}</p>
+{/htxt}
+
