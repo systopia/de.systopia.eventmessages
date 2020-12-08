@@ -60,7 +60,7 @@ class CRM_Eventmessages_SendMail
 
                 // and send the template via email
                 $email_data = [
-                    'id'        => $context['rule']['template'],
+                    'id'        => empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'],
                     'toName'    => $data->contact_name,
                     'toEmail'   => $data->contact_email,
                     'from'      => CRM_Utils_Array::value('event_messages_settings.event_messages_sender', $event, ''),

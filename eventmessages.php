@@ -238,6 +238,22 @@ function eventmessages_civicrm_buildForm($formName, &$form)
 }
 
 /**
+ * Implementation of hook_civicrm_searchTasks,
+ *  to inject our 'Send E-Mail' task
+ */
+function eventmessages_civicrm_searchTasks($objectType, &$tasks)
+{
+    // add "Send E-Mail" task to participant list
+    if ($objectType == 'event') {
+        $tasks[] = [
+            'title' => E::ts('Send Emails (via EventMessages)'),
+            'class' => 'CRM_Eventmessages_Form_Task_ParticipantEmail',
+            'result' => false
+        ];
+    }
+}
+
+/**
  * Implementation of hook_civicrm_copy
  *
  *   inject some UI modifications into selected forms
