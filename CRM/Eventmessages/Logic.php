@@ -35,13 +35,14 @@ class CRM_Eventmessages_Logic
     {
         if (empty($participant_id)) {
             // this is a new contact
-            array_push(self::$record_stack, [0, 0]);
+            array_push(self::$record_stack, [0, 0, false]);
         } else {
             $participant_id = (int)$participant_id;
             $status_id = CRM_Core_DAO::singleValueQuery(
                 "SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}"
             );
-            array_push(self::$record_stack, [$participant_id, $status_id]);
+            $force_execution = !empty($participant_data['force_trigger_eventmessage']);
+            array_push(self::$record_stack, [$participant_id, $status_id, $force_execution]);
         }
     }
 
@@ -65,7 +66,8 @@ class CRM_Eventmessages_Logic
             }
 
             // check if there is a change
-            if ($old_status_id <> $new_status_id) {
+            $force_execution = $record[2];
+            if (($old_status_id <> $new_status_id) || $force_execution) {
                 CRM_Eventmessages_Logic::processStatusChange(
                     $participant_object->event_id,
                     $old_status_id,
