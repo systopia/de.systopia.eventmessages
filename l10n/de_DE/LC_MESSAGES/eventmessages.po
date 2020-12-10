@@ -86,23 +86,23 @@ msgstr "Veranstaltungskommunikation"
 
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 msgid "Send Email to %1 Participants"
-msgstr ""
+msgstr "E-Mail an %1 Teilnehmer*innen verschicken"
 
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 msgid "Send %1 Emails"
-msgstr ""
+msgstr "Versende %1 E-Mails"
 
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 msgid "Sending Emails %1 - %2"
-msgstr ""
+msgstr "Versende E-Mails %1 - %2"
 
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 msgid "Finishing"
-msgstr ""
+msgstr "Abschließen"
 
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 msgid "Sending %1 Event Emails"
-msgstr ""
+msgstr "Verschicke %1 Veranstaltungs-E-Mails"
 
 #: CRM/Eventmessages/Page/TokenList.php
 msgid "EventMessages: List of (potential) E-Mail Tokens"
@@ -180,7 +180,7 @@ msgstr "Teilnehmer Gebührenstufe(n) (text/string)"
 
 #: eventmessages.php
 msgid "Send Emails (via EventMessages)"
-msgstr ""
+msgstr "E-Mails versenden (via Event-Messages)"
 
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 msgid ""
@@ -241,6 +241,8 @@ msgid ""
 "<b>Warning:</b> %1 participant(s) have no viable email address, an email "
 "will not be sent to them"
 msgstr ""
+"<b>Warnung:</b> %1 Teilnehmer*innen haben keine gültige E-Mail-Adresse, sie "
+"werden vom Versand ausgeschlossen."
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
 msgid "Template Help"
@@ -251,6 +253,8 @@ msgid ""
 "The email parameters (sender, cc, bcc, reply-to) will be taken from the "
 "EventMessages configuration of the respective event(s)."
 msgstr ""
+"Die E-Mail-Parameter (Absender, cc, bcc, Antwort an) werden von den im "
+"jeweiligen Event konfigurierten Einstellungen übernommen."
 
 #: templates/CRM/Eventmessages/Page/TokenList.tpl
 msgid ""
