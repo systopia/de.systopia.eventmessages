@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: de.systopia.eventmessages\n"
-"POT-Creation-Date: 2020-10-14 18:29+0200\n"
+"POT-Creation-Date: 2020-12-10 10:21+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
@@ -68,6 +68,7 @@ msgid "Roles"
 msgstr "Rollen"
 
 #: CRM/Eventmessages/Form/EventMessages.php
+#: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 msgid "Message Template"
 msgstr "Nachrichtenvorlage"
 
@@ -82,6 +83,26 @@ msgstr "-erforderlich-"
 #: CRM/Eventmessages/Form/EventMessages.php
 msgid "Event Communication"
 msgstr "Veranstaltungskommunikation"
+
+#: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+msgid "Send Email to %1 Participants"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+msgid "Send %1 Emails"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+msgid "Sending Emails %1 - %2"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+msgid "Finishing"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+msgid "Sending %1 Event Emails"
+msgstr ""
 
 #: CRM/Eventmessages/Page/TokenList.php
 msgid "EventMessages: List of (potential) E-Mail Tokens"
@@ -157,6 +178,10 @@ msgstr "Teilnehmer Gebührenstufe(n) (liste/array)"
 msgid "Participant Fee Level (string)"
 msgstr "Teilnehmer Gebührenstufe(n) (text/string)"
 
+#: eventmessages.php
+msgid "Send Emails (via EventMessages)"
+msgstr ""
+
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 msgid ""
 "Enabling this option will <strong>disable</strong> all of CiviCRM's default "
@@ -176,6 +201,7 @@ msgstr ""
 "Person verschickt werden."
 
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.hlp
 msgid ""
 "Did you know that you can find a list of all tokens available in the email "
 "templates <a class=\"crm-popup\" href=\"%1\">HERE</a>?"
@@ -209,6 +235,22 @@ msgstr "Regeln für den E-Mail Versand"
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Token List"
 msgstr "Token  Liste"
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+msgid ""
+"<b>Warning:</b> %1 participant(s) have no viable email address, an email "
+"will not be sent to them"
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+msgid "Template Help"
+msgstr "Hilfe zu Vorlagen"
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+msgid ""
+"The email parameters (sender, cc, bcc, reply-to) will be taken from the "
+"EventMessages configuration of the respective event(s)."
+msgstr ""
 
 #: templates/CRM/Eventmessages/Page/TokenList.tpl
 msgid ""
@@ -261,9 +303,6 @@ msgstr "Beschreibung"
 
 #~ msgid "Event Message Rules"
 #~ msgstr "Kommunikationsregeln"
-
-#~ msgid "Template"
-#~ msgstr "Nachrichtenvorlage"
 
 #~ msgid "Event Messages Settings"
 #~ msgstr "Kommunikationseinstellungen für diese Veranstaltung"
