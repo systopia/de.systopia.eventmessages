@@ -250,6 +250,12 @@ function eventmessages_civicrm_searchTasks($objectType, &$tasks)
             'class' => 'CRM_Eventmessages_Form_Task_ParticipantEmail',
             'result' => false
         ];
+
+        $tasks[] = [
+            'title' => E::ts('Generate Letters (via EventMessages)'),
+            'class' => 'CRM_Eventmessages_Form_Task_ParticipantLetter',
+            'result' => false
+        ];
     }
 }
 
