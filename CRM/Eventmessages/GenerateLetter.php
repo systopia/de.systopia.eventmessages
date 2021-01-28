@@ -97,14 +97,12 @@ class CRM_Eventmessages_GenerateLetter
                 );
 
                 // Pass tokens as Smarty variables.
-                if (defined('CIVICRM_MAIL_SMARTY') && CIVICRM_MAIL_SMARTY) {
-                    /* @var CRM_Core_Smarty $smarty */
-                    $smarty = CRM_Core_Smarty::singleton();
-                    $smarty->assign_by_ref('contact', $message_tokens->getTokens()['contact']);
-                    $smarty->assign_by_ref('event', $message_tokens->getTokens()['event']);
-                    $smarty->assign_by_ref('participant', $message_tokens->getTokens()['participant']);
-                    $html = $smarty->fetch("string:$html");
+                /* @var CRM_Core_Smarty $smarty */
+                $smarty = CRM_Core_Smarty::singleton();
+                foreach ($message_tokens->getTokens() as $key => $value) {
+                    $smarty->assign($key, $value);
                 }
+                $html = $smarty->fetch("string:$html");
 
                 // Convert to PDF and output the result.
                 $pdf = CRM_Utils_PDF_Utils::html2pdf(
