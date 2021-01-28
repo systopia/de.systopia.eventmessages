@@ -94,7 +94,7 @@ class MessageTokenList extends Event
                     // this is a custom field
                     $field_specs = \CRM_Eventmessages_CustomData::getFieldSpecs($match[1]);
                     $group_name = \CRM_Eventmessages_CustomData::getGroupName($field_specs['custom_group_id']);
-                    $field['name'] = "{$group_name}.{$field_specs['name']}";
+                    $field['name'] = "{$group_name}__{$field_specs['name']}";
                 }
 
                 $token_name = "{$prefix}.{$field['name']}";
