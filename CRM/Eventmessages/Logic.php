@@ -513,7 +513,7 @@ class CRM_Eventmessages_Logic
 
         // generate token collection event
         $message_tokens = new MessageTokens();
-        $message_tokens->setToken('event', $event);
+        $message_tokens->setToken('event', $event_data);
         $message_tokens->setToken('participant', $participant);
         $message_tokens->setToken('contact', $contact);
 
