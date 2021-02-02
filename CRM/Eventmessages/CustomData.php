@@ -335,7 +335,7 @@ class CRM_Eventmessages_CustomData {
    * @param $data   array  key=>value data, keys will be changed
    * @param $depth  int    recursively follow arrays
    */
-  public static function labelCustomFields(&$data, $depth=1) {
+  public static function labelCustomFields(&$data, $depth=1, $separator = '.') {
     if ($depth == 0) return;
 
     $custom_fields_used = array();
@@ -351,7 +351,7 @@ class CRM_Eventmessages_CustomData {
     // replace names
     foreach ($data as $key => &$value) {
       if (preg_match('#^custom_(?P<field_id>\d+)$#', $key, $match)) {
-        $new_key = self::getFieldIdentifier($match['field_id']);
+        $new_key = self::getFieldIdentifier($match['field_id'], $separator);
         $data[$new_key] = $value;
         unset($data[$key]);
       }
@@ -363,7 +363,7 @@ class CRM_Eventmessages_CustomData {
     }
   }
 
-  public static function getFieldIdentifier($field_id) {
+  public static function getFieldIdentifier($field_id, $separator = '') {
     // just to be on the safe side
     self::cacheCustomFields(array($field_id));
 
@@ -371,7 +371,7 @@ class CRM_Eventmessages_CustomData {
     $custom_field = self::$custom_field_cache[$field_id];
     if ($custom_field) {
       $group_name = self::getGroupName($custom_field['custom_group_id']);
-      return "{$group_name}.{$custom_field['name']}";
+      return "{$group_name}{$separator}{$custom_field['name']}";
     } else {
       return 'FIELD_NOT_FOUND_' . $field_id;
     }

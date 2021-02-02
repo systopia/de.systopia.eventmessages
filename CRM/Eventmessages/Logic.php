@@ -15,6 +15,7 @@
 
 use CRM_Eventmessages_ExtensionUtil as E;
 use \Civi\RemoteEvent\Event\GetResultEvent as GetResultEvent;
+use \Civi\EventMessages\MessageTokens as MessageTokens;
 
 /**
  * Basic Logic for the event messages
@@ -457,5 +458,65 @@ class CRM_Eventmessages_Logic
                 }
             }
         }
+    }
+
+    /**
+     * Generate and fill a token event
+     *
+     * @param integer $participant_id
+     *   the participant
+     *
+     * @param integer $contact_id
+     *   the contact id. will be derived if not given
+     *
+     * @param array $event_data
+     *   the event information. will be derived if not given
+     */
+    public static function generateTokenEvent($participant_id, $contact_id = null, $event_data = null)
+    {
+        $participant = civicrm_api3('Participant', 'getsingle', ['id' => $participant_id]);
+        CRM_Eventmessages_CustomData::labelCustomFields($participant, 1, '__');
+        // a small extension for the tokens
+        $participant['participant_roles'] = is_array($participant['participant_role']) ?
+            $participant['participant_role'] : [$participant['participant_role']];
+        $participant['participant_role_ids'] = is_array($participant['participant_role_id']) ?
+            $participant['participant_role_id'] : [$participant['participant_role_id']];
+
+        // derive contact ID if not given
+        if (empty($contact_id)) {
+            $contact_id = $participant['contact_id'];
+        }
+
+        // load contact
+        $contact = civicrm_api3('Contact', 'getsingle', ['id' => $contact_id]);
+        // add custom fields (not included)
+        $custom_fields = civicrm_api3('CustomValue', 'get', [
+            'entity_id'    => $contact_id,
+            'entity_table' => 'civicrm_contact',
+            'option.limit' => 0,
+        ]);
+        foreach ($custom_fields['values'] as $custom_field) {
+            if (isset($custom_field['0'])) {
+                // this is a single field
+                $contact["custom_{$custom_field['id']}"] = $custom_field['latest'];
+            } else {
+                // skip multi-value fields for now...
+            }
+        }
+        CRM_Eventmessages_CustomData::labelCustomFields($contact, 1, '__');
+
+        // load event
+        if (empty($event_data)) {
+            $event_data = civicrm_api3('Event', 'getsingle', ['id' => $participant['event_id']]);
+            CRM_Eventmessages_CustomData::labelCustomFields($event_data, 1, '__');
+        }
+
+        // generate token collection event
+        $message_tokens = new MessageTokens();
+        $message_tokens->setToken('event', $event_data);
+        $message_tokens->setToken('participant', $participant);
+        $message_tokens->setToken('contact', $contact);
+
+        return $message_tokens;
     }
 }

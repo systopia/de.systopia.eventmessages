@@ -36,26 +36,8 @@ class CRM_Eventmessages_SendMail
             $data_query = self::buildDataQuery($context);
             $data  = CRM_Core_DAO::executeQuery($data_query);
             if ($data->fetch()) {
-                // todo: do some more checks?
-
                 // load participant
-                $participant = civicrm_api3('Participant', 'getsingle', ['id' => $data->participant_id]);
-                CRM_Eventmessages_CustomData::labelCustomFields($participant);
-                // a small extension for the tokens
-                $participant['participant_roles'] = is_array($participant['participant_role']) ?
-                    $participant['participant_role'] : [$participant['participant_role']];
-                $participant['participant_role_ids'] = is_array($participant['participant_role_id']) ?
-                    $participant['participant_role_id'] : [$participant['participant_role_id']];
-
-                // load contact
-                $contact = civicrm_api3('Contact', 'getsingle', ['id' => $data->contact_id]);
-                CRM_Eventmessages_CustomData::labelCustomFields($contact);
-
-                // collect tokens
-                $message_tokens = new MessageTokens();
-                $message_tokens->setToken('event', $event);
-                $message_tokens->setToken('participant', $participant);
-                $message_tokens->setToken('contact', $contact);
+                $message_tokens = CRM_Eventmessages_Logic::generateTokenEvent($data->participant_id, $data->contact_id, $event);
                 Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
 
                 // and send the template via email
