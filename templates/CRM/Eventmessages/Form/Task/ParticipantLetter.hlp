@@ -1,0 +1,22 @@
+{*-------------------------------------------------------+
+| SYSTOPIA Event Messages                                |
+| Copyright (C) 2020 SYSTOPIA                            |
+| Author: B. Endres (endres@systopia.de)                 |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++-------------------------------------------------------*}
+
+{crmScope extensionKey='de.systopia.eventmessages'}
+
+{htxt id='id-token-help'}
+{capture assign=token_url}{crmURL p="civicrm/eventmessages/tokenlist"}{/capture}
+  <p>{ts domain="de.systopia.eventmessages" 1=$token_url}Did you know that you can find a list of all tokens available in the email templates <a class="crm-popup" href="%1">HERE</a>?{/ts}</p>
+{/htxt}
+
+{/crmScope}

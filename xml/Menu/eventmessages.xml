@@ -12,4 +12,10 @@
     <title>EventMessages Token List</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/eventmessages/download</path>
+    <page_callback>CRM_Eventmessages_Form_Download</page_callback>
+    <title>Download</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
