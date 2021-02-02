@@ -64,9 +64,10 @@ class CRM_Eventmessages_GenerateLetter
                 CRM_Contact_Form_Task_PDFLetterCommon::formatMessage($html);
 
                 // Replace contact tokens.
+                [$contact] = CRM_Utils_Token::getTokenDetails([$data->contact_id]);
                 $html = CRM_Utils_Token::replaceContactTokens(
                     $html,
-                    $contact,
+                    $contact[$data->contact_id],
                     true,
                     $message_tokens->getTokens()
                 );
