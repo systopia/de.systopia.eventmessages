@@ -1,3 +1,5 @@
+# Configuration
+
 ## Requirements
 
 * PHP v7.0+
