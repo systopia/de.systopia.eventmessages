@@ -198,7 +198,23 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         $values = $this->exportValues();
 
         // store the settings
-        $event_update = ['id' => $this->_id];
+        $event_update = [
+            'id'          => $this->_id,
+            'is_template' => 0
+        ];
+
+        // set template flag, since it will otherwise reset it
+        try {
+            $event_update['is_template'] = (int) civicrm_api3('Event', 'getvalue', [
+                'return' => 'is_template',
+                'id'     => $this->_id
+            ]);
+        } catch (CiviCRM_API3_Exception $ex) {
+            // that's weird...
+            Civi::log()->warning("Event.get [{$this->_id}]: retreiving is_template failed: " . $ex->getMessage());
+        }
+
+        // set all the settings fields
         foreach (self::SETTINGS_FIELDS as $field_name) {
             $field_key = CRM_Eventmessages_CustomData::getCustomFieldKey(
                 'event_messages_settings',
