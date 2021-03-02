@@ -18,5 +18,8 @@
 {capture assign=token_url}{crmURL p="civicrm/eventmessages/tokenlist"}{/capture}
   <p>{ts domain="de.systopia.eventmessages" 1=$token_url}Did you know that you can find a list of all tokens available in the email templates <a class="crm-popup" href="%1">HERE</a>?{/ts}</p>
 {/htxt}
+{htxt id='id-address-only'}
+  <p>{ts domain="de.systopia.eventmessages"}When your template requires a postal address, excluding contacts without a primary postal address will not generate letters for them.{/ts}</p>
+{/htxt}
 
 {/crmScope}

@@ -35,8 +35,11 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
 
         CRM_Utils_System::setTitle(
             E::ts(
-                'Generate Letter for %1 Participants',
-                [1 => $participant_count]
+                'Generate Letter for %1 Participants (%2 with primary postal address)',
+                [
+                    1 => $participant_count,
+                    2 => $participant_count - $no_address_count
+                ]
             )
         );
 
@@ -49,6 +52,13 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
             ['class' => 'crm-select2 huge']
         );
 
+        $this->add(
+            'checkbox',
+            'address_only',
+            E::ts('Exclude contacts without primary postal address'),
+
+        );
+
         $this->setDefaults(
             [
                 'template_id' => Civi::settings()->get(
@@ -59,8 +69,11 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
 
         CRM_Core_Form::addDefaultButtons(
             E::ts(
-                "Generate %1 Letters",
-                [1 => $participant_count - $no_address_count]
+                "Generate %1 (%2) Letters",
+                [
+                    1 => $participant_count,
+                    2 => $participant_count - $no_address_count,
+                ]
             )
         );
     }
@@ -68,8 +81,12 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
 
     public function postProcess()
     {
+        // TODO: Depend on "address_only" checkbox value.
         $values = $this->exportValues();
-        $participant_count = count($this->_participantIds) - $this->getNoAddressCount();
+        $participant_count = count($this->_participantIds);
+        if (!empty($values['address_only'])) {
+            $participant_count -= $this->getNoAddressCount();
+        }
 
         // Store default value for select field.
         Civi::settings()->set('eventmessages_participant_send_template_id', $values['template_id']);
@@ -102,17 +119,30 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
 
         // Retrieve all participants.
         $participant_id_list = implode(',', $this->_participantIds);
-        $participant_query = CRM_Core_DAO::executeQuery(
-            "
+        $participant_query = "
             SELECT participant.id AS participant_id
-            FROM civicrm_participant participant
+                FROM civicrm_participant participant
+            ";
+        if (!empty($values['address_only'])) {
+            $participant_query .= "
             LEFT JOIN civicrm_address address
                    ON address.contact_id = participant.contact_id
                    AND address.is_primary = 1
+            ";
+        }
+        $participant_query .= "
             WHERE participant.id IN ({$participant_id_list})
-              AND address.id IS NOT NULL
-            ORDER BY participant.event_id ASC"
-        );
+            ";
+        if (!empty($values['address_only'])) {
+            $participant_query .= "
+                AND address.id IS NOT NULL
+            ";
+        }
+        $participant_query .= "
+            ORDER BY participant.event_id ASC
+            ";
+
+        $participant_query = CRM_Core_DAO::executeQuery($participant_query);
 
         // Add queue items with sets of participants.
         $current_batch = [];

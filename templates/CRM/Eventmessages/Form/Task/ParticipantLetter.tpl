@@ -14,12 +14,19 @@
 
 {crmScope extensionKey='de.systopia.eventmessages'}
 {if $no_address_count}
-  <div id="help">{ts 1=$no_address_count}<b>Warning:</b> %1 participant(s) have no viable postal address, a letter will not be generated for them{/ts}</div>
+  <div id="help">{ts 1=$no_address_count}<b>Warning:</b> %1 participant(s) do not have a viable postal address. You might want to exclude them from being generated a letter.{/ts}</div>
 {/if}
   <div class="crm-section">
     {capture assign=label_help}{ts}Template Help{/ts}{/capture}
-    <div class="label">{$form.template_id.label}{help id="id-token-help" title=$label_help}</div>
+    <div class="label">{$form.template_id.label} {help id="id-token-help" title=$label_help}</div>
     <div class="content">{$form.template_id.html}</div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="crm-section">
+    {capture assign=help_title}{ts}Help{/ts}{/capture}
+    <div class="label">{$form.address_only.label} {help id="id-address-only" title=$help_title}</div>
+    <div class="content">{$form.address_only.html}</div>
     <div class="clear"></div>
   </div>
 

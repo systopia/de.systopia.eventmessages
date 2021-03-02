@@ -180,7 +180,7 @@ class CRM_Eventmessages_GenerateLetter
               civicrm_contact contact  
               ON
                 contact.id = participant.contact_id
-            INNER JOIN
+            LEFT JOIN
               civicrm_address   address
               ON
                 address.contact_id = contact.id  
