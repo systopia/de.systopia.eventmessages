@@ -88,7 +88,7 @@ class CRM_Eventmessages_SendMail
         static $event_cache = [];
         if (!isset($event_cache[$event_id])) {
             $event = civicrm_api3('Event', 'getsingle', ['id' => $event_id]);
-            CRM_Eventmessages_CustomData::labelCustomFields($event);
+            CRM_Eventmessages_CustomData::labelCustomFields($event, 1, '__');
             $event_cache[$event_id] = $event;
         }
         return $event_cache[$event_id];
