@@ -35,14 +35,16 @@ class CRM_Eventmessages_SendMail
             $event = self::getEventData($context['event_id']);
             $data_query = self::buildDataQuery($context);
             $data  = CRM_Core_DAO::executeQuery($data_query);
+            $template_id = empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'];
             if ($data->fetch()) {
                 // load participant
                 $message_tokens = CRM_Eventmessages_Logic::generateTokenEvent($data->participant_id, $data->contact_id, $event);
+                $message_tokens->setTemplateId($template_id);
                 Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
 
                 // and send the template via email
                 $email_data = [
-                    'id'        => empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'],
+                    'id'        => $template_id,
                     'toName'    => $data->contact_name,
                     'toEmail'   => $data->contact_email,
                     'from'      => CRM_Utils_Array::value('event_messages_settings.event_messages_sender', $event, ''),

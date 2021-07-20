@@ -37,13 +37,15 @@ class CRM_Eventmessages_GenerateLetter
             $event = self::getEventData($context['event_id']);
             $data_query = self::buildDataQuery($context);
             $data = CRM_Core_DAO::executeQuery($data_query);
+            $template_id = empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'];
             if ($data->fetch()) {
                 $message_tokens = CRM_Eventmessages_Logic::generateTokenEvent($data->participant_id, $data->contact_id, $event);
+                $message_tokens->setTemplateId($template_id);
                 Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
 
                 // and generate the letter from the template
                 $letter_data = [
-                    'id' => empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'],
+                    'id' => $template_id,
                     'toName' => $data->contact_name,
                     'contactId' => $data->contact_id,
                     'tplParams' => $message_tokens->getTokens(),
