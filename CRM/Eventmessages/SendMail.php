@@ -28,7 +28,7 @@ class CRM_Eventmessages_SendMail
      * @param array $context
      *      some context information, see processStatusChange
      */
-    public static function sendMessageTo($context)
+    public static function sendMessageTo($context, $silent = true)
     {
         try {
             // load some stuff via SQL
@@ -70,8 +70,17 @@ class CRM_Eventmessages_SendMail
             } else {
                 Civi::log()->warning("Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set.");
             }
-        } catch (Exception $ex) {
-            Civi::log()->warning("Couldn't send email to participant [{$context['participant_id']}], error was: " . $ex->getMessage());
+        } catch (Exception $exception) {
+            Civi::log()->warning(E::ts(
+                'Could not send e-mail to participant %1, error was: %2',
+                [
+                    1 => $context['participant_id'],
+                    2 => $exception->getMessage(),
+                ]
+            ));
+            if (!$silent) {
+                throw $exception;
+            }
         }
     }
 

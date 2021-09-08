@@ -53,17 +53,31 @@ class CRM_Eventmessages_SendMailJob
             // trigger sendMessageTo for each one of them
             foreach ($participants['values'] as $participant) {
                 try {
-                    CRM_Eventmessages_SendMail::sendMessageTo([
-                          'participant_id' => $participant['id'],
-                          'event_id'       => $participant['event_id'],
-                          'from'           => $participant['status_id'],
-                          'to'             => $participant['status_id'],
-                          'rule'           => 0,
-                          'template_id'    => $this->template_id
-                    ]);
+                    CRM_Eventmessages_SendMail::sendMessageTo(
+                        [
+                            'participant_id' => $participant['id'],
+                            'event_id' => $participant['event_id'],
+                            'from' => $participant['status_id'],
+                            'to' => $participant['status_id'],
+                            'rule' => 0,
+                            'template_id' => $this->template_id,
+                        ],
+                        false
+                    );
                 } catch (Exception $exception) {
-                    // this shouldn't happen, sendMessageTo has it's own error handling
-                    Civi::log()->notice("EventMessages.SendMailJob: Error sending to participant [{$participant['id']}]: " . $exception->getMessage());
+                    $formatted_message = E::ts(
+                        'Could not send e-mail to participant %1, error was: %2',
+                        [
+                            1 => '<a href="' . CRM_Utils_System::url(
+                                    'civicrm/contact/view/participant',
+                                    'id=' . $participant['id']
+                                    . '&cid=' . $participant['contact_id']
+                                    . '&action=view'
+                                ) . '">#' . $participant['id'] . '</a>',
+                            2 => '<pre>' . $exception->getMessage() . '</pre>',
+                        ]
+                    );
+                    throw new Exception($formatted_message);
                 }
             }
         }
