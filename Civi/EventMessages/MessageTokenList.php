@@ -24,7 +24,7 @@ use CRM_Eventmessages_ExtensionUtil as E;
  * @package Civi\EventMessages
  *
  * This event will generate a list of all *potential* tokens the MessageTokens could have.
- *  This is purely for documentation purposes
+ *  This is purely for usability / documentation purposes
  */
 class MessageTokenList extends Event
 {
