@@ -61,6 +61,7 @@ class CRM_Eventmessages_SendMailJob
                             'to' => $participant['status_id'],
                             'rule' => 0,
                             'template_id' => $this->template_id,
+                            'participant_ids' => $this->participant_ids,
                         ],
                         false
                     );

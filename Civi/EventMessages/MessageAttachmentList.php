@@ -124,4 +124,18 @@ class MessageAttachmentList extends Event
             'text/calendar'
         );
     }
+
+
+    /**
+     * Get a list of available attachments
+     *
+     * @return array
+     *   'key' => 'label' list of generally available attachments
+     */
+    public static function getAttachmentList()
+    {
+        $attachment_collector = new MessageAttachmentList();
+        \Civi::dispatcher()->dispatch('civi.eventmessages.registerAttachments', $attachment_collector);
+        return $attachment_collector->getRegisteredAttachments();
+    }
 }

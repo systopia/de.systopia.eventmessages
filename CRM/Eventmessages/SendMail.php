@@ -16,6 +16,7 @@
 use CRM_Eventmessages_ExtensionUtil as E;
 use \Civi\EventMessages\MessageTokens as MessageTokens;
 use \Civi\EventMessages\MessageAttachments as MessageAttachments;
+use \Civi\EventMessages\MessageAttachmentList as MessageAttachmentList;
 
 /**
  * Basic Logic for sending the actual email
@@ -44,11 +45,10 @@ class CRM_Eventmessages_SendMail
                 Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
 
                 // add attachments
-                // todo: get $attachment_ids from rule:
-                $attachment_ids = ['ical'];
+                // todo: get $attachment_ids from rule, not just all
+                $attachment_ids = array_keys(MessageAttachmentList::getAttachmentList());
                 if ($attachment_ids) {
-                    // todo: trigger precaching
-                    $attachments = MessageAttachments::renderTemplateSendAttachments($data->participant_id, $attachment_ids, null /* todo: precaching */);
+                    $attachments = MessageAttachments::renderTemplateSendAttachments($data->participant_id, $attachment_ids, $context['participant_ids']);
                 } else {
                     $attachments = [];
                 }
