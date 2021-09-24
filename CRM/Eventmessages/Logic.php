@@ -432,7 +432,7 @@ class CRM_Eventmessages_Logic
         if ($source_event_id && $target_event_id) {
             CRM_Core_DAO::executeQuery(
                 "
-            INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight)
+            INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight,attachments)
             SELECT * FROM
                 (SELECT 
                     {$target_event_id} AS event_id,
