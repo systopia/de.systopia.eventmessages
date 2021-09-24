@@ -14,6 +14,7 @@
 +--------------------------------------------------------*/
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use Civi\EventMessages\MessageAttachmentList;
 
 /**
  * Send E-Mail to participants task
@@ -53,10 +54,20 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
             true,
             ['class' => 'crm-select2 huge']
         );
+        $attachments_list = MessageAttachmentList::getAttachmentList();
+        $this->add(
+            'select',
+            "attachments",
+            E::ts('Attachments'),
+            array_combine(array_keys($attachments_list), array_column($attachments_list, 'title')),
+            false,
+            ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'none']
+        );
 
         // set default values
         $this->setDefaults([
             'template_id'  => Civi::settings()->get('eventmessages_participant_send_template_id'),
+            'attachments'  => Civi::settings()->get('eventmessages_participant_send_attachments'),
 //            'sender_email' => Civi::settings()->get('eventmessages_participant_send_sender_email'),
        ]);
 
@@ -71,6 +82,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
 
         // store default values
         Civi::settings()->set('eventmessages_participant_send_template_id', $values['template_id']);
+        Civi::settings()->set('eventmessages_participant_send_attachments', $values['attachments']);
 //        Civi::settings()->set('eventmessages_participant_send_sender_email', $values['sender_email']);
 
         // init a queue
@@ -113,7 +125,8 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
                         $values['template_id'],
                         E::ts("Sending Emails %1 - %2", [
                             1 => $next_offset, // keep in mind that this is showing when the _next_ task is running
-                            2 => $next_offset + self::RUNNER_BATCH_SIZE])
+                            2 => $next_offset + self::RUNNER_BATCH_SIZE]),
+                        $values['attachments']
                     )
                 );
                 $next_offset += self::RUNNER_BATCH_SIZE;
@@ -126,7 +139,8 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
             new CRM_Eventmessages_SendMailJob(
                 $current_batch,
                 $values['template_id'],
-                E::ts("Finishing")
+                E::ts("Finishing"),
+                $values['attachments']
             )
         );
 
