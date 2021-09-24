@@ -45,8 +45,7 @@ class CRM_Eventmessages_SendMail
                 Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
 
                 // add attachments
-                // todo: get $attachment_ids from rule, not just all
-                $attachment_ids = array_keys(MessageAttachmentList::getAttachmentList());
+                $attachment_ids = $context['attachments'] ?? $context['rule']['attachments'];
                 if ($attachment_ids) {
                     $attachments = MessageAttachments::renderTemplateSendAttachments($data->participant_id, $attachment_ids, $context['participant_ids']);
                 } else {

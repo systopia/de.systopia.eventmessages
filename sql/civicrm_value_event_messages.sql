@@ -9,6 +9,7 @@ CREATE TABLE `civicrm_event_message_rules` (
   `languages`   varchar(255) DEFAULT NULL                COMMENT 'list of languages',
   `roles`       varchar(255) DEFAULT NULL                COMMENT 'list of roles',
   `weight`      int(10)      DEFAULT NULL                COMMENT 'list of weights defining the order',
+  `attachments` varchar(255) DEFAULT NULL                COMMENT 'list of attachments',
   PRIMARY KEY (`id`),
   KEY `FK_civicrm_event_message_rules_event_id` (`event_id`),
   KEY `FK_civicrm_event_message_rules_template_id` (`template_id`),

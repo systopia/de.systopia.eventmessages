@@ -58,4 +58,24 @@ class CRM_Eventmessages_Upgrader extends CRM_Eventmessages_Upgrader_Base {
         return true;
     }
 
+    /**
+     * Add column "attachments" to "civicrm_event_message_rules" table.
+     *
+     * @return TRUE on success
+     * @throws Exception
+     */
+    public function upgrade_0003()
+    {
+        $this->ctx->log->info('Add column "attachments" to "civicrm_event_message_rules" table.');
+        $column_exists = CRM_Core_DAO::singleValueQuery(
+            "SHOW COLUMNS FROM `civicrm_event_message_rules` LIKE 'attachments';"
+        );
+        if (!$column_exists) {
+            CRM_Core_DAO::executeQuery(
+                "ALTER TABLE `civicrm_event_message_rules` ADD COLUMN `attachments` varchar(255) COMMENT 'list of attachments';"
+            );
+        }
+        return true;
+    }
+
 }

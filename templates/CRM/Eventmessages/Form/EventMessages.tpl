@@ -105,6 +105,12 @@
                   <td>{$form.$field_name.html}</td>
                 </tr>
 
+                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-attachment">
+                    {capture assign=field_name}attachments_{$rule_index}{/capture}
+                  <td class="label">{$form.$field_name.label}</td>
+                  <td>{$form.$field_name.html}</td>
+                </tr>
+
               </table>
             </div>
           {/foreach}

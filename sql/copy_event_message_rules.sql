@@ -5,7 +5,7 @@
 
 SET @TEMPLATE_EVENT_ID := "INSERT ID HERE";
 
-INSERT INTO civicrm_event_message_rules (event_id, is_active, template_id, from_status, to_status, languages, roles, weight)
+INSERT INTO civicrm_event_message_rules (event_id, is_active, template_id, from_status, to_status, languages, roles, weight, attachments)
 SELECT 
  new_event.id          AS event_id,
  template.is_active    AS is_active,
@@ -14,7 +14,8 @@ SELECT
  template.to_status    AS to_status,
  template.languages    AS languages,
  template.roles        AS roles,
- template.weight       AS weight
+ template.weight       AS weight,
+ template.attachments  AS attachments
 FROM civicrm_event_message_rules template
 LEFT JOIN civicrm_event new_event
        ON new_event.is_template = 0  -- exclude templates

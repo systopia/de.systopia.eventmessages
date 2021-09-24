@@ -14,6 +14,7 @@
 +--------------------------------------------------------*/
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use Civi\EventMessages\MessageAttachmentList;
 
 
 /**
@@ -104,6 +105,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         $template_list = $this->getMessageTemplateList();
         $languages_list = $this->getLanguagesList();
         $roles_list = $this->getRolesList();
+        $attachments_list = MessageAttachmentList::getAttachmentList();
         foreach (range(1, self::MAX_RULE_COUNT) as $index) {
             $this->add(
                 'hidden',
@@ -154,6 +156,14 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                 false,
                 ['class' => 'huge crm-select2']
             );
+            $this->add(
+                'select',
+                "attachments_{$index}",
+                E::ts('Attachments'),
+                array_combine(array_keys($attachments_list), array_column($attachments_list, 'title')),
+                false,
+                ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'none']
+            );
         }
 
         // set current rule data
@@ -168,6 +178,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                "roles_{$i}"     => $rule['roles'],
                "languages_{$i}" => $rule['languages'],
                "template_{$i}"  => $rule['template'],
+               "attachments_{$i}" => $rule['attachments'],
            ]);
         }
 
@@ -236,7 +247,8 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                 'languages' => CRM_Utils_Array::value("languages_{$i}", $values, []),
                 'roles'     => CRM_Utils_Array::value("roles_{$i}", $values, []),
                 'template'  => CRM_Utils_Array::value("template_{$i}", $values, null),
-                'weight'    => (10 + count($rules) * 10)
+                'weight'    => (10 + count($rules) * 10),
+                'attachments' => CRM_Utils_Array::value("attachments_{$i}", $values, []),
             ];
             if (!empty($rule['template'])) {
                 $rules[] = $rule;
