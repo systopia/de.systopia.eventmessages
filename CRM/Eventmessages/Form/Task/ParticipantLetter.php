@@ -55,8 +55,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
         $this->add(
             'checkbox',
             'address_only',
-            E::ts('Exclude contacts without primary postal address'),
-
+            E::ts('Exclude contacts without primary postal address')
         );
 
         $this->setDefaults(
