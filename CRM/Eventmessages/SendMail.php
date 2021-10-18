@@ -44,14 +44,14 @@ class CRM_Eventmessages_SendMail
 
                 // and send the template via email
                 $email_data = [
-                    'id'        => $template_id,
+                    'id'        => (int) $template_id,
                     'toName'    => $data->contact_name,
                     'toEmail'   => $data->contact_email,
-                    'from'      => CRM_Utils_Array::value('event_messages_settings.event_messages_sender', $event, ''),
-                    'replyTo'   => CRM_Utils_Array::value('event_messages_settings.event_messages_reply_to', $event, ''),
-                    'cc'        => CRM_Utils_Array::value('event_messages_settings.event_messages_cc', $event, ''),
-                    'bcc'       => CRM_Utils_Array::value('event_messages_settings.event_messages_bcc', $event, ''),
-                    'contactId' => $data->contact_id,
+                    'from'      => CRM_Utils_Array::value('event_messages_settings__event_messages_sender', $event, ''),
+                    'replyTo'   => CRM_Utils_Array::value('event_messages_settings__event_messages_reply_to', $event, ''),
+                    'cc'        => CRM_Utils_Array::value('event_messages_settings__event_messages_cc', $event, ''),
+                    'bcc'       => CRM_Utils_Array::value('event_messages_settings__event_messages_bcc', $event, ''),
+                    'contactId' => (int) $data->contact_id,
                     'tplParams' => $message_tokens->getTokens(),
                 ];
 
