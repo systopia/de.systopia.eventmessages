@@ -2,7 +2,7 @@
 <extension key="de.systopia.eventmessages" type="module">
   <file>eventmessages</file>
   <name>Custom Event Communication</name>
-  <description></description>
+  <description>Provides a more flexible way of sending emails to event participant.</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>SYSTOPIA</author>
