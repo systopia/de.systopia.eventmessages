@@ -278,6 +278,7 @@ function eventmessages_civicrm_copy($objectName, &$object)
                     // this should be it:
                     $original_event_id = $call['args'][0];
                     CRM_Eventmessages_Logic::copyRules($original_event_id, $new_event_id);
+                    CRM_Eventmessages_Logic::copySettings($original_event_id, $new_event_id);
                 }
             }
         }

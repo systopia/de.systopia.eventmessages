@@ -415,7 +415,7 @@ class CRM_Eventmessages_Logic
      *
      * @param integer $source_event_id
      *   the source event, from which the rules are copied
-     * @param $target_event_id
+     * @param integer $target_event_id
      *   the target event, where the rules are copied to
      */
     public static function copyRules($source_event_id, $target_event_id)
@@ -440,6 +440,35 @@ class CRM_Eventmessages_Logic
                 WHERE event_id = {$source_event_id}) tmp_table
             "
             );
+        }
+    }
+
+    /**
+     * Copy all settings from on event to the other
+     *
+     * @param integer $source_event_id
+     *   the source event, from which the rules are copied
+     * @param integer $target_event_id
+     *   the target event, where the rules are copied to
+     */
+    public static function copySettings($source_event_id, $target_event_id)
+    {
+        $source_event_id = (int)$source_event_id;
+        $target_event_id = (int)$target_event_id;
+        if ($source_event_id && $target_event_id) {
+            // load current event settings
+            foreach (CRM_Eventmessages_Form_EventMessages::SETTINGS_FIELDS as $field_name) {
+                $return_fields[] = CRM_Eventmessages_CustomData::getCustomFieldKey('event_messages_settings', $field_name);
+            }
+            $current_event_settings = civicrm_api3('Event', 'getsingle', [
+                'id'     => $source_event_id,
+                'return' => implode(',', $return_fields)
+            ]);
+
+            // set for the now event
+            $new_event_settings = $current_event_settings;
+            $new_event_settings['id'] = $target_event_id;
+            civicrm_api3('Event', 'create', $new_event_settings);
         }
     }
 
