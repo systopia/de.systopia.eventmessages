@@ -64,8 +64,12 @@ class CRM_Eventmessages_SendMail
                 }
 
                 // send the mail
-                Civi::log()->debug("EventMessages: Sending eventmessages mail to '{$data->contact_email}' from '{$email_data['from']}'");
-                civicrm_api3('MessageTemplate', 'send', $email_data);
+                if (self::isMailingDisabled()) {
+                    Civi::log()->info("EventMessages: Outbound mailing disabled, NOT sending email to '{$data->contact_email}' from '{$email_data['from']}'");
+                } else {
+                    Civi::log()->debug("EventMessages: Sending email to '{$data->contact_email}' from '{$email_data['from']}'");
+                    civicrm_api3('MessageTemplate', 'send', $email_data);
+                }
 
             } else {
                 Civi::log()->warning("Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set.");
@@ -264,5 +268,18 @@ class CRM_Eventmessages_SendMail
                   AND (contact.is_deleted IS NULL OR contact.is_deleted = 0)
                 ORDER BY email.is_primary DESC, email.is_bulkmail ASC, email.is_billing ASC
             ";
+    }
+
+    /**
+     * Check if the outbound (mailing backend) is disabled
+     *
+     * @return boolean
+     *    true iff mailing is disabled
+     */
+    public static function isMailingDisabled()
+    {
+        $mailing_backend = Civi::settings()->getMandatory('mailing_backend') ?? [];
+        $outbound = $mailing_backend['outBound_option'] ?? -1;
+        return ($outbound == CRM_Mailing_Config::OUTBOUND_OPTION_DISABLED);
     }
 }
