@@ -278,7 +278,7 @@ class CRM_Eventmessages_SendMail
      */
     public static function isMailingDisabled()
     {
-        $mailing_backend = Civi::settings()->getMandatory('mailing_backend') ?? [];
+        $mailing_backend = Civi::settings()->get('mailing_backend') ?? [];
         $outbound = $mailing_backend['outBound_option'] ?? -1;
         return ($outbound == CRM_Mailing_Config::OUTBOUND_OPTION_DISABLED);
     }
