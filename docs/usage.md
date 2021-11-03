@@ -2,9 +2,9 @@
 
 ## Message rules
 
-After installing and activating the extension a new tab "Event Communication"
+After installing and activating the extension a new tab "Communication"
 will be available in the event configuration UI. You can choose to disable all
-CiviEvent confirmation mails for the event at hand which is recomendended for
+CiviEvent confirmation mails for the event at hand which is recommended for
 most use cases.
 
 Set your sender's *Cc*, *BCc* and *Reply To* addresses as desired and create at
