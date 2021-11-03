@@ -19,7 +19,7 @@ The extension can then be enabled in the user interface.
 
 ## Configuration
 
-After installing and activating the extension a new tab "Event Communication" will be available in the event configuration UI. You can choose to disable all CiviEvent confirmation mails for the event at hand which is recomendended for most use cases.
+After installing and activating the extension a new tab "Communication" will be available in the event configuration UI. You can choose to disable all CiviEvent confirmation mails for the event at hand which is recomendended for most use cases.
 
 Set your sender's cc, bcc and reply to addresses as desired and create at least one message rule. Message rules will use regular CiviCRM message templates so make sure to set up at least one template before defining rules.
 

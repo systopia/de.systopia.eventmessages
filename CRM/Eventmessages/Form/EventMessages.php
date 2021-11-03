@@ -354,7 +354,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         // then add new registration tab
         if ($event_id) {
             $tabs['eventmessages'] = [
-                'title'   => E::ts("Event Communication"),
+                'title'   => E::ts("Communication"),
                 'link'    => CRM_Utils_System::url(
                     'civicrm/event/manage/eventmessages',
                     "action=update&reset=1&id={$event_id}"
@@ -365,7 +365,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             ];
         } else {
             $tabs['eventmessages'] = [
-                'title' => E::ts("Event Communication"),
+                'title' => E::ts("Communication"),
                 'url'   => 'civicrm/event/manage/eventmessages',
                 'field' => 'id',
             ];

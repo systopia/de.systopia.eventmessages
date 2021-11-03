@@ -5,11 +5,31 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: de.systopia.eventmessages\n"
-"POT-Creation-Date: 2020-12-10 10:21+0100\n"
+"POT-Creation-Date: 2021-11-03 10:25+0100\n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Your PDF letters are ready for download."
+msgstr ""
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Download"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Back to Search"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Error downloading PDF files: %1"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Download Error"
+msgstr ""
 
 #: CRM/Eventmessages/Form/EventMessages.php
 msgid "Disable CiviCRM Default Messages"
@@ -64,6 +84,7 @@ msgstr ""
 
 #: CRM/Eventmessages/Form/EventMessages.php
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
 msgid "Message Template"
 msgstr ""
 
@@ -76,7 +97,7 @@ msgid "-mandatory-"
 msgstr ""
 
 #: CRM/Eventmessages/Form/EventMessages.php
-msgid "Event Communication"
+msgid "Communication"
 msgstr ""
 
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
@@ -99,8 +120,40 @@ msgstr ""
 msgid "Sending %1 Event Emails"
 msgstr ""
 
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generate Letter for %1 Participants (%2 with primary postal address)"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Exclude contacts without primary postal address"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generate %1 (%2) Letters"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Initialized"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generated letters %1 of %2"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Finished"
+msgstr ""
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generating %1 Event Letters"
+msgstr ""
+
 #: CRM/Eventmessages/Page/TokenList.php
 msgid "EventMessages: List of (potential) E-Mail Tokens"
+msgstr ""
+
+#: CRM/Eventmessages/SendMail.php CRM/Eventmessages/SendMailJob.php
+msgid "Could not send e-mail to participant %1, error was: %2"
 msgstr ""
 
 #: CRM/Eventmessages/Upgrader/Base.php
@@ -170,6 +223,10 @@ msgstr ""
 msgid "Send Emails (via EventMessages)"
 msgstr ""
 
+#: eventmessages.php
+msgid "Generate Letters (via EventMessages)"
+msgstr ""
+
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 msgid ""
 "Enabling this option will <strong>disable</strong> all of CiviCRM's default "
@@ -185,6 +242,7 @@ msgstr ""
 
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.hlp
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.hlp
 msgid ""
 "Did you know that you can find a list of all tokens available in the email "
 "templates <a class=\"crm-popup\" href=\"%1\">HERE</a>?"
@@ -217,6 +275,7 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl
 msgid "Template Help"
 msgstr ""
 
@@ -224,6 +283,22 @@ msgstr ""
 msgid ""
 "The email parameters (sender, cc, bcc, reply-to) will be taken from the "
 "EventMessages configuration of the respective event(s)."
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.hlp
+msgid ""
+"When your template requires a postal address, excluding contacts without a "
+"primary postal address will not generate letters for them."
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl
+msgid ""
+"<b>Warning:</b> %1 participant(s) do not have a viable postal address. You "
+"might want to exclude them from being generated a letter."
+msgstr ""
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl
+msgid "Help"
 msgstr ""
 
 #: templates/CRM/Eventmessages/Page/TokenList.tpl
