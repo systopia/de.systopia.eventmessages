@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: de.systopia.eventmessages\n"
-"POT-Creation-Date: 2020-12-10 10:21+0100\n"
+"POT-Creation-Date: 2021-11-03 10:25+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
@@ -15,6 +15,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Your PDF letters are ready for download."
+msgstr "Ihre Briefe stehen zum zum Download bereit."
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Download"
+msgstr "Download"
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Back to Search"
+msgstr "Zurück zur Suche"
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Error downloading PDF files: %1"
+msgstr "Fehler beim Download folgender Dateien: %1"
+
+#: CRM/Eventmessages/Form/Download.php
+msgid "Download Error"
+msgstr "Download Fehler"
 
 #: CRM/Eventmessages/Form/EventMessages.php
 msgid "Disable CiviCRM Default Messages"
@@ -69,6 +89,7 @@ msgstr "Rollen"
 
 #: CRM/Eventmessages/Form/EventMessages.php
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
 msgid "Message Template"
 msgstr "Nachrichtenvorlage"
 
@@ -81,8 +102,8 @@ msgid "-mandatory-"
 msgstr "-erforderlich-"
 
 #: CRM/Eventmessages/Form/EventMessages.php
-msgid "Event Communication"
-msgstr "Veranstaltungskommunikation"
+msgid "Communication"
+msgstr "Kommunikation"
 
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 msgid "Send Email to %1 Participants"
@@ -104,9 +125,42 @@ msgstr "Abschließen"
 msgid "Sending %1 Event Emails"
 msgstr "Verschicke %1 Veranstaltungs-E-Mails"
 
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generate Letter for %1 Participants (%2 with primary postal address)"
+msgstr "Briefe für %1 Teilnehmer erstellen (%2 mit Primär-Adresse)"
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Exclude contacts without primary postal address"
+msgstr "Kontakte ohne Primär-Adresse ausschließen"
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generate %1 (%2) Letters"
+msgstr "Erstelle %1 (%2) Briefe"
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Initialized"
+msgstr "Initialisiert"
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generated letters %1 of %2"
+msgstr "Briefe %1 von %2 erstellt"
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Finished"
+msgstr "Fertig"
+
+#: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+msgid "Generating %1 Event Letters"
+msgstr "Erstelle %1 Teilnehmer-Briefe"
+
 #: CRM/Eventmessages/Page/TokenList.php
 msgid "EventMessages: List of (potential) E-Mail Tokens"
 msgstr "EventMessages: Liste von möglichen E-Mail Tokens (Platzhalter)"
+
+#: CRM/Eventmessages/SendMail.php CRM/Eventmessages/SendMailJob.php
+msgid "Could not send e-mail to participant %1, error was: %2"
+msgstr ""
+"E-Mail für Teilnehmer %1 konnte nicht gesendet werden, der Fehler war: %2"
 
 #: CRM/Eventmessages/Upgrader/Base.php
 msgid "Upgrade %1 to revision %2"
@@ -182,6 +236,10 @@ msgstr "Teilnehmer Gebührenstufe(n) (text/string)"
 msgid "Send Emails (via EventMessages)"
 msgstr "E-Mails versenden (via Event-Messages)"
 
+#: eventmessages.php
+msgid "Generate Letters (via EventMessages)"
+msgstr "Briefe erstellen (via Event-Messages)"
+
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 msgid ""
 "Enabling this option will <strong>disable</strong> all of CiviCRM's default "
@@ -202,6 +260,7 @@ msgstr ""
 
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.hlp
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.hlp
 msgid ""
 "Did you know that you can find a list of all tokens available in the email "
 "templates <a class=\"crm-popup\" href=\"%1\">HERE</a>?"
@@ -245,6 +304,7 @@ msgstr ""
 "werden vom Versand ausgeschlossen."
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl
 msgid "Template Help"
 msgstr "Hilfe zu Vorlagen"
 
@@ -255,6 +315,26 @@ msgid ""
 msgstr ""
 "Die E-Mail-Parameter (Absender, cc, bcc, Antwort an) werden von den im "
 "jeweiligen Event konfigurierten Einstellungen übernommen."
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.hlp
+msgid ""
+"When your template requires a postal address, excluding contacts without a "
+"primary postal address will not generate letters for them."
+msgstr ""
+"Falls die gewählte Vorlage eine Adresse benötigt, so kann man mit dieser "
+"Option Kontakte ohne Adresse ausschließen."
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl
+msgid ""
+"<b>Warning:</b> %1 participant(s) do not have a viable postal address. You "
+"might want to exclude them from being generated a letter."
+msgstr ""
+"<b>Warnung:</b> %1 Teilnehmer*innen haben keine gültige Adresse, sie werden "
+"vom Versand ausgeschlossen."
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl
+msgid "Help"
+msgstr "Hilfe"
 
 #: templates/CRM/Eventmessages/Page/TokenList.tpl
 msgid ""
@@ -286,9 +366,6 @@ msgstr "Beschreibung"
 
 #~ msgid "Disable Default Messages"
 #~ msgstr "Standard E-Mails unterdrücken"
-
-#~ msgid "Help"
-#~ msgstr "Hilfe"
 
 #~ msgid "Execute All Matching Rules"
 #~ msgstr "Alle zutreffenden Regeln Ausführen"
