@@ -313,11 +313,12 @@ class MessageAttachments extends Event
     {
         /** @var $ical_cache array internal cache for ical data, indexed by event_id */
         static $ical_cache = [];
+        static $pdf_message_template_cache = [];
+        $event_id = $renderAttachmentEvent->getEventID();
+        $participant = $renderAttachmentEvent->getParticipant();
 
         if ($renderAttachmentEvent->isAttachementRequested('ical')) {
             // simply use the CiviCRM ical function, copied from CRM_Utils_ICalendar
-            $event_id = $renderAttachmentEvent->getEventID();
-
             // let's see if we have it
             if (!isset($ical_cache[$event_id])) {
                 // no? render ical data
@@ -340,6 +341,31 @@ class MessageAttachments extends Event
                 'text/calendar',
                 $ical_cache[$event_id]
             );
+        }
+        foreach (\CRM_Core_BAO_MessageTemplate::getMessageTemplates() as $message_template_id => $message_template_title) {
+            if ($renderAttachmentEvent->isAttachementRequested('pdf_message_template_' . $message_template_id)) {
+                if (!isset($pdf_message_template_cache[$event_id][$message_template_id])) {
+                    $pdf = \CRM_Eventmessages_GenerateLetter::generateLetterFor(
+                        [
+                            'participant_id' => $participant['id'],
+                            'event_id' => $event_id,
+                            'from' => $participant['status_id'],
+                            'to' => $participant['status_id'],
+                            'rule' => 0,
+                            'template_id' => $message_template_id,
+                        ]
+                    );
+                    $filename = \System::mktemp('eventmessages_attachment_template_' . $message_template_id . '_participant_' . $participant['id'] . '.pdf');
+                    file_put_contents($filename, $pdf);
+                    $pdf_message_template_cache[$event_id][$message_template_id] = $filename;
+                }
+                $renderAttachmentEvent->addAttachment(
+                    'pdf_message_template_' . $message_template_id,
+                    $message_template_title . '.pdf',
+                    'application/pdf',
+                    $pdf_message_template_cache[$event_id][$message_template_id]
+                );
+            }
         }
     }
 }

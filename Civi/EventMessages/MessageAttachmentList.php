@@ -123,6 +123,14 @@ class MessageAttachmentList extends Event
             E::ts("Event (iCalendar)"),
             'text/calendar'
         );
+
+        foreach (\CRM_Core_BAO_MessageTemplate::getMessageTemplates() as $message_template_id => $message_template_title) {
+            $event->registerAttachment(
+                'pdf_message_template_' . $message_template_id,
+                E::ts("Message Template as PDF - %1", [1 => $message_template_title]),
+                'application/pdf'
+            );
+        }
     }
 
 
