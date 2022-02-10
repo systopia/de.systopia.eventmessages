@@ -29,6 +29,12 @@
     <div class="clear"></div>
   </div>
 
+  <div class="crm-section">
+    <div class="label">{$form.attachments.label}</div>
+    <div class="content">{$form.attachments.html}</div>
+    <div class="clear"></div>
+  </div>
+
   <div id="help">{ts}The email parameters (sender, cc, bcc, reply-to) will be taken from the EventMessages configuration of the respective event(s).{/ts}</div>
 
   <br>

@@ -97,6 +97,7 @@ class CRM_Eventmessages_Logic
      *    'languages' => array of languages
      *    'roles'     => array of roles
      *    'template'  => Message Template ID
+     *    'attachments' => array of attachments
      * ]
      */
     public static function getActiveRules($event_id)
@@ -113,7 +114,8 @@ class CRM_Eventmessages_Logic
                   to_status   AS to_status,
                   languages   AS languages,
                   roles       AS roles,
-                  template_id AS template_id
+                  template_id AS template_id,
+                  attachments AS attachments
                 FROM civicrm_event_message_rules
                 WHERE event_id = {$event_id}
                   AND is_active = 1
@@ -128,6 +130,7 @@ class CRM_Eventmessages_Logic
                     'languages' => empty($query->languages) ? [] : explode(',', $query->languages),
                     'roles' => empty($query->roles) ? [] : explode(',', $query->roles),
                     'template' => $query->template_id,
+                    'attachments' => empty($query->attachments) ? [] : explode(',', $query->attachments),
                 ];
             }
             $rules_cache[$event_id] = $rules;
@@ -162,7 +165,8 @@ class CRM_Eventmessages_Logic
                   to_status   AS to_status,
                   languages   AS languages,
                   roles       AS roles,
-                  template_id AS template_id
+                  template_id AS template_id,
+                  attachments AS attachments
                 FROM civicrm_event_message_rules
                 WHERE event_id = {$event_id}
                 ORDER BY weight ASC;"
@@ -176,6 +180,7 @@ class CRM_Eventmessages_Logic
                 'languages' => empty($query->languages) ? [] : explode(',', $query->languages),
                 'roles' => empty($query->roles) ? [] : explode(',', $query->roles),
                 'template' => $query->template_id,
+                'attachments' => empty($query->attachments) ? [] : explode(',', $query->attachments),
             ];
         }
         return $rules;
@@ -208,8 +213,8 @@ class CRM_Eventmessages_Logic
                 // this is a new rule -> insert
                 CRM_Core_DAO::executeQuery(
                     "
-                INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight)
-                VALUES (%1, %2, %3, %4, %5, %6, %7, %8);
+                INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight,attachments)
+                VALUES (%1, %2, %3, %4, %5, %6, %7, %8, %9);
                 ",
                     [
                         1 => [$event_id, 'Integer'],
@@ -220,6 +225,7 @@ class CRM_Eventmessages_Logic
                         6 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
                         7 => [$new_rule['template'], 'Integer'],
                         8 => [$weight, 'Integer'],
+                        9 => [implode(',', $new_rule['attachments']), 'String'],
                     ]
                 );
             } else {
@@ -227,7 +233,7 @@ class CRM_Eventmessages_Logic
                 CRM_Core_DAO::executeQuery(
                     "
                     UPDATE civicrm_event_message_rules
-                    SET from_status = %2, to_status = %3, is_active = %4, template_id = %5, languages = %6, roles = %7, weight = %8
+                    SET from_status = %2, to_status = %3, is_active = %4, template_id = %5, languages = %6, roles = %7, weight = %8, attachments = %9
                     WHERE id = %1;",
                     [
                         1 => [$new_rule['id'], 'Integer'],
@@ -238,6 +244,7 @@ class CRM_Eventmessages_Logic
                         6 => [implode(',', $new_rule['languages']), 'String'],
                         7 => [implode(',', $new_rule['roles']), 'String'],
                         8 => [$weight, 'Integer'],
+                        9 => [implode(',', $new_rule['attachments']), 'String'],
                     ]
                 );
                 // remove from list
@@ -425,7 +432,7 @@ class CRM_Eventmessages_Logic
         if ($source_event_id && $target_event_id) {
             CRM_Core_DAO::executeQuery(
                 "
-            INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight)
+            INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight,attachments)
             SELECT * FROM
                 (SELECT 
                     {$target_event_id} AS event_id,
@@ -435,7 +442,8 @@ class CRM_Eventmessages_Logic
                     roles              AS roles,
                     is_active          AS is_active,
                     template_id        AS template_id,
-                    weight             AS weight
+                    weight             AS weight,
+                    attachments        AS attachments
                 FROM civicrm_event_message_rules
                 WHERE event_id = {$source_event_id}) tmp_table
             "

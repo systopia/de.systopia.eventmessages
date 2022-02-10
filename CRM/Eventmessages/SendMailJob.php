@@ -29,11 +29,18 @@ class CRM_Eventmessages_SendMailJob
     /** @var integer template to send to */
     protected $template_id;
 
-    public function __construct($participant_ids, $template_id, $title)
+    /**
+     * @var array
+     *   A list of attachment IDs to add to the e-mail.
+     */
+    protected $attachments;
+
+    public function __construct($participant_ids, $template_id, $title, $attachments = [])
     {
         $this->participant_ids = $participant_ids;
         $this->template_id = $template_id;
         $this->title = $title;
+        $this->attachments = $attachments;
     }
 
     /**
@@ -61,6 +68,8 @@ class CRM_Eventmessages_SendMailJob
                             'to' => $participant['status_id'],
                             'rule' => 0,
                             'template_id' => $this->template_id,
+                            'participant_ids' => $this->participant_ids,
+                            'attachments' => $this->attachments,
                         ],
                         false
                     );
