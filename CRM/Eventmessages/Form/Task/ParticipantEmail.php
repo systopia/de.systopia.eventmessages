@@ -54,22 +54,20 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
             true,
             ['class' => 'crm-select2 huge']
         );
-        $attachments_list = MessageAttachmentList::getAttachmentList();
-        $this->add(
-            'select',
-            "attachments",
-            E::ts('Attachments'),
-            array_combine(array_keys($attachments_list), array_column($attachments_list, 'title')),
-            false,
-            ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'none']
-        );
 
-        // set default values
-        $this->setDefaults([
+        if (is_a($this, 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments')) {
+            $this->addAttachmentElements(['entity_type' => 'participant']);
+        }
+
+        // Set default values.
+        $defaults = [
             'template_id'  => Civi::settings()->get('eventmessages_participant_send_template_id'),
-            'attachments'  => Civi::settings()->get('eventmessages_participant_send_attachments'),
 //            'sender_email' => Civi::settings()->get('eventmessages_participant_send_sender_email'),
-       ]);
+        ];
+        if (is_a($this, 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments')) {
+            // TODO: Set default values for attachments?
+        }
+        $this->setDefaults($defaults);
 
         CRM_Core_Form::addDefaultButtons(E::ts("Send %1 Emails", [1 => $participant_count - $no_email_count]));
     }
@@ -84,6 +82,10 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
         Civi::settings()->set('eventmessages_participant_send_template_id', $values['template_id']);
         Civi::settings()->set('eventmessages_participant_send_attachments', $values['attachments']);
 //        Civi::settings()->set('eventmessages_participant_send_sender_email', $values['sender_email']);
+
+        if (is_a($this, 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments')) {
+            $values['attachments'] = $this->processAttachments();
+        }
 
         // init a queue
         $queue = CRM_Queue_Service::singleton()->create([

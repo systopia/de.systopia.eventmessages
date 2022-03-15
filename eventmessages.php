@@ -32,17 +32,9 @@ function eventmessages_civicrm_config(&$config)
         ['CRM_Eventmessages_Logic', 'stripEventMessageData']
     );
 
-    // REGISTER default attachments
-    Civi::dispatcher()->addListener(
-        'civi.eventmessages.registerAttachments',
-        ['Civi\EventMessages\MessageAttachmentList', 'registerDefaultAttachments']
-    );
-
-    // RENDER default attachments
-    Civi::dispatcher()->addListener(
-        'civi.eventmessages.renderAttachments',
-        ['Civi\EventMessages\MessageAttachments', 'renderDefaultAttachments']
-    );
+    if (interface_exists('\Civi\Mailattachment\AttachmentType\AttachmentTypeInterface')) {
+        \Civi::dispatcher()->addSubscriber(new \Civi\EventMessages\AttachmentProvider());
+    }
 }
 
 /**
@@ -259,7 +251,7 @@ function eventmessages_civicrm_searchTasks($objectType, &$tasks)
     if ($objectType == 'event') {
         $tasks[] = [
             'title' => E::ts('Send Emails (via EventMessages)'),
-            'class' => 'CRM_Eventmessages_Form_Task_ParticipantEmail',
+            'class' => trait_exists('Civi\Mailattachment\Form\Task\AttachmentsTrait') ? 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments' : 'CRM_Eventmessages_Form_Task_ParticipantEmail',
             'result' => false
         ];
 

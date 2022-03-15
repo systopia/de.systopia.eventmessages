@@ -13,15 +13,17 @@
 +-------------------------------------------------------*}
 
 {crmScope extensionKey='de.systopia.eventmessages'}
-{if $no_email_count}
-  <div id="help">{ts 1=$no_email_count}<b>Warning:</b> %1 participant(s) have no viable email address, an email will not be sent to them{/ts}</div>
-{/if}
+<div class="crm-block crm-form-block">
 
-{*  <div class="crm-section">*}
-{*    <div class="label">{$form.sender_email.label}</div>*}
-{*    <div class="content">{$form.sender_email.html}</div>*}
-{*    <div class="clear"></div>*}
-{*  </div>*}
+  {if $no_email_count}
+    <div id="help">{ts 1=$no_email_count}<b>Warning:</b> %1 participant(s) have no viable email address, an email will not be sent to them{/ts}</div>
+  {/if}
+
+  {*  <div class="crm-section">*}
+  {*    <div class="label">{$form.sender_email.label}</div>*}
+  {*    <div class="content">{$form.sender_email.html}</div>*}
+  {*    <div class="clear"></div>*}
+  {*  </div>*}
   <div class="crm-section">
     {capture assign=label_help}{ts}Template Help{/ts}{/capture}
     <div class="label">{$form.template_id.label}{help id="id-token-help" title=$label_help}</div>
@@ -29,11 +31,14 @@
     <div class="clear"></div>
   </div>
 
-  <div class="crm-section">
-    <div class="label">{$form.attachments.label}</div>
-    <div class="content">{$form.attachments.html}</div>
-    <div class="clear"></div>
-  </div>
+  {if !empty($supports_attachments)}
+    <div class="crm-accordion-wrapper">
+      <div class="crm-accordion-header">{ts}Attachments{/ts}</div>
+      <div class="crm-accordion-body">
+          {include file="Civi/Mailattachment/Form/Task/AttachmentsTrait.tpl"}
+      </div>
+    </div>
+  {/if}
 
   <div id="help">{ts}The email parameters (sender, cc, bcc, reply-to) will be taken from the EventMessages configuration of the respective event(s).{/ts}</div>
 
@@ -41,4 +46,6 @@
   <div class="crm-submit-buttons">
       {include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
+
+</div>
 {/crmScope}

@@ -44,14 +44,6 @@ class CRM_Eventmessages_SendMail
                 $message_tokens->setTemplateId($template_id);
                 Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
 
-                // add attachments
-                $attachment_ids = $context['attachments'] ?? $context['rule']['attachments'];
-                if ($attachment_ids) {
-                    $attachments = MessageAttachments::renderTemplateSendAttachments($data->participant_id, $attachment_ids, $context['participant_ids']);
-                } else {
-                    $attachments = [];
-                }
-
                 // and send the template via email
                 $email_data = [
                     'id'        => (int) $template_id,
@@ -63,8 +55,36 @@ class CRM_Eventmessages_SendMail
                     'bcc'       => CRM_Utils_Array::value('event_messages_settings__event_messages_bcc', $event, ''),
                     'contactId' => (int) $data->contact_id,
                     'tplParams' => $message_tokens->getTokens(),
-                    'attachments' => $attachments
                 ];
+
+                // add attachments
+                if (trait_exists('Civi\Mailattachment\Form\Task\AttachmentsTrait')) {
+                    $attachment_types = \Civi\Mailattachment\Form\Task\AttachmentsTrait::attachmentTypes();
+                    $attachments = $context['attachments'] ?? $context['rule']['attachments'];
+                    foreach ($attachments as $attachment_id => $attachment_values) {
+                        $attachment_type = $attachment_types[$attachment_values['type']];
+                        /* @var \Civi\Mailattachment\AttachmentType\AttachmentTypeInterface $controller */
+                        $controller = $attachment_type['controller'];
+                        if (
+                            !($attachment = $controller::buildAttachment(
+                                [
+                                    'entity_type' => 'participant',
+                                    'entity_id' => $data->participant_id,
+                                    'entity_ids' => $context['participant_ids'],
+                                ],
+                                $attachment_values)
+                            )
+                        ) {
+                            // no attachment -> cannot send
+                            throw new Exception(
+                                E::ts("Attachment '%1' could not be generated or found.", [
+                                    1 => $attachment_id,
+                                ])
+                            );
+                        }
+                        $email_data['attachments'][] = $attachment;
+                    }
+                }
 
                 // resolve/beautify sender (use name instead of value of the option_value)
                 $from_addresses = CRM_Core_OptionGroup::values('from_email_address');
