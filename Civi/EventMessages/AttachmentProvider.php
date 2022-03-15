@@ -40,5 +40,15 @@ class AttachmentProvider implements EventSubscriberInterface
                 'entity_types' => ['event', 'participant'],
             ],
         ];
+
+        // TODO: Add attachment provider for rendering message templates as PDF
+        //   Instead of registering a separate provider for each template, the template should be selected in the
+        //   AttachmentProvider form.
+//        foreach (\CRM_Core_BAO_MessageTemplate::getMessageTemplates() as $message_template_id => $message_template_title) {
+//            $event->attachment_types['pdf_message_template_' . $message_template_id] = [
+//                'label' => E::ts("Message Template as PDF - %1", [1 => $message_template_title]),
+//                'controller' => self::class,
+//            ];
+//        }
     }
 }
