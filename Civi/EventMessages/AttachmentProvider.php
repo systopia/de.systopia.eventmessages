@@ -32,5 +32,13 @@ class AttachmentProvider implements EventSubscriberInterface
 
     public static function getAttachmentTypes($event)
     {
+        // Add attachment provider for iCal files.
+        $event->attachment_types['ical'] = [
+            'label' => E::ts('iCalendar file'),
+            'controller' => '\Civi\EventMessages\AttachmentProvider\ICal',
+            'context' => [
+                'entity_types' => ['event', 'participant'],
+            ],
+        ];
     }
 }
