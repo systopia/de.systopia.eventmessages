@@ -7,9 +7,9 @@
  * extension.
  */
 class CRM_Eventmessages_ExtensionUtil {
-  const SHORT_NAME = "eventmessages";
-  const LONG_NAME = "de.systopia.eventmessages";
-  const CLASS_PREFIX = "CRM_Eventmessages";
+  const SHORT_NAME = 'eventmessages';
+  const LONG_NAME = 'de.systopia.eventmessages';
+  const CLASS_PREFIX = 'CRM_Eventmessages';
 
   /**
    * Translate a string using the extension's domain.
@@ -91,9 +91,9 @@ function _eventmessages_civix_civicrm_config(&$config = NULL) {
   }
   $configured = TRUE;
 
-  $template =& CRM_Core_Smarty::singleton();
+  $template = CRM_Core_Smarty::singleton();
 
-  $extRoot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+  $extRoot = __DIR__ . DIRECTORY_SEPARATOR;
   $extDir = $extRoot . 'templates';
 
   if (is_array($template->template_dir)) {
@@ -193,8 +193,9 @@ function _eventmessages_civix_civicrm_disable() {
  * @param $op string, the type of operation being performed; 'check' or 'enqueue'
  * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of pending up upgrade tasks
  *
- * @return mixed  based on op. for 'check', returns array(boolean) (TRUE if upgrades are pending)
- *                for 'enqueue', returns void
+ * @return mixed
+ *   based on op. for 'check', returns array(boolean) (TRUE if upgrades are pending)
+ *   for 'enqueue', returns void
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_upgrade
  */
@@ -220,41 +221,18 @@ function _eventmessages_civix_upgrader() {
  * Search directory tree for files which match a glob pattern.
  *
  * Note: Dot-directories (like "..", ".git", or ".svn") will be ignored.
- * Note: In Civi 4.3+, delegate to CRM_Utils_File::findFiles()
+ * Note: Delegate to CRM_Utils_File::findFiles(), this function kept only
+ * for backward compatibility of extension code that uses it.
  *
  * @param string $dir base dir
  * @param string $pattern , glob pattern, eg "*.txt"
  *
- * @return array(string)
+ * @return array
  */
 function _eventmessages_civix_find_files($dir, $pattern) {
-  if (is_callable(['CRM_Utils_File', 'findFiles'])) {
-    return CRM_Utils_File::findFiles($dir, $pattern);
-  }
-
-  $todos = [$dir];
-  $result = [];
-  while (!empty($todos)) {
-    $subdir = array_shift($todos);
-    foreach (_eventmessages_civix_glob("$subdir/$pattern") as $match) {
-      if (!is_dir($match)) {
-        $result[] = $match;
-      }
-    }
-    if ($dh = opendir($subdir)) {
-      while (FALSE !== ($entry = readdir($dh))) {
-        $path = $subdir . DIRECTORY_SEPARATOR . $entry;
-        if ($entry{0} == '.') {
-        }
-        elseif (is_dir($path)) {
-          $todos[] = $path;
-        }
-      }
-      closedir($dh);
-    }
-  }
-  return $result;
+  return CRM_Utils_File::findFiles($dir, $pattern);
 }
+
 /**
  * (Delegated) Implements hook_civicrm_managed().
  *
@@ -362,7 +340,7 @@ function _eventmessages_civix_civicrm_themes(&$themes) {
  * @link http://php.net/glob
  * @param string $pattern
  *
- * @return array, possibly empty
+ * @return array
  */
 function _eventmessages_civix_glob($pattern) {
   $result = glob($pattern);
@@ -470,8 +448,6 @@ function _eventmessages_civix_civicrm_alterSettingsFolders(&$metaDataFolders = N
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
  */
-
 function _eventmessages_civix_civicrm_entityTypes(&$entityTypes) {
-  $entityTypes = array_merge($entityTypes, array (
-  ));
+  $entityTypes = array_merge($entityTypes, []);
 }
