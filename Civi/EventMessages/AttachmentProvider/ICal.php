@@ -1,9 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| SYSTOPIA Mail Attachments Extension                    |
+| SYSTOPIA Event Communication                           |
 | Copyright (C) 2022 SYSTOPIA                            |
 | Author: J. Schuppe (schuppe@systopia.de)               |
-| http://www.systopia.de/                                |
 +--------------------------------------------------------+
 | This program is released as free software under the    |
 | Affero GPL license. You can redistribute it and/or     |
@@ -40,10 +39,7 @@ class ICal implements AttachmentTypeInterface
 
     public static function buildAttachment($context, $attachment_values)
     {
-        if ($context['entity_type'] == 'event') {
-            $event_id = $context['entity_id'];
-        }
-        elseif ($context['entity_type'] == 'participant') {
+        if ($context['entity_type'] == 'participant') {
             // Warm up the cache if all entity IDs are given.
             if (empty(\Civi::$statics[__CLASS__]['participants']) && isset($context['entity_ids'])) {
                 \Civi::$statics[__CLASS__]['participants'] = Participant::get(FALSE)
