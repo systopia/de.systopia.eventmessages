@@ -22,24 +22,20 @@ use Civi\Mailattachment\AttachmentType\AttachmentTypeInterface;
 class MessageTemplatePDF implements AttachmentTypeInterface
 {
     /**
-     * @param \CRM_Core_Form_Task $form
-     *
-     * @param int $attachment_id
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public static function buildAttachmentForm(&$form, $attachment_id)
+    public static function buildAttachmentForm(&$form, $attachment_id, $prefix = '')
     {
         $form->add(
             'select',
-            'attachments--' . $attachment_id . '--template_id',
+            $prefix . 'attachments--' . $attachment_id . '--template_id',
             E::ts('Message Template'),
             self::getMessageTemplates(),
             true,
             ['class' => 'crm-select2 huge']
         );
         return [
-            'attachments--' . $attachment_id . '--template_id' => 'attachment-message_template_pdf-template_id',
+            $prefix . 'attachments--' . $attachment_id . '--template_id' => 'attachment-message_template_pdf-template_id',
         ];
     }
 
@@ -48,14 +44,20 @@ class MessageTemplatePDF implements AttachmentTypeInterface
         return $type == 'hlp' ? 'Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.' . $type : null;
     }
 
-    public static function processAttachmentForm(&$form, $attachment_id)
+    /**
+     * {@inheritDoc}
+     */
+    public static function processAttachmentForm(&$form, $attachment_id, $prefix = '')
     {
         $values = $form->exportValues();
         return [
-            'template_id' => $values['attachments--' . $attachment_id . '--template_id'],
+            'template_id' => $values[$prefix . 'attachments--' . $attachment_id . '--template_id'],
         ];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function buildAttachment($context, $attachment_values)
     {
         // Warm up the cache if all entity IDs are given.

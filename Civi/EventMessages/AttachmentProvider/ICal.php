@@ -27,16 +27,22 @@ class ICal implements AttachmentTypeInterface
     /**
      * {@inheritDoc}
      */
-    public static function buildAttachmentForm(&$form, $attachment_id)
+    public static function buildAttachmentForm(&$form, $attachment_id, $prefix = '')
     {
         return [];
     }
 
-    public static function processAttachmentForm(&$form, $attachment_id)
+    /**
+     * {@inheritDoc}
+     */
+    public static function processAttachmentForm(&$form, $attachment_id, $prefix = '')
     {
         return [];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function buildAttachment($context, $attachment_values)
     {
         if ($context['entity_type'] == 'participant') {
