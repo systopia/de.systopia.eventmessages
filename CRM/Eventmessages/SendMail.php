@@ -58,8 +58,8 @@ class CRM_Eventmessages_SendMail
                 ];
 
                 // add attachments
-                if (trait_exists('Civi\Mailattachment\Form\Task\AttachmentsTrait')) {
-                    $attachment_types = \Civi\Mailattachment\Form\Task\AttachmentsTrait::attachmentTypes();
+                if (class_exists('Civi\Mailattachment\Form\Attachments')) {
+                    $attachment_types = \Civi\Mailattachment\Form\Attachments::attachmentTypes();
                     $attachments = $context['attachments'] ?? $context['rule']['attachments'];
                     foreach ($attachments as $attachment_id => $attachment_values) {
                         $attachment_type = $attachment_types[$attachment_values['type']];

@@ -35,7 +35,7 @@
     <div class="crm-accordion-wrapper">
       <div class="crm-accordion-header">{ts}Attachments{/ts}</div>
       <div class="crm-accordion-body">
-          {include file="Civi/Mailattachment/Form/Task/AttachmentsTrait.tpl"}
+          {include file="Civi/Mailattachment/Form/Attachments.tpl"}
       </div>
     </div>
   {/if}

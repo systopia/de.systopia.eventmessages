@@ -251,7 +251,7 @@ function eventmessages_civicrm_searchTasks($objectType, &$tasks)
     if ($objectType == 'event') {
         $tasks[] = [
             'title' => E::ts('Send Emails (via EventMessages)'),
-            'class' => trait_exists('Civi\Mailattachment\Form\Task\AttachmentsTrait') ? 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments' : 'CRM_Eventmessages_Form_Task_ParticipantEmail',
+            'class' => 'CRM_Eventmessages_Form_Task_ParticipantEmail',
             'result' => false
         ];
 

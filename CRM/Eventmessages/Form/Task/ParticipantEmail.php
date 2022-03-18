@@ -55,8 +55,8 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
             ['class' => 'crm-select2 huge']
         );
 
-        if (is_a($this, 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments')) {
-            $this->addAttachmentElements(['entity_type' => 'participant']);
+        if (class_exists('Civi\Mailattachment\Form\Attachments')) {
+            \Civi\Mailattachment\Form\Attachments::addAttachmentElements($this, ['entity_type' => 'participant']);
         }
 
         // Set default values.
@@ -64,7 +64,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
             'template_id'  => Civi::settings()->get('eventmessages_participant_send_template_id'),
 //            'sender_email' => Civi::settings()->get('eventmessages_participant_send_sender_email'),
         ];
-        if (is_a($this, 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments')) {
+        if (class_exists('Civi\Mailattachment\Form\Attachments')) {
             // TODO: Set default values for attachments?
         }
         $this->setDefaults($defaults);
@@ -83,8 +83,8 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
         Civi::settings()->set('eventmessages_participant_send_attachments', $values['attachments']);
 //        Civi::settings()->set('eventmessages_participant_send_sender_email', $values['sender_email']);
 
-        if (is_a($this, 'CRM_Eventmessages_Form_Task_ParticipantEmailAttachments')) {
-            $values['attachments'] = $this->processAttachments();
+        if (class_exists('Civi\Mailattachment\Form\Attachments')) {
+            $values['attachments'] = \Civi\Mailattachment\Form\Attachments::processAttachments($this);
         }
 
         // init a queue
