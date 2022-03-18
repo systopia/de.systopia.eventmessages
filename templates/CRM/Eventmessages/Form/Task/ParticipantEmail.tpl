@@ -38,6 +38,12 @@
           {include file="Civi/Mailattachment/Form/Attachments.tpl"}
       </div>
     </div>
+  {else}
+    <div class="help">
+        {capture assign="mailattachment_link"}<a href="https://github.com/systopia/de.systopia.mailattachment">Mail Attachments</a>{/capture}
+      <p>{ts 1=$mailattachment_link}If you would like to add file attachments to e-mails, consider installing the %1 extension which provides a framework for different attachment types.{/ts}</p>
+      <p>{ts}This includes e.g. attaching existing files per contact.{/ts}</p>
+    </div>
   {/if}
 
   <div id="help">{ts}The email parameters (sender, cc, bcc, reply-to) will be taken from the EventMessages configuration of the respective event(s).{/ts}</div>
