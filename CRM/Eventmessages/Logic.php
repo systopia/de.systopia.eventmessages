@@ -130,7 +130,7 @@ class CRM_Eventmessages_Logic
                     'languages' => empty($query->languages) ? [] : explode(',', $query->languages),
                     'roles' => empty($query->roles) ? [] : explode(',', $query->roles),
                     'template' => $query->template_id,
-                    'attachments' => empty($query->attachments) ? [] : explode(',', $query->attachments),
+                    'attachments' => empty($query->attachments) ? [] : json_decode($query->attachments, true),
                 ];
             }
             $rules_cache[$event_id] = $rules;
@@ -180,7 +180,7 @@ class CRM_Eventmessages_Logic
                 'languages' => empty($query->languages) ? [] : explode(',', $query->languages),
                 'roles' => empty($query->roles) ? [] : explode(',', $query->roles),
                 'template' => $query->template_id,
-                'attachments' => empty($query->attachments) ? [] : explode(',', $query->attachments),
+                'attachments' => empty($query->attachments) ? [] : json_decode($query->attachments, true),
             ];
         }
         return $rules;
@@ -225,7 +225,7 @@ class CRM_Eventmessages_Logic
                         6 => [empty($new_rule['is_active']) ? 0 : 1, 'Integer'],
                         7 => [$new_rule['template'], 'Integer'],
                         8 => [$weight, 'Integer'],
-                        9 => [implode(',', $new_rule['attachments']), 'String'],
+                        9 => [json_encode($new_rule['attachments']), 'String'],
                     ]
                 );
             } else {
@@ -244,7 +244,7 @@ class CRM_Eventmessages_Logic
                         6 => [implode(',', $new_rule['languages']), 'String'],
                         7 => [implode(',', $new_rule['roles']), 'String'],
                         8 => [$weight, 'Integer'],
-                        9 => [implode(',', $new_rule['attachments']), 'String'],
+                        9 => [json_encode($new_rule['attachments']), 'String'],
                     ]
                 );
                 // remove from list
