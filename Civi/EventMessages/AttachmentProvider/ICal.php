@@ -27,7 +27,7 @@ class ICal implements AttachmentTypeInterface
     /**
      * {@inheritDoc}
      */
-    public static function buildAttachmentForm(&$form, $attachment_id, $prefix = '')
+    public static function buildAttachmentForm(&$form, $attachment_id, $prefix = '', $defaults = [])
     {
         return [];
     }

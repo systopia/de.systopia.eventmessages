@@ -24,7 +24,7 @@ class MessageTemplatePDF implements AttachmentTypeInterface
     /**
      * {@inheritDoc}
      */
-    public static function buildAttachmentForm(&$form, $attachment_id, $prefix = '')
+    public static function buildAttachmentForm(&$form, $attachment_id, $prefix = '', $defaults = [])
     {
         $form->add(
             'select',
@@ -34,6 +34,13 @@ class MessageTemplatePDF implements AttachmentTypeInterface
             true,
             ['class' => 'crm-select2 huge']
         );
+
+        $form->setDefaults(
+            [
+                $prefix . 'attachments--' . $attachment_id . '--template_id' => $defaults['template_id'],
+            ]
+        );
+
         return [
             $prefix . 'attachments--' . $attachment_id . '--template_id' => 'attachment-message_template_pdf-template_id',
         ];
