@@ -66,6 +66,7 @@
       <div class="eventmessages-rules-list">
           {foreach from=$rules_list item=rule_index}
             <div class="eventmessages-rule eventmessages-rule-{$rule_index}">
+
               <table class="form-layout-compressed">
 
                 <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-template">
@@ -105,16 +106,17 @@
                   <td>{$form.$field_name.html}</td>
                 </tr>
 
+              </table>
+
                 {if !empty($supports_attachments)}
                     {capture assign="prefix"}{$rule_index}--{/capture}
                     {include file="Civi/Mailattachment/Form/Attachments.tpl" prefix=$prefix}
                 {/if}
 
-              </table>
             </div>
           {/foreach}
-
       </div>
+
     </div>
   </div>
 
