@@ -324,6 +324,11 @@ class MessageAttachments extends Event
                 // no? render ical data
                 $template = \CRM_Core_Smarty::singleton();
                 $event_data = \CRM_Event_BAO_Event::getCompleteInfo('19800101', null, $event_id, null, false);
+                foreach (['title', 'description', 'event_type', 'location', 'contact_email'] as $field) {
+                    if (isset($event_data[0][$field])) {
+                        $event_data[0][$field] = html_entity_decode($event_data[0][$field], ENT_QUOTES | ENT_HTML401, 'UTF-8');
+                    }
+                }
                 $template->assign('events', $event_data);
                 $template->assign('timezone', @date_default_timezone_get());
                 $ical_data = $template->fetch('CRM/Core/Calendar/ICal.tpl');
