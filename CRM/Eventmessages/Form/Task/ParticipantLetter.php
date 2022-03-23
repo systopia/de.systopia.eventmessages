@@ -221,7 +221,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
         foreach ($query['values'] as $status) {
             $list[$status['id']] = $status['msg_title'];
         }
-        sort($list);
+        asort($list);
 
         return $list;
     }
