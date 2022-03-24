@@ -14,7 +14,6 @@
 +--------------------------------------------------------*/
 
 use CRM_Eventmessages_ExtensionUtil as E;
-use Civi\EventMessages\MessageAttachmentList;
 
 /**
  * Send E-Mail to participants task

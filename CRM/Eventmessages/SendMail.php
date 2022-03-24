@@ -15,8 +15,6 @@
 
 use CRM_Eventmessages_ExtensionUtil as E;
 use \Civi\EventMessages\MessageTokens as MessageTokens;
-use \Civi\EventMessages\MessageAttachments as MessageAttachments;
-use \Civi\EventMessages\MessageAttachmentList as MessageAttachmentList;
 
 /**
  * Basic Logic for sending the actual email
