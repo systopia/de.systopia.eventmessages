@@ -63,9 +63,18 @@
 
       </table>
 
+        {if empty($supports_attachments)}
+          <div class="help">
+              {capture assign="mailattachment_link"}<a href="https://github.com/systopia/de.systopia.mailattachment">Mail Attachments</a>{/capture}
+            <p>{ts 1=$mailattachment_link}If you would like to add file attachments to e-mails, consider installing the %1 extension which provides a framework for different attachment types.{/ts}</p>
+            <p>{ts}This includes e.g. attaching existing files per contact.{/ts}</p>
+          </div>
+        {/if}
+
       <div class="eventmessages-rules-list">
           {foreach from=$rules_list item=rule_index}
             <div class="eventmessages-rule eventmessages-rule-{$rule_index}">
+
               <table class="form-layout-compressed">
 
                 <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-template">
@@ -105,17 +114,17 @@
                   <td>{$form.$field_name.html}</td>
                 </tr>
 
-                <tr class="crm-event-manage-eventmessages-form-block-event_messages_rule-attachment">
-                    {capture assign=field_name}attachments_{$rule_index}{/capture}
-                  <td class="label">{$form.$field_name.label}</td>
-                  <td>{$form.$field_name.html}</td>
-                </tr>
-
               </table>
+
+                {if !empty($supports_attachments)}
+                    {capture assign="prefix"}{$rule_index}--{/capture}
+                    {include file="Civi/Mailattachment/Form/Attachments.tpl" prefix=$prefix}
+                {/if}
+
             </div>
           {/foreach}
-
       </div>
+
     </div>
   </div>
 

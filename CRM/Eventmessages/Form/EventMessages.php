@@ -14,7 +14,6 @@
 +--------------------------------------------------------*/
 
 use CRM_Eventmessages_ExtensionUtil as E;
-use Civi\EventMessages\MessageAttachmentList;
 
 
 /**
@@ -105,8 +104,12 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         $template_list = $this->getMessageTemplateList();
         $languages_list = $this->getLanguagesList();
         $roles_list = $this->getRolesList();
-        $attachments_list = MessageAttachmentList::getAttachmentList();
-        foreach (range(1, self::MAX_RULE_COUNT) as $index) {
+        $rules = CRM_Eventmessages_Logic::getAllRules($this->_id);
+        $rules = array_pad($rules, self::MAX_RULE_COUNT, []);
+        foreach ($rules as $index => $rule) {
+            // 1-based.
+            $index++;
+
             $this->add(
                 'hidden',
                 "id_{$index}"
@@ -156,32 +159,37 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                 false,
                 ['class' => 'huge crm-select2']
             );
-            $this->add(
-                'select',
-                "attachments_{$index}",
-                E::ts('Attachments'),
-                array_combine(array_keys($attachments_list), array_column($attachments_list, 'title')),
-                false,
-                ['class' => 'huge crm-select2', 'multiple' => 'multiple', 'placeholder' => 'none']
-            );
+
+            // Add attachment elements.
+            if (class_exists('\Civi\Mailattachment\Form\Attachments')) {
+                \Civi\Mailattachment\Form\Attachments::addAttachmentElements(
+                    $this,
+                    [
+                        'entity_type' => 'participant',
+                        'prefix' => $index . '--',
+                        'defaults' => $rule['attachments'] ?? []
+                    ]
+                );
+            }
         }
 
         // set current rule data
-        $rules = CRM_Eventmessages_Logic::getAllRules($this->_id);
         foreach ($rules as $index => $rule) {
-            $i = $index + 1;
-            $this->setDefaults([
-               "id_{$i}"        => $rule['id'],
-               "is_active_{$i}" => $rule['is_active'],
-               "from_{$i}"      => $rule['from'],
-               "to_{$i}"        => $rule['to'],
-               "roles_{$i}"     => $rule['roles'],
-               "languages_{$i}" => $rule['languages'],
-               "template_{$i}"  => $rule['template'],
-               "attachments_{$i}" => $rule['attachments'],
-           ]);
+            if (!empty($rule)) {
+                $i = $index + 1;
+                $this->setDefaults(
+                    [
+                        "id_{$i}" => $rule['id'],
+                        "is_active_{$i}" => $rule['is_active'],
+                        "from_{$i}" => $rule['from'],
+                        "to_{$i}" => $rule['to'],
+                        "roles_{$i}" => $rule['roles'],
+                        "languages_{$i}" => $rule['languages'],
+                        "template_{$i}" => $rule['template'],
+                    ]
+                );
+            }
         }
-
 
         $this->addButtons(
             [
@@ -235,7 +243,6 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         }
         civicrm_api3('Event', 'create', $event_update);
 
-
         // extract rules
         $rules = [];
         foreach (range(1, self::MAX_RULE_COUNT) as $i) {
@@ -248,8 +255,10 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                 'roles'     => CRM_Utils_Array::value("roles_{$i}", $values, []),
                 'template'  => CRM_Utils_Array::value("template_{$i}", $values, null),
                 'weight'    => (10 + count($rules) * 10),
-                'attachments' => CRM_Utils_Array::value("attachments_{$i}", $values, []),
             ];
+            if (class_exists('\Civi\Mailattachment\Form\Attachments')) {
+                $rule['attachments'] = \Civi\Mailattachment\Form\Attachments::processAttachments($this, ['prefix' => $i . '--']);
+            }
             if (!empty($rule['template'])) {
                 $rules[] = $rule;
             }

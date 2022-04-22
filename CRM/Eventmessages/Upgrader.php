@@ -78,4 +78,17 @@ class CRM_Eventmessages_Upgrader extends CRM_Eventmessages_Upgrader_Base {
         return true;
     }
 
+    /**
+     * Change data type of column "attachments" to TEXT in "civicrm_event_message_rules" table.
+     *
+     * @return true on success
+     */
+    public function upgrade_0004() {
+        $this->ctx->log->info('Change data type of column "attachments" to TEXT in "civicrm_event_message_rules" table.');
+        CRM_Core_DAO::executeQuery(
+            "ALTER TABLE `civicrm_event_message_rules` MODIFY `attachments` text DEFAULT NULL COMMENT 'list of attachments';"
+        );
+        return true;
+    }
+
 }

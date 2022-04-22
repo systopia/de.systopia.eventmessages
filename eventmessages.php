@@ -32,17 +32,9 @@ function eventmessages_civicrm_config(&$config)
         ['CRM_Eventmessages_Logic', 'stripEventMessageData']
     );
 
-    // REGISTER default attachments
-    Civi::dispatcher()->addListener(
-        'civi.eventmessages.registerAttachments',
-        ['Civi\EventMessages\MessageAttachmentList', 'registerDefaultAttachments']
-    );
-
-    // RENDER default attachments
-    Civi::dispatcher()->addListener(
-        'civi.eventmessages.renderAttachments',
-        ['Civi\EventMessages\MessageAttachments', 'renderDefaultAttachments']
-    );
+    if (interface_exists('\Civi\Mailattachment\AttachmentType\AttachmentTypeInterface')) {
+        \Civi::dispatcher()->addSubscriber(new \Civi\EventMessages\AttachmentProvider());
+    }
 }
 
 /**
