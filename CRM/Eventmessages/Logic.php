@@ -540,6 +540,9 @@ class CRM_Eventmessages_Logic
                 // skip multi-value fields for now...
             }
         }
+        // Add checksum
+        $contact['checksum'] = \CRM_Contact_BAO_Contact_Utils::generateChecksum($contact_id);
+
         CRM_Eventmessages_CustomData::labelCustomFields($contact, 1, '__');
 
         // load event
