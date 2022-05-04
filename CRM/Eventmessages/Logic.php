@@ -557,7 +557,7 @@ class CRM_Eventmessages_Logic
             $link = qrcodecheckin_get_image_url($code); 
     
             $participant['qrcode_url'] = $link;
-            $participant['qrcode_html'] = E::ts('<div><img alt="QR Code with link to checkin page" src="%1"></div><div>You should see a QR code above which will be used to quickly check you into the event. If you do not see a code display above, please enable the display of images in your email program or try accessing it <a href="%1">directly</a>. You may want to take a screen grab of your QR Code in case you need to display it when you do not have Internet access.</div>', [
+            $participant['qrcode_html'] = CRM_Qrcodecheckin_ExtensionUtil::ts('<div><img alt="QR Code with link to checkin page" src="%1"></div><div>You should see a QR code above which will be used to quickly check you into the event. If you do not see a code display above, please enable the display of images in your email program or try accessing it <a href="%1">directly</a>. You may want to take a screen grab of your QR Code in case you need to display it when you do not have Internet access.</div>', [
               1 => $link,
             ]);
         }
