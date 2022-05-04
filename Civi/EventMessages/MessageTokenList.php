@@ -109,6 +109,18 @@ class MessageTokenList extends Event
         }
 
         $this->addToken('$contact.checksum',           E::ts("Contact Checksum"));
+        
+        // Check if extension qrcode is enabled
+        $result_get_extension = civicrm_api3('Extension', 'get', [
+            'sequential' => 1,
+            'is_active' => 1,
+            'full_name' => "net.ourpowerbase.qrcodecheckin",
+        ]);
+        if (!empty($result_get_extension['count'])) {
+            $this->addToken('$participant.qrcode_url',           E::ts("QR Code URL"));
+            $this->addToken('$participant.qrcode_html',           E::ts("QR Code HTML"));
+        }
+        
 
         // add additional stuff that the API returns, but doesn't list in getfields
         $this->addToken('$participant.participant_status',           E::ts("Participant Status"));

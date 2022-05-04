@@ -542,6 +542,25 @@ class CRM_Eventmessages_Logic
         }
         // Add checksum
         $contact['checksum'] = \CRM_Contact_BAO_Contact_Utils::generateChecksum($contact_id);
+        
+        // Check if extension qrcode is enabled
+        $result_get_extension = civicrm_api3('Extension', 'get', [
+            'sequential' => 1,
+            'is_active' => 1,
+            'full_name' => "net.ourpowerbase.qrcodecheckin",
+        ]);
+        if (!empty($result_get_extension['count'])) {
+            $code = qrcodecheckin_get_code($participant_id);
+            // First ensure the image file is created.
+            qrcodecheckin_create_image($code, $participant_id);  
+            
+            $link = qrcodecheckin_get_image_url($code); 
+    
+            $participant['qrcode_url'] = $link;
+            $participant['qrcode_html'] = E::ts('<div><img alt="QR Code with link to checkin page" src="%1"></div><div>You should see a QR code above which will be used to quickly check you into the event. If you do not see a code display above, please enable the display of images in your email program or try accessing it <a href="%1">directly</a>. You may want to take a screen grab of your QR Code in case you need to display it when you do not have Internet access.</div>', [
+              1 => $link,
+            ]);
+        }
 
         CRM_Eventmessages_CustomData::labelCustomFields($contact, 1, '__');
 
