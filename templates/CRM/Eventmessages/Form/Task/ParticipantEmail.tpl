@@ -31,6 +31,8 @@
     <div class="clear"></div>
   </div>
 
+  <div id="help">{ts}The email parameters (sender, cc, bcc, reply-to) will be taken from the EventMessages configuration of the respective event(s).{/ts}</div>
+
   {if !empty($supports_attachments)}
     <div class="crm-accordion-wrapper">
       <div class="crm-accordion-header">{ts}Attachments{/ts}</div>
@@ -45,8 +47,6 @@
       <p>{ts}This includes e.g. attaching existing files per contact.{/ts}</p>
     </div>
   {/if}
-
-  <div id="help">{ts}The email parameters (sender, cc, bcc, reply-to) will be taken from the EventMessages configuration of the respective event(s).{/ts}</div>
 
   <br>
   <div class="crm-submit-buttons">
