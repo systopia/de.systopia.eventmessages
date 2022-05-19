@@ -32,7 +32,8 @@ function eventmessages_civicrm_config(&$config)
         ['CRM_Eventmessages_Logic', 'stripEventMessageData']
     );
 
-    if (interface_exists('\Civi\Mailattachment\AttachmentType\AttachmentTypeInterface')) {
+    if (interface_exists('\Civi\Mailattachment\AttachmentType\AttachmentTypeInterface')
+         && class_exists('\Civi\EventMessages\AttachmentProvider')) {
         \Civi::dispatcher()->addSubscriber(new \Civi\EventMessages\AttachmentProvider());
     }
 }
