@@ -288,3 +288,15 @@ function eventmessages_civicrm_copy($objectName, &$object)
         }
     }
 }
+
+/**
+ * Implements hook_civicrm_apiWrappers() to allow using template_in APIv3
+ *
+ * @see https://github.com/systopia/de.systopia.eventmessages/issues/22
+ */
+function eventmessages_civicrm_apiWrappers(&$wrappers, $apiRequest) {
+    if (class_exists('CRM_Eventmessages_ApiWrapper')) {
+        $wrappers[] = new CRM_Eventmessages_ApiWrapper();
+    }
+}
+
