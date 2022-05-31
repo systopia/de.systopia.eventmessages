@@ -65,9 +65,8 @@
 
         {if empty($supports_attachments)}
           <div class="help">
-              {capture assign="mailattachment_link"}<a href="https://github.com/systopia/de.systopia.mailattachment">Mail Attachments</a>{/capture}
-            <p>{ts 1=$mailattachment_link}If you would like to add file attachments to e-mails, consider installing the %1 extension which provides a framework for different attachment types.{/ts}</p>
-            <p>{ts}This includes e.g. attaching existing files per contact.{/ts}</p>
+            {capture assign="mailattachment_link"}<a href="https://github.com/systopia/de.systopia.mailattachment">Mail Attachments</a>{/capture}
+            <p>{ts 1=$mailattachment_link}If you would like to add file attachments to e-mails, consider installing the %1 extension which provides a framework for different attachment types.{/ts} {ts}This includes e.g. attaching existing files per contact.{/ts}</p>
           </div>
         {/if}
 
