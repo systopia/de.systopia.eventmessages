@@ -231,7 +231,7 @@ function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params)
  */
 function eventmessages_civicrm_buildForm($formName, &$form)
 {
-    if ($formName == 'CRM_Event_Form_Participant') {
+    if ($form instanceof CRM_Event_Form_Participant) {
         //Civi::log()->debug("EventMessages: injecting 'event_form_new_participant_mods.js'");
         $disabled_field = CRM_Eventmessages_CustomData::getCustomFieldKey(
             'event_messages_settings',
