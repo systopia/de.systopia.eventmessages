@@ -200,6 +200,17 @@ class CRM_Eventmessages_SendMail
                             }
                             break; // no suppression, continue to send
                         }
+
+                        // 4. check for emails coming through event self-service
+                        if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
+                            $participant_id = $call['args'][2];
+                            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail detected!");
+                                $this->logDroppedMail($recipients, $headers, $body);
+                                return; // don't send
+                            }
+                            break; // no suppression, continue to send
+                        }
                     }
                 }
 
