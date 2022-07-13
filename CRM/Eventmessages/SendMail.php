@@ -164,7 +164,7 @@ class CRM_Eventmessages_SendMail
                 /* //uncomment this for debugging:
                 $stack_trace_log = '';
                 foreach ($callstack as $code_line) {
-                    $stack_trace_log .= "{$code_line['file']}:{$code_line['line']} ({$code_line['function']})\n";
+                    $stack_trace_log .= "{$code_line['class']}:{$code_line['line']} ({$code_line['function']})\n";
                 }
                 Civi::log()->debug("StackTrace:\n" . $stack_trace_log); // */
 
@@ -202,12 +202,20 @@ class CRM_Eventmessages_SendMail
                         }
 
                         // 4. check for emails coming through event self-service
-                        if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
-                            $participant_id = $call['args'][2];
-                            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
-                                Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail detected!");
-                                $this->logDroppedMail($recipients, $headers, $body);
-                                return; // don't send
+                        if ($call['class'] == 'CRM_Event_Form_SelfSvcUpdate' && $call['function'] == 'cancelParticipant') {
+                            // extract participant_id
+                            // this is extremely hacky, if anyone finds a better way to extract the participant_id, please let us know!
+                            $entry_url = $call['args'][0]['entryURL'];
+                            if (preg_match('/pid=(\d+)\D/', $entry_url, $matches)) {
+                                $participant_id = $matches[1];
+                                Civi::log()->debug("pid : " . $participant_id);
+                                if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                    Civi::log()->debug("EventMessages: CRM_Event_Form_SelfSvcUpdate::cancelParticipant detected!");
+                                    $this->logDroppedMail($recipients, $headers, $body);
+                                    return; // don't send
+                                }
+                            } else {
+                                Civi::log()->debug("EventMessages: couldn't extract participant ID from CRM_Event_Form_SelfSvcUpdate::cancelParticipant");
                             }
                             break; // no suppression, continue to send
                         }
