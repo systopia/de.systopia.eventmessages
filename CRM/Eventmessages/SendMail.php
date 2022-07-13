@@ -159,10 +159,20 @@ class CRM_Eventmessages_SendMail
              */
             function send($recipients, $headers, $body)
             {
-                // go through the call stack, and see where this is coming from
                 $callstack = debug_backtrace();
+
+                /* //uncomment this for debugging:
+                $stack_trace_log = '';
+                foreach ($callstack as $code_line) {
+                    $stack_trace_log .= "{$code_line['file']}:{$code_line['line']} ({$code_line['function']})\n";
+                }
+                Civi::log()->debug("StackTrace:\n" . $stack_trace_log); // */
+
+                // scan the call stack for "forbidden" calls
                 foreach ($callstack as $call) {
                     if (isset($call['class']) && isset($call['function'])) {
+                        // Civi::log()->debug("Screening {$call['class']} : {$call['function']}");
+
                         // 1. check for emails coming through CRM_Event_BAO_Event::sendMessageTo
                         if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
                             break; // these are ours, continue to send
@@ -179,7 +189,7 @@ class CRM_Eventmessages_SendMail
                             break; // no suppression, continue to send
                         }
 
-                        // 3. check for mails coming from from the CRM_Event_Form_Participant form
+                        // 3. check for mails coming from the CRM_Event_Form_Participant form
                         //  note that this also triggers our own messages, but that was already dealt with in 1.
                         if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
                             $participant_id = $call['object']->_id;
