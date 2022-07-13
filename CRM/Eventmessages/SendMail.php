@@ -202,20 +202,20 @@ class CRM_Eventmessages_SendMail
                         }
 
                         // 4. check for emails coming through event self-service
-                        if ($call['class'] == 'CRM_Event_Form_SelfSvcUpdate' && $call['function'] == 'cancelParticipant') {
+                        if ($call['class'] == 'CRM_Event_Form_SelfSvcUpdate'
+                            && ($call['function'] == 'cancelParticipant' || $call['function'] == 'transferParticipant')) {
                             // extract participant_id
                             // this is extremely hacky, if anyone finds a better way to extract the participant_id, please let us know!
                             $entry_url = $call['args'][0]['entryURL'];
                             if (preg_match('/pid=(\d+)\D/', $entry_url, $matches)) {
                                 $participant_id = $matches[1];
-                                Civi::log()->debug("pid : " . $participant_id);
                                 if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
-                                    Civi::log()->debug("EventMessages: CRM_Event_Form_SelfSvcUpdate::cancelParticipant detected!");
+                                    Civi::log()->debug("EventMessages: CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant detected!");
                                     $this->logDroppedMail($recipients, $headers, $body);
                                     return; // don't send
                                 }
                             } else {
-                                Civi::log()->debug("EventMessages: couldn't extract participant ID from CRM_Event_Form_SelfSvcUpdate::cancelParticipant");
+                                Civi::log()->debug("EventMessages: couldn't extract participant ID from CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant");
                             }
                             break; // no suppression, continue to send
                         }
