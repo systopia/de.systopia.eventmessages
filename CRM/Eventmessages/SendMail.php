@@ -217,7 +217,7 @@ class CRM_Eventmessages_SendMail
                         if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
                             $participant_id = $call['args'][0];
                             if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
-                                Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail detected!");
+                                Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
                                 $this->logDroppedMail($recipients, $headers, $body);
                                 return; // don't send
                             }
