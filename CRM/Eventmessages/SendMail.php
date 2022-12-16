@@ -213,9 +213,9 @@ class CRM_Eventmessages_SendMail
                             break; // no suppression, continue to send
                         }
 
-                        // 5. suppress transitional emails
-                        if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
-                            $participant_id = $call['args'][0];
+                        // 5. suppress mails from the participant form
+                        if ($call['class'] == 'CRM_Event_Form_Registration_ParticipantConfirm' && $call['function'] == 'postProcess') {
+                            $participant_id = $call['object']->_participantId;
                             if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
                                 Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
                                 $this->logDroppedMail($recipients, $headers, $body);
