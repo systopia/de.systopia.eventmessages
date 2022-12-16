@@ -162,7 +162,8 @@ class CRM_Eventmessages_SendMail
                 $callstack = debug_backtrace();
 
                 // scan the call stack for "forbidden" calls
-                foreach ($callstack as $call) {
+                foreach ($callstack as $stack_idx => $call) {
+
                     if (isset($call['class']) && isset($call['function'])) {
                         // Civi::log()->debug("Screening {$call['class']} : {$call['function']}");
 
@@ -213,17 +214,22 @@ class CRM_Eventmessages_SendMail
                             break; // no suppression, continue to send
                         }
 
-                        // 5. suppress mails from the participant form
-                        if ($call['class'] == 'CRM_Event_Form_Registration_ParticipantConfirm' && $call['function'] == 'postProcess') {
-                            $participant_id = $call['object']->_participantId;
-                            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
-                                Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
-                                $this->logDroppedMail($recipients, $headers, $body);
-                                return; // don't send
+                        // 5. suppress mails from the participant transition form
+                        if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
+                            // this is transition confirmation...but we don't want to filter out all of them
+                            if (isset($callstack[$stack_idx - 2])) {
+                                $sentinel_call = $callstack[$stack_idx - 2];
+                                if ($sentinel_call['class'] == 'CRM_Event_Form_Registration_ParticipantConfirm' && $sentinel_call['function'] == 'postProcess') {
+                                    $participant_id = $call['args'][0];
+                                    if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                        Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
+                                        $this->logDroppedMail($recipients, $headers, $body);
+                                        return; // don't send
+                                    }
+                                    break; // no suppression, continue to send
+                                }
                             }
-                            break; // no suppression, continue to send
                         }
-
                     }
                 }
 
