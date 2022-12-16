@@ -161,13 +161,6 @@ class CRM_Eventmessages_SendMail
             {
                 $callstack = debug_backtrace();
 
-                /* //uncomment this for debugging:
-                $stack_trace_log = '';
-                foreach ($callstack as $code_line) {
-                    $stack_trace_log .= "{$code_line['class']}:{$code_line['line']} ({$code_line['function']})\n";
-                }
-                Civi::log()->debug("StackTrace:\n" . $stack_trace_log); // */
-
                 // scan the call stack for "forbidden" calls
                 foreach ($callstack as $call) {
                     if (isset($call['class']) && isset($call['function'])) {
@@ -219,7 +212,32 @@ class CRM_Eventmessages_SendMail
                             }
                             break; // no suppression, continue to send
                         }
+
+                        // 5. suppress transitional emails
+                        if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
+                            $participant_id = $call['args'][0];
+                            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail detected!");
+                                $this->logDroppedMail($recipients, $headers, $body);
+                                return; // don't send
+                            }
+                            break; // no suppression, continue to send
+                        }
+
                     }
+                }
+
+                // this email WILL be sent - if requested,
+                //   the stack trace will be logged if
+                if (defined('EVENTMESSAGES_LOG_SYSTEM_EMAILS')) {
+                    // print a stack trace to the CiviCRM log
+                    $stack_trace = 'EVENTMESSAGES - MESSAGE SENT STACK TRACE:';
+                    foreach ($callstack as $call) {
+                        if (isset($call['class']) && isset($call['function'])) {
+                            $stack_trace .= "\n{$call['class']}:{$call['line']} - {$call['function']}:" . json_encode($call['args'], 0, 1);
+                        }
+                    }
+                    Civi::log()->debug($stack_trace);
                 }
 
                 // we're done filtering -> send it already

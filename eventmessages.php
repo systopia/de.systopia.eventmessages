@@ -25,6 +25,7 @@ use CRM_Eventmessages_ExtensionUtil as E;
 function eventmessages_civicrm_config(&$config)
 {
     _eventmessages_civix_civicrm_config($config);
+    define('EVENTMESSAGES_LOG_SYSTEM_EMAILS', true);
 
     // REMOTEEVENT.GET filters
     Civi::dispatcher()->addListener(
