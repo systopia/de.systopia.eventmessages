@@ -481,6 +481,20 @@ class CRM_Eventmessages_Logic
     public static function generateTokenEvent($participant_id, $contact_id = null, $event_data = null)
     {
         $participant = civicrm_api3('Participant', 'getsingle', ['id' => $participant_id]);
+        // add custom fields (not included)
+        $custom_fields = civicrm_api3('CustomValue', 'get', [
+            'entity_id'    => $participant_id,
+            'entity_table' => 'civicrm_participant',
+            'option.limit' => 0,
+        ]);
+        foreach ($custom_fields['values'] as $custom_field) {
+            if (isset($custom_field['0'])) {
+                // this is a single field
+                $participant["custom_{$custom_field['id']}"] = $custom_field['latest'];
+            } else {
+                // skip multi-value fields for now...
+            }
+        }
         CRM_Eventmessages_SendMail::applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, $participant);
         CRM_Eventmessages_CustomData::labelCustomFields($participant, 1, '__');
         // a small extension for the tokens
