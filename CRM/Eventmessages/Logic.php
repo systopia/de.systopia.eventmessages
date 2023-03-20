@@ -465,6 +465,7 @@ class CRM_Eventmessages_Logic
         $target_event_id = (int)$target_event_id;
         if ($source_event_id && $target_event_id) {
             // load current event settings
+            $return_fields = ['is_template'];
             foreach (CRM_Eventmessages_Form_EventMessages::SETTINGS_FIELDS as $field_name) {
                 $return_fields[] = CRM_Eventmessages_CustomData::getCustomFieldKey('event_messages_settings', $field_name);
             }
