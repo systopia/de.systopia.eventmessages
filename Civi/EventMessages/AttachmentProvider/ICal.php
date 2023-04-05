@@ -81,7 +81,7 @@ class ICal implements AttachmentTypeInterface
             $ical_data = $template->fetch('CRM/Core/Calendar/ICal.tpl');
             $ical_data = preg_replace('/(?<!\r)\n/', "\r\n", $ical_data);
             // write to tmp file
-            $tmp_file = \System::mktemp("event_{$event_id}.ical");
+            $tmp_file = \System::mktemp("event_{$event_id}.ics");
             file_put_contents($tmp_file, $ical_data);
             \Civi::$statics[__CLASS__]['ical_files'][$event_id] = $tmp_file;
         }
@@ -89,7 +89,7 @@ class ICal implements AttachmentTypeInterface
         return [
             'fullPath' => \Civi::$statics[__CLASS__]['ical_files'][$event_id],
             'mime_type' => 'text/calendar',
-            'cleanName' => E::ts("event.ical"),
+            'cleanName' => E::ts("event.ics"),
         ];
     }
 }
