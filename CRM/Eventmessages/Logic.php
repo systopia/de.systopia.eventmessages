@@ -373,7 +373,7 @@ class CRM_Eventmessages_Logic
         if (!isset($language_cache[$participant_id])) {
             $preferred_language = CRM_Core_DAO::singleValueQuery(
                 "
-             SELECT contact.preferred_language 
+             SELECT contact.preferred_language
              FROM civicrm_participant participant
              LEFT JOIN civicrm_contact contact
                     ON contact.id = participant.contact_id
@@ -434,7 +434,7 @@ class CRM_Eventmessages_Logic
                 "
             INSERT INTO civicrm_event_message_rules(event_id,from_status,to_status,languages,roles,is_active,template_id,weight,attachments)
             SELECT * FROM
-                (SELECT 
+                (SELECT
                     {$target_event_id} AS event_id,
                     from_status        AS from_status,
                     to_status          AS to_status,
@@ -512,6 +512,7 @@ class CRM_Eventmessages_Logic
     public static function generateTokenEvent($participant_id, $contact_id = null, $event_data = null)
     {
         $participant = civicrm_api3('Participant', 'getsingle', ['id' => $participant_id]);
+        CRM_Eventmessages_SendMail::applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, $participant);
         CRM_Eventmessages_CustomData::labelCustomFields($participant, 1, '__');
         // a small extension for the tokens
         $participant['participant_roles'] = is_array($participant['participant_role']) ?
