@@ -28,7 +28,8 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         'event_messages_reply_to',
         'event_messages_cc',
         'event_messages_bcc',
-        'event_messages_execute_all_rules'
+        'event_messages_execute_all_rules',
+        'event_messages_custom_data_workaround'
     ];
 
     /**
@@ -79,9 +80,10 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         );
         $this->add(
             'checkbox',
-            'event_messages_execute_all_rules',
-            E::ts("Execute All Matching Rules?")
+            'event_messages_custom_data_workaround',
+            E::ts("Custom Data Workaround")
         );
+
         // set defaults for these fields
         $return_fields = [];
         foreach (self::SETTINGS_FIELDS as $field_name) {

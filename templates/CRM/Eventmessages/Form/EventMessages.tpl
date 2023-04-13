@@ -49,6 +49,12 @@
       <td>{$form.event_messages_bcc.html}</td>
     </tr>
 
+    <tr class="crm-event-manage-eventmessages-form-block-event_messages_custom_data_workaround">
+      {capture assign=help_title}{ts}Custom Field Workaround{/ts}{/capture}
+      <td class="label">{$form.event_messages_custom_data_workaround.label}&nbsp;{help id="id-custom-field-workaround-help" title=$help_title}</td>
+      <td>{$form.event_messages_custom_data_workaround.html}</td>
+    </tr>
+
   </table>
 
   <div class="crm-block crm-manage-events crm-accordion-wrapper">
