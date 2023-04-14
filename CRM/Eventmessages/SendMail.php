@@ -249,14 +249,29 @@ class CRM_Eventmessages_SendMail
       // TODO: remove logging
       Civi::log()->debug("EventMessages: adding custom data submission for event [{$event_id}] / participant [{$participant_id}]");
 
-      // copy all custom_xx parameters into the participant
-      foreach ($_REQUEST as $key => $value) {
-        if (preg_match('/^custom_[0-9]+$', $key)) {
-          if (isset($participant[$key])) {
-            // TODO: remove logging
-            Civi::log()->debug("EventMessages: overwriting participant value [{$key}] with submission data for event [{$event_id}] / participant [{$participant_id}]");
+      // get all potential sources of the registration data submission
+      $submission_sources = [];
+      $submission_sources[] = $_REQUEST;
+      if (isset($_SESSION['CiviCRM']) && is_array($_SESSION['CiviCRM'])) {
+        foreach ($_SESSION['CiviCRM'] as $key => $data) {
+          if (strpos($key,'CRM_Event_Controller_Registration_') !== false) {
+            if (isset($_SESSION['CiviCRM'][$key]['value'])) {
+              $submission_sources[] = $_SESSION['CiviCRM'][$key]['value'];
+            }
           }
-          $participant[$key] = $value;
+        }
+      }
+
+      // copy all custom_xx parameters into the participant
+      foreach ($submission_sources as $submission_source) {
+        foreach ($submission_source as $key => $value) {
+          if (preg_match('/^custom_[0-9]+$/', $key)) {
+            if (isset($participant[$key])) {
+              // TODO: remove logging
+              Civi::log()->debug("EventMessages: overwriting participant value [{$key}] with submission data for event [{$event_id}] / participant [{$participant_id}]");
+            }
+            $participant[$key] = $value;
+          }
         }
       }
     }
