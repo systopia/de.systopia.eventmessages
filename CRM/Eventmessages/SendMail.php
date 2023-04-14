@@ -251,7 +251,7 @@ class CRM_Eventmessages_SendMail
 
       // get all potential sources of the registration data submission
       $submission_sources = [];
-      $submission_sources[] = $_REQUEST;
+      // add session as a source
       if (isset($_SESSION['CiviCRM']) && is_array($_SESSION['CiviCRM'])) {
         foreach ($_SESSION['CiviCRM'] as $key => $data) {
           if (strpos($key,'CRM_Event_Controller_Registration_') !== false) {
@@ -261,6 +261,8 @@ class CRM_Eventmessages_SendMail
           }
         }
       }
+      // add the current request as a source
+      $submission_sources[] = $_REQUEST;
 
       // copy all custom_xx parameters into the participant
       foreach ($submission_sources as $submission_source) {
