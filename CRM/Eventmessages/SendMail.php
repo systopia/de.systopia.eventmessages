@@ -307,7 +307,8 @@ class CRM_Eventmessages_SendMail
                 $settings = CRM_Core_DAO::executeQuery("
                     SELECT disable_default, custom_data_workaround
                     FROM civicrm_value_event_messages_settings settings
-                    WHERE settings.entity_id = {$event_id}")->fetch();
+                    WHERE settings.entity_id = {$event_id}");
+                $settings->fetch();
                 $cached_event_results['disable_default'][$event_id] = $settings->disable_default ?? false;
                 $cached_event_results['custom_data_workaround'][$event_id] = $settings->disable_default ?? false;
             }
@@ -318,12 +319,13 @@ class CRM_Eventmessages_SendMail
         $participant_id = (int) $participant_id;
         if ($participant_id) {
             if (!isset($cached_participant_results[$setting_name][$participant_id])) {
-                $cached_participant_results[$setting_name][$participant_id] = (boolean) CRM_Core_DAO::executeQuery("
-                SELECT disable_default, custom_data_workaround
-                FROM civicrm_participant participant
-                LEFT JOIN civicrm_value_event_messages_settings settings
-                       ON settings.entity_id = participant.event_id
-                WHERE participant.id = {$participant_id}")->fetch();
+              $settings = CRM_Core_DAO::executeQuery("
+                    SELECT disable_default, custom_data_workaround
+                    FROM civicrm_participant participant
+                    LEFT JOIN civicrm_value_event_messages_settings settings
+                           ON settings.entity_id = participant.event_id
+                    WHERE participant.id = {$participant_id}");
+              $settings->fetch();
               $cached_participant_results['disable_default'][$participant_id] = (boolean) $settings->disable_default ?? false;
               $cached_participant_results['custom_data_workaround'][$participant_id] = (boolean) $settings->disable_default ?? false;
             }
