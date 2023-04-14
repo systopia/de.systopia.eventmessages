@@ -244,7 +244,7 @@ class CRM_Eventmessages_SendMail
    * @see https://github.com/systopia/de.systopia.eventmessages/issues/31
    */
   public static function applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, &$participant) {
-    $custom_data_workaround = (boolean) self::getEventMailsSettingsForParticipant('custom_data_workaround', $participant_id, $event_id);
+    $custom_data_workaround = (boolean) self::getEventMailsSettingsForParticipant('custom_data_workaround', $participant_id, $participant['event_id']);
     if ($custom_data_workaround) {
       // TODO: remove logging
       Civi::log()->debug("EventMessages: adding custom data submission for event [{$event_id}] / participant [{$participant_id}]");
@@ -310,7 +310,7 @@ class CRM_Eventmessages_SendMail
                     WHERE settings.entity_id = {$event_id}");
                 $settings->fetch();
                 $cached_event_results['disable_default'][$event_id] = $settings->disable_default ?? false;
-                $cached_event_results['custom_data_workaround'][$event_id] = $settings->disable_default ?? false;
+                $cached_event_results['custom_data_workaround'][$event_id] = $settings->custom_data_workaround ?? false;
             }
             return $cached_event_results[$setting_name][$event_id];
         }
@@ -327,7 +327,7 @@ class CRM_Eventmessages_SendMail
                     WHERE participant.id = {$participant_id}");
               $settings->fetch();
               $cached_participant_results['disable_default'][$participant_id] = (boolean) $settings->disable_default ?? false;
-              $cached_participant_results['custom_data_workaround'][$participant_id] = (boolean) $settings->disable_default ?? false;
+              $cached_participant_results['custom_data_workaround'][$participant_id] = (boolean) $settings->custom_data_workaround ?? false;
             }
             return $cached_participant_results[$setting_name][$participant_id];
         }
