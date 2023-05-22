@@ -80,7 +80,7 @@ cj(document).ready(function () {
     } else {
       // show the fieldset
       // console.log("show stuff");
-      cj("fieldset#send_confirmation_receipt,fieldset#email-receipt,div#notify")
+      cj("fieldset#send_confirmation_receipt,fieldset#email-receipt")
         .show()
         .change();
     }
