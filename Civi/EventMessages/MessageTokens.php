@@ -15,7 +15,7 @@
 
 
 namespace Civi\EventMessages;
-use Symfony\Component\EventDispatcher\Event;
+use \Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class MessageTokens
