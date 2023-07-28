@@ -159,10 +159,14 @@ class CRM_Eventmessages_SendMail
              */
             function send($recipients, $headers, $body)
             {
-                // go through the call stack, and see where this is coming from
                 $callstack = debug_backtrace();
-                foreach ($callstack as $call) {
+
+                // scan the call stack for "forbidden" calls
+                foreach ($callstack as $stack_idx => $call) {
+
                     if (isset($call['class']) && isset($call['function'])) {
+                        // Civi::log()->debug("Screening {$call['class']} : {$call['function']}");
+
                         // 1. check for emails coming through CRM_Event_BAO_Event::sendMessageTo
                         if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
                             break; // these are ours, continue to send
@@ -179,7 +183,7 @@ class CRM_Eventmessages_SendMail
                             break; // no suppression, continue to send
                         }
 
-                        // 3. check for mails coming from from the CRM_Event_Form_Participant form
+                        // 3. check for mails coming from the CRM_Event_Form_Participant form
                         //  note that this also triggers our own messages, but that was already dealt with in 1.
                         if ($call['class'] == 'CRM_Event_Form_Participant' && $call['function'] == 'submit') {
                             $participant_id = $call['object']->_id;
@@ -190,7 +194,56 @@ class CRM_Eventmessages_SendMail
                             }
                             break; // no suppression, continue to send
                         }
+
+                        // 4. check for emails coming through event self-service
+                        if ($call['class'] == 'CRM_Event_Form_SelfSvcUpdate'
+                            && ($call['function'] == 'cancelParticipant' || $call['function'] == 'transferParticipant')) {
+                            // extract participant_id
+                            // this is extremely hacky, if anyone finds a better way to extract the participant_id, please let us know!
+                            $entry_url = $call['args'][0]['entryURL'];
+                            if (preg_match('/pid=(\d+)\D/', $entry_url, $matches)) {
+                                $participant_id = $matches[1];
+                                if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                    Civi::log()->debug("EventMessages: CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant detected!");
+                                    $this->logDroppedMail($recipients, $headers, $body);
+                                    return; // don't send
+                                }
+                            } else {
+                                Civi::log()->debug("EventMessages: couldn't extract participant ID from CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant");
+                            }
+                            break; // no suppression, continue to send
+                        }
+
+                        // 5. suppress mails from the participant transition form
+                        if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
+                            // this is transition confirmation...but we don't want to filter out all of them
+                            if (isset($callstack[$stack_idx - 2])) {
+                                $sentinel_call = $callstack[$stack_idx - 2];
+                                if ($sentinel_call['class'] == 'CRM_Event_Form_Registration_ParticipantConfirm' && $sentinel_call['function'] == 'postProcess') {
+                                    $participant_id = $call['args'][0];
+                                    if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                                        Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
+                                        $this->logDroppedMail($recipients, $headers, $body);
+                                        return; // don't send
+                                    }
+                                    break; // no suppression, continue to send
+                                }
+                            }
+                        }
                     }
+                }
+
+                // this email WILL be sent - if requested,
+                //   the stack trace will be logged if
+                if (defined('EVENTMESSAGES_LOG_SYSTEM_EMAILS')) {
+                    // print a stack trace to the CiviCRM log
+                    $stack_trace = 'EVENTMESSAGES - MESSAGE SENT STACK TRACE:';
+                    foreach ($callstack as $call) {
+                        if (isset($call['class']) && isset($call['function'])) {
+                            $stack_trace .= "\n{$call['class']}:{$call['line']} - {$call['function']}:" . json_encode($call['args'], 0, 1);
+                        }
+                    }
+                    Civi::log()->debug($stack_trace);
                 }
 
                 // we're done filtering -> send it already
@@ -236,7 +289,7 @@ class CRM_Eventmessages_SendMail
                     FROM civicrm_value_event_messages_settings settings
                     WHERE settings.entity_id = {$event_id}");
 
-                // TODO: remove logging
+                // debug logging:
                 Civi::log()->debug("EventMessages: suppress system messages for event [{$event_id}]: " .
                                    ($cached_event_results[$event_id] ? 'yes' : 'no'));
             }
@@ -261,7 +314,6 @@ class CRM_Eventmessages_SendMail
             return $cached_participant_results[$participant_id];
         }
 
-        // TODO: remove logging
         Civi::log()->debug("EventMessages: suppression of system messages unknown, no IDs submitted");
         return false;
     }
