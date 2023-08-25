@@ -86,8 +86,6 @@ class CRM_Eventmessages_SendMail
 
                 // resolve/beautify sender (use name instead of value of the option_value)
                 $from_addresses = CRM_Core_OptionGroup::values('from_email_address');
-                Civi::log()->debug("#22465 from address: " . $email_data['from']);
-                Civi::log()->debug("#22465 from address options: " . json_encode($from_addresses));
                 if (isset($from_addresses[$email_data['from']])) {
                     $email_data['from'] = $from_addresses[$email_data['from']];
                 } else {
