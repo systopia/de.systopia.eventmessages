@@ -86,6 +86,8 @@ class CRM_Eventmessages_SendMail
 
                 // resolve/beautify sender (use name instead of value of the option_value)
                 $from_addresses = CRM_Core_OptionGroup::values('from_email_address');
+                Civi::log()->debug("#22465 from address: " . $email_data['from']);
+                Civi::log()->debug("#22465 from address options: " . json_encode($from_addresses));
                 if (isset($from_addresses[$email_data['from']])) {
                     $email_data['from'] = $from_addresses[$email_data['from']];
                 } else {
@@ -332,17 +334,17 @@ class CRM_Eventmessages_SendMail
     {
         $participant_id = (int) $context['participant_id'];
         return "
-                SELECT 
+                SELECT
                   email.email          AS contact_email,
                   contact.display_name AS contact_name,
                   contact.id           AS contact_id,
                   participant.id       AS participant_id
                 FROM civicrm_participant   participant
-                INNER JOIN civicrm_contact contact  
+                INNER JOIN civicrm_contact contact
                         ON contact.id = participant.contact_id
                 INNER JOIN civicrm_email   email
                         ON email.contact_id = contact.id
-                        AND (email.on_hold IS NULL OR email.on_hold = 0)  
+                        AND (email.on_hold IS NULL OR email.on_hold = 0)
                 INNER JOIN civicrm_event   event
                         ON event.id = participant.event_id
                 WHERE participant.id = {$participant_id}
