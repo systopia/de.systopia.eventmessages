@@ -69,7 +69,7 @@ msgstr "Alle zutreffenden Regeln Ausführen?"
 
 #: CRM/Eventmessages/Form/EventMessages.php
 msgid "Custom Data Workaround"
-msgstr "Benutzerdefinierte Daten Workaround"
+msgstr "Benutzerdefinierte Felder Workaround"
 
 #: CRM/Eventmessages/Form/EventMessages.php
 msgid "Active?"
@@ -340,7 +340,7 @@ msgstr ""
 
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Custom Field Workaround"
-msgstr "Benutzerdefinierte Daten Workaround"
+msgstr "Benutzerdefinierte Felder Workaround"
 
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Message Rules"
