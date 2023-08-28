@@ -275,7 +275,82 @@ class CRM_Eventmessages_SendMail
      * @return boolean
      *   should the email be suppressed?
      */
-    public static function suppressSystemEventMailsForParticipant($participant_id, $event_id = null)
+    public static function suppressSystemEventMailsForParticipant($participant_id, $event_id = null) {
+      $disable_default = (boolean) self::getEventMailsSettingsForParticipant('disable_default', $participant_id, $event_id);
+
+      // TODO: remove logging
+      Civi::log()->debug("EventMessages: suppress system messages for event [{$event_id}] / participant [{$participant_id}]: " .
+                         ($disable_default ? 'yes' : 'no'));
+
+      return $disable_default;
+    }
+
+  /**
+   * Apply the submission data overwrite
+   *
+   * @param integer $participant_id
+   *   the participant ID
+   *
+   * @param array $participant
+   *   participant data to be extended
+   *
+   * @see https://github.com/systopia/de.systopia.eventmessages/issues/31
+   */
+  public static function applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, &$participant) {
+    $custom_data_workaround = (boolean) self::getEventMailsSettingsForParticipant('custom_data_workaround', $participant_id, $participant['event_id']);
+    if ($custom_data_workaround) {
+      // TODO: remove logging
+      Civi::log()->debug("EventMessages: adding custom data submission for event [{$event_id}] / participant [{$participant_id}]");
+
+      // get all potential sources of the registration data submission
+      $submission_sources = [];
+      // add session as a source
+      if (isset($_SESSION['CiviCRM']) && is_array($_SESSION['CiviCRM'])) {
+        foreach ($_SESSION['CiviCRM'] as $key => $data) {
+          if (strpos($key,'CRM_Event_Controller_Registration_') !== false) {
+            if (isset($_SESSION['CiviCRM'][$key]['value'])) {
+              $submission_sources[] = $_SESSION['CiviCRM'][$key]['value'];
+            }
+          }
+        }
+      }
+      // add the current request as a source
+      $submission_sources[] = $_REQUEST;
+
+      // copy all custom_xx parameters into the participant
+      foreach ($submission_sources as $submission_source) {
+        foreach ($submission_source as $key => $value) {
+          if (preg_match('/^custom_[0-9]+$/', $key)) {
+            if (isset($participant[$key])) {
+              // TODO: remove logging
+              Civi::log()->debug("EventMessages: overwriting participant value [{$key}] with submission data for event [{$event_id}] / participant [{$participant_id}]");
+            }
+            $participant[$key] = $value;
+          }
+        }
+      }
+    }
+
+    return $custom_data_workaround;
+  }
+
+  /**
+     * Check whether CiviCRM's native event notifications should be suppressed
+     *  for this participant/event
+     *
+     * @param string $setting_name
+     *   name of the setting to look for
+     *
+     * @param integer $participant_id
+     *   the participant ID
+     *
+     * @param integer $event_id
+     *   the event ID
+     *
+     * @return mixed
+     *   get a specific setting based on participant_id or event_id
+     */
+    public static function getEventMailsSettingsForParticipant($setting_name, $participant_id, $event_id = null)
     {
         static $cached_event_results = [];
         static $cached_participant_results = [];
@@ -283,35 +358,34 @@ class CRM_Eventmessages_SendMail
         // if an event ID is given, use that
         $event_id = (int) $event_id;
         if ($event_id) {
-            if (!isset($cached_event_results[$event_id])) {
-                $cached_event_results[$event_id] = (boolean) CRM_Core_DAO::singleValueQuery("
-                    SELECT settings.disable_default
+            if (!isset($cached_event_results[$setting_name][$event_id])) {
+                $settings = CRM_Core_DAO::executeQuery("
+                    SELECT disable_default, custom_data_workaround
                     FROM civicrm_value_event_messages_settings settings
                     WHERE settings.entity_id = {$event_id}");
 
-                // debug logging:
-                Civi::log()->debug("EventMessages: suppress system messages for event [{$event_id}]: " .
-                                   ($cached_event_results[$event_id] ? 'yes' : 'no'));
+                $settings->fetch();
+                $cached_event_results['disable_default'][$event_id] = $settings->disable_default ?? false;
+                $cached_event_results['custom_data_workaround'][$event_id] = $settings->custom_data_workaround ?? false;
             }
-            return $cached_event_results[$event_id];
+            return $cached_event_results[$setting_name][$event_id];
         }
 
         // otherwise, we have to work with the participant
         $participant_id = (int) $participant_id;
         if ($participant_id) {
-            if (!isset($cached_participant_results[$participant_id])) {
-                $cached_participant_results[$participant_id] = (boolean) CRM_Core_DAO::singleValueQuery("
-                SELECT settings.disable_default
-                FROM civicrm_participant participant
-                LEFT JOIN civicrm_value_event_messages_settings settings
-                       ON settings.entity_id = participant.event_id
-                WHERE participant.id = {$participant_id}");
-
-                // TODO: remove logging
-                Civi::log()->debug("EventMessages: suppress system messages for participant [{$participant_id}]: " .
-                                   ($cached_participant_results[$participant_id] ? 'yes' : 'no'));
+            if (!isset($cached_participant_results[$setting_name][$participant_id])) {
+              $settings = CRM_Core_DAO::executeQuery("
+                    SELECT disable_default, custom_data_workaround
+                    FROM civicrm_participant participant
+                    LEFT JOIN civicrm_value_event_messages_settings settings
+                           ON settings.entity_id = participant.event_id
+                    WHERE participant.id = {$participant_id}");
+              $settings->fetch();
+              $cached_participant_results['disable_default'][$participant_id] = (boolean) $settings->disable_default ?? false;
+              $cached_participant_results['custom_data_workaround'][$participant_id] = (boolean) $settings->custom_data_workaround ?? false;
             }
-            return $cached_participant_results[$participant_id];
+            return $cached_participant_results[$setting_name][$participant_id];
         }
 
         Civi::log()->debug("EventMessages: suppression of system messages unknown, no IDs submitted");

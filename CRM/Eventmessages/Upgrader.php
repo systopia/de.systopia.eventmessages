@@ -91,4 +91,18 @@ class CRM_Eventmessages_Upgrader extends CRM_Eventmessages_Upgrader_Base {
         return true;
     }
 
+  /**
+   * Adding settings
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_0005()
+  {
+    $this->ctx->log->info('Adding custom field workaround option');
+    $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
+    $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
+    return true;
+  }
+
 }

@@ -39,3 +39,9 @@
   <p>{ts domain="de.systopia.eventmessages"}Also be aware that CC and BCC might not work properly with the <code>mail()</code> and <code>sendmail</code> CiviCRM outbound email configurations.{/ts}</p>
 {/htxt}
 
+{htxt id='id-custom-field-workaround-help'}
+  <p>{ts domain="de.systopia.eventmessages"}If you have custom field values in your event signup form, the values will not be available to the EventCommunication extension at the time the message is sent, and might therefore be empty or outdated.{/ts}</p>
+  <p>{ts domain="de.systopia.eventmessages"}As a workaround you can activate this option, so those values are taken directly from the submission.{/ts}</p>
+  <p>{ts domain="de.systopia.eventmessages"}<strong>Caution:</strong> if those values will be processed or manipulated by CiviCRM after submission, the values sent out might differ from the ones stored in CiviCRM. Test well.{/ts}</p>
+{/htxt}
+
