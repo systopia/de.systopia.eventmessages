@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: de.systopia.eventmessages\n"
-"POT-Creation-Date: 2021-11-03 10:25+0100\n"
+"POT-Creation-Date: 2023-08-28 10:44+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
@@ -68,6 +68,10 @@ msgid "Execute All Matching Rules?"
 msgstr "Alle zutreffenden Regeln Ausführen?"
 
 #: CRM/Eventmessages/Form/EventMessages.php
+msgid "Custom Data Workaround"
+msgstr "Benutzerdefinierte Daten Workaround"
+
+#: CRM/Eventmessages/Form/EventMessages.php
 msgid "Active?"
 msgstr "Regel Aktiviert?"
 
@@ -90,6 +94,7 @@ msgstr "Rollen"
 #: CRM/Eventmessages/Form/EventMessages.php
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
 #: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+#: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
 msgid "Message Template"
 msgstr "Nachrichtenvorlage"
 
@@ -157,6 +162,10 @@ msgstr "Erstelle %1 Teilnehmer-Briefe"
 msgid "EventMessages: List of (potential) E-Mail Tokens"
 msgstr "EventMessages: Liste von möglichen E-Mail Tokens (Platzhalter)"
 
+#: CRM/Eventmessages/SendMail.php
+msgid "Attachment '%1' could not be generated or found."
+msgstr "Anhang '%1' konnte nicht erstellt oder gefunden werden."
+
 #: CRM/Eventmessages/SendMail.php CRM/Eventmessages/SendMailJob.php
 msgid "Could not send e-mail to participant %1, error was: %2"
 msgstr ""
@@ -165,6 +174,18 @@ msgstr ""
 #: CRM/Eventmessages/Upgrader/Base.php
 msgid "Upgrade %1 to revision %2"
 msgstr ""
+
+#: Civi/EventMessages/AttachmentProvider/ICal.php
+msgid "event.ics"
+msgstr ""
+
+#: Civi/EventMessages/AttachmentProvider.php
+msgid "iCalendar file"
+msgstr "iCalendar Datei"
+
+#: Civi/EventMessages/AttachmentProvider.php
+msgid "Message Template as PDF"
+msgstr "Nachrichtenvorlage als PDF Anhang"
 
 #: Civi/EventMessages/MessageTokenList.php
 msgid "no description available"
@@ -287,9 +308,59 @@ msgstr ""
 "Einstellung <code>mail()</code> oder <code>sendmail</code> unter Umständen "
 "nicht korrekt funktioniert."
 
+#: templates/CRM/Eventmessages/Form/EventMessages.hlp
+msgid ""
+"If you have custom field values in your event signup form, the values will "
+"not be available to the EventCommunication extension at the time the message "
+"is sent, and might therefore be empty or outdated."
+msgstr ""
+"Falls Ihr Anmeldeformular benutzerdefinierte Felder enthält, so sind die "
+"Werte dieser Felder zum Zeitpunkt des Verschickens der E-Mail noch nicht in "
+"CiviCRM hinterlegt, und es die Platzhalter sind entweder leer oder enthalten "
+"alte Werte."
+
+#: templates/CRM/Eventmessages/Form/EventMessages.hlp
+msgid ""
+"As a workaround you can activate this option, so those values are taken "
+"directly from the submission."
+msgstr ""
+"Abhilfe schafft diese Option, bei der die Werte direkt aus den übermittelten "
+"Daten entnommen werden."
+
+#: templates/CRM/Eventmessages/Form/EventMessages.hlp
+msgid ""
+"<strong>Caution:</strong> if those values will be processed or manipulated "
+"by CiviCRM after submission, the values sent out might differ from the ones "
+"stored in CiviCRM. Test well."
+msgstr ""
+"<strong>Achtung:</strong> Falls diese Werte nach der Übermittlung noch "
+"einmal von CiviCRM bearbeitet werden, so könnten die in der E-Mail "
+"verwendeten Werte von den in CiviCRM gespeicherten abweichen. Dieser Prozess "
+"sollte gut getestet werden."
+
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
+msgid "Custom Field Workaround"
+msgstr "Benutzerdefinierte Daten Workaround"
+
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Message Rules"
 msgstr "Regeln für den E-Mail Versand"
+
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+msgid ""
+"If you would like to add file attachments to e-mails, consider installing "
+"the %1 extension which provides a framework for different attachment types."
+msgstr ""
+"Falls Sie gerne Anhänge mit diesen E-Mails versenden möchten, so sollten Sie "
+"sich einmal die %1 Erweiterung ansehen. Diese bietet die Einbindung von "
+"einer ganzen Reihe von Arten von Anhängen."
+
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+msgid "This includes e.g. attaching existing files per contact."
+msgstr ""
+"Dies erlaubt auch das Anhängen von personalisierten Dokumenten pro Kontakt."
 
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Token List"
@@ -315,6 +386,10 @@ msgid ""
 msgstr ""
 "Die E-Mail-Parameter (Absender, cc, bcc, Antwort an) werden von den im "
 "jeweiligen Event konfigurierten Einstellungen übernommen."
+
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+msgid "Attachments"
+msgstr "Anhänge"
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.hlp
 msgid ""
@@ -357,6 +432,15 @@ msgstr "Token"
 #: templates/CRM/Eventmessages/Page/TokenList.tpl
 msgid "Description"
 msgstr "Beschreibung"
+
+#: templates/Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.hlp
+msgid ""
+"The CiviCRM message template to render as PDF and attach to the sent e-mail. "
+"Contact tokens and Event Communications variables are being replaced."
+msgstr ""
+"Die CiviCRM Nachrichtenvorlage, die als PDF an die versendete E-Mail "
+"angehängt werden soll. Kontakt-Platzhalter und Event Communications "
+"Variablen werden dabei ersetzt."
 
 #~ msgid "Participant Registration Time / Date"
 #~ msgstr "Teilnehmer Registrierungszeitpunkt"
