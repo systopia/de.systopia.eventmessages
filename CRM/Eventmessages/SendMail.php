@@ -299,7 +299,7 @@ class CRM_Eventmessages_SendMail
   public static function applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, &$participant) {
     $custom_data_workaround = (boolean) self::getEventMailsSettingsForParticipant('custom_data_workaround', $participant_id, $participant['event_id']);
     if ($custom_data_workaround) {
-      // TODO: remove logging
+      $event_id = $participant['event_id'] ?? 'n/a';
       Civi::log()->debug("EventMessages: adding custom data submission for event [{$event_id}] / participant [{$participant_id}]");
 
       // get all potential sources of the registration data submission
@@ -321,10 +321,9 @@ class CRM_Eventmessages_SendMail
       foreach ($submission_sources as $submission_source) {
         foreach ($submission_source as $key => $value) {
           if (preg_match('/^custom_[0-9]+$/', $key)) {
-            if (isset($participant[$key])) {
-              // TODO: remove logging
-              Civi::log()->debug("EventMessages: overwriting participant value [{$key}] with submission data for event [{$event_id}] / participant [{$participant_id}]");
-            }
+            // uncomment this for debugging
+//            if (isset($participant[$key]))
+//              Civi::log()->debug("EventMessages: overwriting participant value for [{$key}] with submission data for event [{$event_id}] / participant [{$participant_id}]");
             $participant[$key] = $value;
           }
         }
