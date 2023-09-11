@@ -108,6 +108,8 @@ class MessageTokenList extends Event
             }
         }
 
+        $this->addToken('$contact.checksum',           E::ts("Contact Checksum"));
+
         // add additional stuff that the API returns, but doesn't list in getfields
         $this->addToken('$participant.participant_status',           E::ts("Participant Status"));
         $this->addToken('$participant.participant_roles',            E::ts("Participant Role(s) (array)"));
