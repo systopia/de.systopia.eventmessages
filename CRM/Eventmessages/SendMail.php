@@ -216,18 +216,12 @@ class CRM_Eventmessages_SendMail
 
                         // 5. suppress mails from the participant transition form
                         if ($call['class'] == 'CRM_Event_BAO_Participant' && $call['function'] == 'sendTransitionParticipantMail') {
-                            // this is transition confirmation...but we don't want to filter out all of them
-                            if (isset($callstack[$stack_idx - 2])) {
-                                $sentinel_call = $callstack[$stack_idx - 2];
-                                if ($sentinel_call['class'] == 'CRM_Event_Form_Registration_ParticipantConfirm' && $sentinel_call['function'] == 'postProcess') {
-                                    $participant_id = $call['args'][0];
-                                    if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
-                                        Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
-                                        $this->logDroppedMail($recipients, $headers, $body);
-                                        return; // don't send
-                                    }
-                                    break; // no suppression, continue to send
-                                }
+                            // this is transition confirmation...hope it's ok to filter out all of them
+                            $participant_id = $call['args'][0];
+                            if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
+                              Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
+                              $this->logDroppedMail($recipients, $headers, $body);
+                              return; // don't send
                             }
                         }
                     }
@@ -246,7 +240,7 @@ class CRM_Eventmessages_SendMail
                     Civi::log()->debug($stack_trace);
                 }
 
-                // we're done filtering -> send it already
+                // we're done filtering -> send it already...
                 $this->mailer->send($recipients, $headers, $body);
             }
 
@@ -276,6 +270,13 @@ class CRM_Eventmessages_SendMail
      *   should the email be suppressed?
      */
     public static function suppressSystemEventMailsForParticipant($participant_id, $event_id = null) {
+      // check if something's slipped through, despite our efforts to identify the participant
+      if (empty($participant_id)) {
+        Civi::log()->debug("EventMessages: empty participant ID encountered! Will NOT suppress, but this should be fixed.");
+        return false;
+      }
+
+      // get the current setting
       $disable_default = (boolean) self::getEventMailsSettingsForParticipant('disable_default', $participant_id, $event_id);
 
       // TODO: remove logging

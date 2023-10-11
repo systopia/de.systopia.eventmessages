@@ -26,6 +26,9 @@ function eventmessages_civicrm_config(&$config)
 {
     _eventmessages_civix_civicrm_config($config);
 
+    // uncomment the next line to get stack traces of core mails still sent
+    // define('EVENTMESSAGES_LOG_SYSTEM_EMAILS', 1);
+
     // REMOTEEVENT.GET filters
     Civi::dispatcher()->addListener(
         'civi.remoteevent.get.result',
