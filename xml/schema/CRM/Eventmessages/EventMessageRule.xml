@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Eventmessages</base>
+  <class>EventMessageRule</class>
+  <name>civicrm_event_message_rules</name>
+  <comment>Event Messages Rule Entity</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique EventMessageRule ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>event_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to Event</comment>
+  </field>
+  <foreignKey>
+    <name>event_id</name>
+    <table>civicrm_event</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>is_active</name>
+    <type>int unsigned</type>
+    <comment>FK to Event</comment>
+  </field>
+
+  <field>
+    <name>template_id</name>
+    <type>int unsigned</type>
+    <comment>civicrm_message_template to be used</comment>
+  </field>
+  <foreignKey>
+    <name>template_id</name>
+    <table>civicrm_msg_template</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>from_status</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>list of (previous) participant status IDs</comment>
+  </field>
+
+  <field>
+    <name>to_status</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>list of (future) participant status IDs</comment>
+  </field>
+
+  <field>
+    <name>languages</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>list of languages</comment>
+  </field>
+
+  <field>
+    <name>roles</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>list of roles</comment>
+  </field>
+
+  <field>
+    <name>weight</name>
+    <type>int</type>
+    <comment>list of weights defining the order</comment>
+  </field>
+
+  <field>
+    <name>attachments</name>
+    <type>text</type>
+    <comment>list of attachments</comment>
+  </field>
+</table>
