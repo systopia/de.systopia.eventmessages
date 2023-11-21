@@ -37,12 +37,13 @@
   <field>
     <name>is_active</name>
     <type>int unsigned</type>
-    <comment>FK to Event</comment>
+    <comment>is this rule active</comment>
   </field>
 
   <field>
     <name>template_id</name>
     <type>int unsigned</type>
+    <required>true</required>
     <comment>civicrm_message_template to be used</comment>
   </field>
   <foreignKey>
