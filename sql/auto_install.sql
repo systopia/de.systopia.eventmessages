@@ -33,19 +33,19 @@ SET FOREIGN_KEY_CHECKS=1;
 -- *
 -- *
 -- *******************************************************/
---CREATE TABLE `civicrm_event_message_rules` (
---  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique EventMessageRule ID',
---  `event_id` int unsigned NOT NULL COMMENT 'FK to Event',
---  `is_active` int unsigned COMMENT 'FK to Event',
---  `template_id` int unsigned COMMENT 'civicrm_message_template to be used',
---  `from_status` varchar(255) COMMENT 'list of (previous) participant status IDs',
---  `to_status` varchar(255) COMMENT 'list of (future) participant status IDs',
---  `languages` varchar(255) COMMENT 'list of languages',
---  `roles` varchar(255) COMMENT 'list of roles',
---  `weight` int COMMENT 'list of weights defining the order',
---  `attachments` text COMMENT 'list of attachments',
---  PRIMARY KEY (`id`),
---  CONSTRAINT FK_civicrm_event_message_rules_event_id FOREIGN KEY (`event_id`) REFERENCES `civicrm_event`(`id`) ON DELETE CASCADE,
---  CONSTRAINT FK_civicrm_event_message_rules_template_id FOREIGN KEY (`template_id`) REFERENCES `civicrm_msg_template`(`id`) ON DELETE CASCADE
---)
---ENGINE=InnoDB;
+CREATE TABLE `civicrm_event_message_rules` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique EventMessageRule ID',
+  `event_id` int unsigned COMMENT 'FK to Event',
+  `is_active` int unsigned COMMENT 'FK to Event',
+  `template_id` int unsigned COMMENT 'civicrm_message_template to be used',
+  `from_status` varchar(255) COMMENT 'list of (previous) participant status IDs',
+  `to_status` varchar(255) COMMENT 'list of (future) participant status IDs',
+  `languages` varchar(255) COMMENT 'list of languages',
+  `roles` varchar(255) COMMENT 'list of roles',
+  `weight` int COMMENT 'list of weights defining the order',
+  `attachments` text COMMENT 'list of attachments',
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_event_message_rules_event_id FOREIGN KEY (`event_id`) REFERENCES `civicrm_event`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_event_message_rules_template_id FOREIGN KEY (`template_id`) REFERENCES `civicrm_msg_template`(`id`) ON DELETE CASCADE
+)
+ENGINE=InnoDB;

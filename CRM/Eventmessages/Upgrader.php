@@ -26,7 +26,6 @@ class CRM_Eventmessages_Upgrader extends CRM_Eventmessages_Upgrader_Base {
     public function install()
     {
         // create table
-        $this->executeSqlFile('sql/civicrm_value_event_messages.sql');
         $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
         $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
     }
