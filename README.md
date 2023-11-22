@@ -40,7 +40,7 @@ executed, and potentially multiple emails will be sent to the same person. If
 this is disabled, the processing will stop after the first matching rule.
 
 You should be able to use most contact token in the message templates. A list of
-additional token can be found at `/civiremote/civicrm/eventmessages/tokenlist`.
+additional token can be found at `/civicrm/eventmessages/tokenlist`.
 
 ## Known Issues
 
