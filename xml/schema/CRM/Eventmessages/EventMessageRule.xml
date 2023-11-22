@@ -39,6 +39,10 @@
     <type>int unsigned</type>
     <comment>is this rule active</comment>
   </field>
+  <index>
+    <name>INDEX_is_active</name>
+    <fieldName>is_active<fieldName>
+  </index>
 
   <field>
     <name>template_id</name>
