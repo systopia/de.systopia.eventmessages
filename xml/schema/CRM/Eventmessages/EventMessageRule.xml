@@ -9,7 +9,7 @@
 
   <field>
     <name>id</name>
-    <type>int unsigned</type>
+    <type>int(10) unsigned</type>
     <required>true</required>
     <comment>Unique EventMessageRule ID</comment>
     <html>
@@ -23,7 +23,7 @@
 
   <field>
     <name>event_id</name>
-    <type>int unsigned</type>
+    <type>int(10) unsigned</type>
     <required>true</required>
     <comment>FK to Event</comment>
   </field>
@@ -36,17 +36,18 @@
 
   <field>
     <name>is_active</name>
-    <type>int unsigned</type>
+    <type>tinyint(4)</type>
+    <default>NULL</default>
     <comment>is this rule active</comment>
   </field>
   <index>
     <name>INDEX_is_active</name>
-    <fieldName>is_active<fieldName>
+    <fieldName>is_active</fieldName>
   </index>
 
   <field>
     <name>template_id</name>
-    <type>int unsigned</type>
+    <type>int(10) unsigned</type>
     <required>true</required>
     <comment>civicrm_message_template to be used</comment>
   </field>
@@ -61,6 +62,7 @@
     <name>from_status</name>
     <type>varchar</type>
     <length>255</length>
+    <default>NULL</default>
     <comment>list of (previous) participant status IDs</comment>
   </field>
 
@@ -68,6 +70,7 @@
     <name>to_status</name>
     <type>varchar</type>
     <length>255</length>
+    <default>NULL</default>
     <comment>list of (future) participant status IDs</comment>
   </field>
 
@@ -75,6 +78,7 @@
     <name>languages</name>
     <type>varchar</type>
     <length>255</length>
+    <default>NULL</default>
     <comment>list of languages</comment>
   </field>
 
@@ -82,18 +86,21 @@
     <name>roles</name>
     <type>varchar</type>
     <length>255</length>
+    <default>NULL</default>
     <comment>list of roles</comment>
   </field>
 
   <field>
     <name>weight</name>
-    <type>int</type>
+    <type>int(10)</type>
+    <default>NULL</default>
     <comment>list of weights defining the order</comment>
   </field>
 
   <field>
     <name>attachments</name>
     <type>text</type>
+    <default>NULL</default>
     <comment>list of attachments</comment>
   </field>
 </table>
