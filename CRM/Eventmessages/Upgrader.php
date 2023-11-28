@@ -18,7 +18,7 @@ use CRM_Eventmessages_ExtensionUtil as E;
 /**
  * Collection of upgrade steps.
  */
-class CRM_Eventmessages_Upgrader extends CRM_Eventmessages_Upgrader_Base {
+class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
 
     /**
      * Create the required custom data
