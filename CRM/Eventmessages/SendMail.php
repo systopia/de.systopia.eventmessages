@@ -308,6 +308,7 @@ class CRM_Eventmessages_SendMail
       // add session as a source
       if (isset($_SESSION['CiviCRM']) && is_array($_SESSION['CiviCRM'])) {
         foreach ($_SESSION['CiviCRM'] as $key => $data) {
+          // check for CiviCRM native form values
           if (strpos($key,'CRM_Event_Controller_Registration_') !== false) {
             if (isset($_SESSION['CiviCRM'][$key]['value'])) {
               $submission_sources[] = $_SESSION['CiviCRM'][$key]['value'];
@@ -318,14 +319,32 @@ class CRM_Eventmessages_SendMail
       // add the current request as a source
       $submission_sources[] = $_REQUEST;
 
-      // copy all custom_xx parameters into the participant
+      // if the current request has a json field, add that too
+      if (!empty($_REQUEST['json'])) {
+        $json_data = json_decode($_REQUEST['json'], true);
+        if (is_array($json_data)) {
+          $submission_sources[] = $json_data;
+        }
+      }
+
+      // copy all identifiable custom field data into the participant
       foreach ($submission_sources as $submission_source) {
         foreach ($submission_source as $key => $value) {
+          // look for the classic custom_xxx notation
           if (preg_match('/^custom_[0-9]+$/', $key)) {
-            // uncomment this for debugging
-//            if (isset($participant[$key]))
-//              Civi::log()->debug("EventMessages: overwriting participant value for [{$key}] with submission data for event [{$event_id}] / participant [{$participant_id}]");
             $participant[$key] = $value;
+          }
+
+          // also process the FormEditor's notation, i.e. "Participant\u00a7group_name-field_name"
+          if (strpos($key, "\u00a7")) {         // it contains the separator character
+            $field_key = explode("\u00a7", $key)[1];
+            if (strpos($field_key, '-')) {      // it also contains the group/field separator '-'
+              [$group_name, $field_name] = explode('-', $field_key);
+              $custom_field_key = CRM_Eventmessages_CustomData::getCustomFieldKey($group_name, $field_name);
+              if ($custom_field_key) {                 // it also maps to an existing custom field
+                $participant[$key] = $value;
+              }
+            }
           }
         }
       }
