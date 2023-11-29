@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use Civi\Api4\Event;
+use Civi\EventMessages\Language\LanguageMatcher;
 use CRM_Eventmessages_ExtensionUtil as E;
 use \Civi\RemoteEvent\Event\GetResultEvent as GetResultEvent;
 use \Civi\EventMessages\MessageTokens as MessageTokens;
@@ -287,14 +289,19 @@ class CRM_Eventmessages_Logic
      */
     public static function processStatusChange($event_id, $from_status_id, $to_status_id, $participant_id)
     {
+        $event = Event::get()
+            ->setSelect(['*', 'event_messages_settings.*'])
+            ->addWhere('id', '=', $event_id)
+            ->execute()
+            ->single();
         $rules = self::getActiveRules($event_id);
-        $multi_match = self::isMultiMatch($event_id);
+        $multi_match = $event['event_messages_settings.event_messages_execute_all_rules'] ?? false;
         foreach ($rules as $rule) {
             if (in_array($from_status_id, $rule['from']) || empty($rule['from'])) {
                 // 'from' status matches!
                 if (in_array($to_status_id, $rule['to']) || empty($rule['to'])) {
                     // 'to' status matches, too!
-                    if (self::participantMatchesLanguageAndRole($rule, $event_id, $participant_id)) {
+                    if (self::participantMatchesLanguageAndRole($event, $rule, $participant_id)) {
                         // everything checks out, go for it!
                         CRM_Eventmessages_SendMail::sendMessageTo(
                             [
@@ -315,25 +322,6 @@ class CRM_Eventmessages_Logic
     }
 
     /**
-     * Check if the given event ID allows multiple rule matches (and multiple emails to be sent)
-     *
-     * @param integer $event_id
-     *   event ID
-     *
-     * @return boolean
-     *   is multimatch allowed in this event?
-     */
-    public static function isMultiMatch($event_id)
-    {
-        $event_id = (int)$event_id;
-        $value = CRM_Core_DAO::singleValueQuery(
-            "
-            SELECT execute_all_rules FROM civicrm_value_event_messages_settings WHERE entity_id = {$event_id}"
-        );
-        return (boolean)$value;
-    }
-
-    /**
      * Check if the participant matches the language and role rules as well
      *
      * @param array $rule
@@ -346,18 +334,8 @@ class CRM_Eventmessages_Logic
      * @return bool
      *    true, if the contact matches the rule's language and role filters
      */
-    public static function participantMatchesLanguageAndRole($rule, $event_id, $participant_id)
+    public static function participantMatchesLanguageAndRole(array $event, array $rule, int $participant_id)
     {
-        if (!empty($rule['languages'])) {
-            // we'll have to check the language
-            $participant_language = self::getParticipantLanguage($participant_id);
-            if ($participant_language) {
-                if (!in_array($participant_language, $rule['languages'])) {
-                    return false;
-                }
-            }
-        }
-
         if (!empty($rule['roles'])) {
             // we'll have to check the roles
             $participant_roles = self::getParticipantRoles($participant_id);
@@ -366,38 +344,16 @@ class CRM_Eventmessages_Logic
             }
         }
 
-        return true;
-    }
-
-    /**
-     * Get the participant's preferred language.
-     * Caution: cached
-     *
-     * @param integer $participant_id
-     *
-     * @return string
-     *   language key
-     */
-    protected static function getParticipantLanguage($participant_id)
-    {
-        $participant_id = (int)$participant_id;
-        static $language_cache = [];
-        if (!isset($language_cache[$participant_id])) {
-            $preferred_language = CRM_Core_DAO::singleValueQuery(
-                "
-             SELECT contact.preferred_language
-             FROM civicrm_participant participant
-             LEFT JOIN civicrm_contact contact
-                    ON contact.id = participant.contact_id
-             WHERE participant.id = {$participant_id}"
-            );
-            if (empty($preferred_language)) {
-                $language_cache[$participant_id] = '';
-            } else {
-                $language_cache[$participant_id] = $preferred_language;
+        if (!empty($rule['languages'])) {
+            // we'll have to check the language
+            /** @var LanguageMatcher $language_matcher */
+            $language_matcher = \Civi::service(LanguageMatcher::class);
+            if (!$language_matcher->match($rule['languages'], $event, $participant_id)) {
+                return false;
             }
         }
-        return $language_cache[$participant_id];
+
+        return true;
     }
 
     /**

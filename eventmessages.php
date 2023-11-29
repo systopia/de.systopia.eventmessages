@@ -16,6 +16,9 @@
 require_once 'eventmessages.civix.php';
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Config\Resource\GlobResource;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Implements hook_civicrm_config().
@@ -38,6 +41,22 @@ function eventmessages_civicrm_config(&$config)
     if (interface_exists('\Civi\Mailattachment\AttachmentType\AttachmentTypeInterface')
          && class_exists('\Civi\EventMessages\AttachmentProvider')) {
         \Civi::dispatcher()->addSubscriber(new \Civi\EventMessages\AttachmentProvider());
+    }
+}
+
+function eventmessages_civicrm_container(ContainerBuilder $container): void {
+    $globResource = new GlobResource(__DIR__ . '/services', '/*.php', FALSE);
+    // Container will be rebuilt if a *.php file is added to services
+    $container->addResource($globResource);
+    foreach ($globResource->getIterator() as $path => $info) {
+        // Container will be rebuilt if file changes
+        $container->addResource(new FileResource($path));
+        require $path;
+    }
+
+    if (function_exists('_eventmessages_test_civicrm_container')) {
+        // Allow to use different services in tests.
+        _funding_test_civicrm_container($container);
     }
 }
 

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: de.systopia.eventmessages\n"
-"POT-Creation-Date: 2023-08-28 10:44+0200\n"
+"POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
@@ -13,8 +13,100 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Event Message Rules"
+msgstr "Kommunikationsregeln"
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Event Message Rule"
+msgstr "Kommunikationsregel"
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "ID"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Unique EventMessageRule ID"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Event ID"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "FK to Event"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Enabled"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "is this rule active"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Template ID"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "civicrm_message_template to be used"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "From Status"
+msgstr "Ausgangsstatus"
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "list of (previous) participant status IDs"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "To Status"
+msgstr "Zielstatus"
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "list of (future) participant status IDs"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Languages"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "list of languages"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+#: CRM/Eventmessages/Form/EventMessages.php
+msgid "Roles"
+msgstr "Rollen"
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "list of roles"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "Weight"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "list of weights defining the order"
+msgstr ""
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
+msgid "Attachments"
+msgstr "Anhänge"
+
+#: CRM/Eventmessages/DAO/EventMessageRule.php
+msgid "list of attachments"
+msgstr ""
 
 #: CRM/Eventmessages/Form/Download.php
 msgid "Your PDF letters are ready for download."
@@ -68,6 +160,11 @@ msgid "Execute All Matching Rules?"
 msgstr "Alle zutreffenden Regeln Ausführen?"
 
 #: CRM/Eventmessages/Form/EventMessages.php
+msgid "Language Providers"
+msgstr "Sprachquellen"
+
+#: CRM/Eventmessages/Form/EventMessages.php
+#: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Custom Data Workaround"
 msgstr "Benutzerdefinierte Felder Workaround"
 
@@ -76,20 +173,8 @@ msgid "Active?"
 msgstr "Regel Aktiviert?"
 
 #: CRM/Eventmessages/Form/EventMessages.php
-msgid "From Status"
-msgstr "Ausgangsstatus"
-
-#: CRM/Eventmessages/Form/EventMessages.php
-msgid "To Status"
-msgstr "Zielstatus"
-
-#: CRM/Eventmessages/Form/EventMessages.php
 msgid "Preferred Language"
 msgstr "Bevorzugte Sprache des Kontakts"
-
-#: CRM/Eventmessages/Form/EventMessages.php
-msgid "Roles"
-msgstr "Rollen"
 
 #: CRM/Eventmessages/Form/EventMessages.php
 #: CRM/Eventmessages/Form/Task/ParticipantEmail.php
@@ -171,10 +256,6 @@ msgid "Could not send e-mail to participant %1, error was: %2"
 msgstr ""
 "E-Mail für Teilnehmer %1 konnte nicht gesendet werden, der Fehler war: %2"
 
-#: CRM/Eventmessages/Upgrader/Base.php
-msgid "Upgrade %1 to revision %2"
-msgstr ""
-
 #: Civi/EventMessages/AttachmentProvider/ICal.php
 msgid "event.ics"
 msgstr ""
@@ -187,9 +268,43 @@ msgstr "iCalendar Datei"
 msgid "Message Template as PDF"
 msgstr "Nachrichtenvorlage als PDF Anhang"
 
+#: Civi/EventMessages/Install/LanguagesOptionsGroupCreator.php
+msgid "Event Message Languages"
+msgstr "Event Message Sprachen"
+
+#: Civi/EventMessages/Language/Provider/ContactLanguageProvider.php
+msgid ""
+"Contact custom fields using Event Messages Languages option group and "
+"preferred language."
+msgstr ""
+
+#: Civi/EventMessages/Language/Provider/ContactLanguageProvider.php
+msgid "Contact"
+msgstr "Kontakt"
+
+#: Civi/EventMessages/Language/Provider/EventLanguageProvider.php
+msgid "Event custom fields using Event Messages Languages option group."
+msgstr ""
+
+#: Civi/EventMessages/Language/Provider/EventLanguageProvider.php
+msgid "Event"
+msgstr "Veranstaltung"
+
+#: Civi/EventMessages/Language/Provider/ParticipantLanguageProvider.php
+msgid "Participant custom fields using Event Messages Languages option group."
+msgstr ""
+
+#: Civi/EventMessages/Language/Provider/ParticipantLanguageProvider.php
+msgid "Participant"
+msgstr "Teilnehmer"
+
 #: Civi/EventMessages/MessageTokenList.php
 msgid "no description available"
 msgstr "es liegt keine Beschreibung vor"
+
+#: Civi/EventMessages/MessageTokenList.php
+msgid "Contact Checksum"
+msgstr ""
 
 #: Civi/EventMessages/MessageTokenList.php
 msgid "Participant Status"
@@ -338,9 +453,19 @@ msgstr ""
 "verwendeten Werte von den in CiviCRM gespeicherten abweichen. Dieser Prozess "
 "sollte gut getestet werden."
 
-#: templates/CRM/Eventmessages/Form/EventMessages.tpl
-msgid "Custom Field Workaround"
-msgstr "Benutzerdefinierte Felder Workaround"
+#: templates/CRM/Eventmessages/Form/EventMessages.hlp
+msgid ""
+"Specifies where and in which order to look for languages to match against "
+"the rules. If a rule contains a language at least one options needs to be "
+"selected."
+msgstr ""
+"Definiert wo und in welcher Reihenfolge nach Sprachen gesucht wird, die "
+"gegen die Regeln geprüft werden. Wenn eine Regel eine Sprache enthält, muss "
+"mindestens eine Option ausgewählt sein."
+
+#: templates/CRM/Eventmessages/Form/EventMessages.hlp
+msgid "The following options are available:"
+msgstr "Die folgenden Optionen sind verfügbar:"
 
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Message Rules"
@@ -386,10 +511,6 @@ msgid ""
 msgstr ""
 "Die E-Mail-Parameter (Absender, cc, bcc, Antwort an) werden von den im "
 "jeweiligen Event konfigurierten Einstellungen übernommen."
-
-#: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
-msgid "Attachments"
-msgstr "Anhänge"
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.hlp
 msgid ""
@@ -441,33 +562,3 @@ msgstr ""
 "Die CiviCRM Nachrichtenvorlage, die als PDF an die versendete E-Mail "
 "angehängt werden soll. Kontakt-Platzhalter und Event Communications "
 "Variablen werden dabei ersetzt."
-
-#~ msgid "Participant Registration Time / Date"
-#~ msgstr "Teilnehmer Registrierungszeitpunkt"
-
-#~ msgid "Participant Fee Amount"
-#~ msgstr "Teilnehmergebühr: Betrag"
-
-#~ msgid "Disable Default Messages"
-#~ msgstr "Standard E-Mails unterdrücken"
-
-#~ msgid "Execute All Matching Rules"
-#~ msgstr "Alle zutreffenden Regeln Ausführen"
-
-#~ msgid "Execute All Rules"
-#~ msgstr "Execute All Matching Rules"
-
-#~ msgid "Sender"
-#~ msgstr "Absender"
-
-#~ msgid "Reply-To"
-#~ msgstr "Execute All Matching Rules?"
-
-#~ msgid "-please select-"
-#~ msgstr "-bitte wählen-"
-
-#~ msgid "Event Message Rules"
-#~ msgstr "Kommunikationsregeln"
-
-#~ msgid "Event Messages Settings"
-#~ msgstr "Kommunikationseinstellungen für diese Veranstaltung"

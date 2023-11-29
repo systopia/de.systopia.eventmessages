@@ -13,6 +13,9 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use Civi\Api4\CustomGroup;
+use Civi\Api4\OptionGroup;
+use Civi\EventMessages\Install\LanguagesOptionsGroupCreator;
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -23,11 +26,23 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
     /**
      * Create the required custom data
      */
-    public function install()
+    public function install(): void
     {
         // create table
         $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
         $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
+
+        (new LanguagesOptionsGroupCreator())->createLanguagesOptionGroup();
+    }
+
+    public function uninstall(): void
+    {
+        CustomGroup::delete(false)
+            ->addWhere('name', '=', 'event_messages_settings')
+            ->execute();
+        OptionGroup::delete(false)
+            ->addWhere('name', '=', 'event_messages_languages')
+            ->execute();
     }
 
     /**
@@ -102,6 +117,18 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
     $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
     $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
     return true;
+  }
+
+  public function upgrade_0006(): bool
+  {
+      $this->ctx->log->info('Add custom field');
+      $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
+      $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
+
+      $this->ctx->log->info('Add languages option group');
+      (new LanguagesOptionsGroupCreator())->createLanguagesOptionGroup();
+
+      return true;
   }
 
 }

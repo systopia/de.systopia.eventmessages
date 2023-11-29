@@ -9,7 +9,7 @@
 
   <field>
     <name>id</name>
-    <type>int(10) unsigned</type>
+    <type>int unsigned</type>
     <required>true</required>
     <comment>Unique EventMessageRule ID</comment>
     <html>
@@ -23,7 +23,7 @@
 
   <field>
     <name>event_id</name>
-    <type>int(10) unsigned</type>
+    <type>int unsigned</type>
     <required>true</required>
     <comment>FK to Event</comment>
   </field>
@@ -36,7 +36,7 @@
 
   <field>
     <name>is_active</name>
-    <type>tinyint(4)</type>
+    <type>tinyint</type>
     <default>NULL</default>
     <comment>is this rule active</comment>
   </field>
@@ -47,7 +47,7 @@
 
   <field>
     <name>template_id</name>
-    <type>int(10) unsigned</type>
+    <type>int unsigned</type>
     <required>true</required>
     <comment>civicrm_message_template to be used</comment>
   </field>
@@ -63,6 +63,7 @@
     <type>varchar</type>
     <length>255</length>
     <default>NULL</default>
+    <serialize>COMMA</serialize>
     <comment>list of (previous) participant status IDs</comment>
   </field>
 
@@ -71,6 +72,7 @@
     <type>varchar</type>
     <length>255</length>
     <default>NULL</default>
+    <serialize>COMMA</serialize>
     <comment>list of (future) participant status IDs</comment>
   </field>
 
@@ -79,6 +81,7 @@
     <type>varchar</type>
     <length>255</length>
     <default>NULL</default>
+    <serialize>COMMA</serialize>
     <comment>list of languages</comment>
   </field>
 
@@ -87,12 +90,13 @@
     <type>varchar</type>
     <length>255</length>
     <default>NULL</default>
+    <serialize>COMMA</serialize>
     <comment>list of roles</comment>
   </field>
 
   <field>
     <name>weight</name>
-    <type>int(10)</type>
+    <type>int</type>
     <default>NULL</default>
     <comment>list of weights defining the order</comment>
   </field>
@@ -101,6 +105,7 @@
     <name>attachments</name>
     <type>text</type>
     <default>NULL</default>
+    <serialize>JSON</serialize>
     <comment>list of attachments</comment>
   </field>
 </table>
