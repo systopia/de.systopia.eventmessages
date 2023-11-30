@@ -17,14 +17,14 @@
 
 declare(strict_types=1);
 
-/** @var ContainerBuilder $container */
+/** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\EventMessages\DependencyInjection\Compiler\LanguageProviderPass;
 use Civi\EventMessages\DependencyInjection\Util\ServiceRegistrator;
+use Civi\EventMessages\EventSubscriber\LanguagesGroupDeleteSubscriber;
 use Civi\EventMessages\Language\EventMessagesLanguageProvider;
 use Civi\EventMessages\Language\LanguageMatcher;
 use Civi\EventMessages\Language\LanguageProviderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 $container->addCompilerPass(new LanguageProviderPass());
 
@@ -39,3 +39,6 @@ ServiceRegistrator::autowireAllImplementing(
     LanguageProviderInterface::class,
     [LanguageProviderInterface::SERVICE_TAG => []]
 );
+
+$container->autowire(LanguagesGroupDeleteSubscriber::class)
+    ->addTag('kernel.event_subscriber');
