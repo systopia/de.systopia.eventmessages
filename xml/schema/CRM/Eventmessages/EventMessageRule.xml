@@ -82,6 +82,9 @@
     <length>255</length>
     <default>NULL</default>
     <serialize>COMMA</serialize>
+    <pseudoconstant>
+      <optionGroupName>event_messages_languages</optionGroupName>
+    </pseudoconstant>
     <comment>list of languages</comment>
   </field>
 
