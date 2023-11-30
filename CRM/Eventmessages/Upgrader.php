@@ -14,8 +14,10 @@
 +--------------------------------------------------------*/
 
 use Civi\Api4\CustomGroup;
+use Civi\Api4\Event;
 use Civi\Api4\OptionGroup;
 use Civi\EventMessages\Install\LanguagesOptionsGroupCreator;
+use Civi\EventMessages\Language\Provider\ContactLanguageProvider;
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -124,6 +126,13 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
       $this->ctx->log->info('Add custom field');
       $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
       $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
+
+      // Set language_provider_names on existing events to keep previous behavior.
+      Event::update(FALSE)
+          ->addValue('event_messages_settings.language_provider_names', [ContactLanguageProvider::getName()])
+          // Where is required for update action.
+          ->addWhere('id', 'IS NOT NULL')
+          ->execute();
 
       $this->ctx->log->info('Add languages option group');
       (new LanguagesOptionsGroupCreator())->createLanguagesOptionGroup();
