@@ -289,7 +289,7 @@ class CRM_Eventmessages_Logic
      */
     public static function processStatusChange($event_id, $from_status_id, $to_status_id, $participant_id)
     {
-        $event = Event::get()
+        $event = Event::get(false)
             ->setSelect(['*', 'event_messages_settings.*'])
             ->addWhere('id', '=', $event_id)
             ->execute()
