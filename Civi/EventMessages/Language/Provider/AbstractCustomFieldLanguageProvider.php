@@ -86,6 +86,7 @@ abstract class AbstractCustomFieldLanguageProvider implements LanguageProviderIn
                 ->setSelect(['custom_group_id:name', 'name'])
                 ->addWhere('custom_group_id.extends', '=', $this->entityName)
                 ->addWhere('option_group_id:name', '=', 'event_messages_languages')
+                ->addOrderBy('custom_group_id.weight')
                 ->addOrderBy('weight', 'ASC')
                 ->execute();
 
