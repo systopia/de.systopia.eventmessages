@@ -18,6 +18,7 @@
 declare(strict_types=1);
 
 use Civi\Api4\Event;
+use Civi\Core\Transaction\Manager as CiviTransactionManager;
 use Civi\EventMessages\AbstractEventmessagesHeadlessTestCase;
 use Civi\EventMessages\Fixtures\ContactFixture;
 use Civi\EventMessages\Fixtures\EmailFixture;
@@ -85,6 +86,7 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
         );
 
         ParticipantFixture::addFixture($contact['id'], $event['id']);
+        $this->simulateCommit();
     }
 
     public function testNoStatusMatch(): void {
@@ -106,5 +108,15 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
         $this->mailerMock->expects(static::never())->method('send');
 
         ParticipantFixture::addFixture($contact['id'], $event['id']);
+        $this->simulateCommit();
+    }
+
+    /**
+     * Because this test case is run in a transaction we have to ensure post
+     * commit hooks are called.
+     */
+    private function simulateCommit(): void {
+        $frame = CiviTransactionManager::singleton()->getBaseFrame();
+        $frame->invokeCallbacks(CRM_Core_Transaction::PHASE_POST_COMMIT);
     }
 }
