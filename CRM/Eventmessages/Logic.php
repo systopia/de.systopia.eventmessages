@@ -23,54 +23,66 @@ use \Civi\EventMessages\MessageTokens as MessageTokens;
 class CRM_Eventmessages_Logic
 {
 
-    /** @var array stack of [participant_id, status_id] tuples */
-    protected static $record_stack = [];
+    /**
+     * @phpstan-var array<int, array{status_id: int, force_execution: bool}>
+     *     Every new and edited participant is added to this array before post
+     *     commit with its participant ID as key.
+     */
+    protected static array $records = [];
 
     /**
      * Record a participant status before a change
-     *
-     * @param integer $participant_id
-     * @param array $participant_data
      */
-    public static function recordPre($participant_id, $participant_data)
+    public static function recordPreEdit(int $participant_id, array $participant_data): void
     {
-        if (empty($participant_id)) {
-            // this is a new contact
-            array_push(self::$record_stack, [0, 0, false]);
-        } else {
-            $participant_id = (int)$participant_id;
-            $status_id = CRM_Core_DAO::singleValueQuery(
-                "SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}"
+        $force_execution = !empty($participant_data['force_trigger_eventmessage']);
+        if (!isset(self::$records[$participant_id])) {
+            // First participant change in transaction.
+            $status_id = (int) CRM_Core_DAO::singleValueQuery(
+                    "SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}"
             );
-            $force_execution = !empty($participant_data['force_trigger_eventmessage']);
-            array_push(self::$record_stack, [$participant_id, $status_id, $force_execution]);
+            self::$records[$participant_id] = [
+                'status_id' => $status_id,
+                'force_execution' => $force_execution,
+            ];
+        } elseif ($force_execution) {
+            // Further participant change during a transaction.
+            self::$records[$participant_id]['force_execution'] = true;
         }
     }
 
     /**
-     * Record a participant status after a change, and trigger any matching rules
-     *
-     * @param integer $participant_id
-     * @param CRM_Event_BAO_Participant $participant_object
+     * Add new participant to records which are handled after commit
      */
-    public static function recordPost($participant_id, $participant_object)
+    public static function recordPostCreate(int $participant_id): void {
+        // New participant is inserted and has got an ID.
+        self::$records[$participant_id] = [
+            'status_id' => 0,
+            'force_execution' => false,
+        ];
+    }
+
+    /**
+     * Trigger any matching rules after commit
+     */
+    public static function recordPostCommit(int $participant_id, CRM_Event_BAO_Participant $participant_object): void
     {
-        $record = array_pop(self::$record_stack);
-        if (empty($record[0]) || $record[0] == $participant_id) {
-            $old_status_id = $record[1];
+        $record = self::$records[$participant_id] ?? null;
+        if (null !== $record) {
+            unset(self::$records[$participant_id]);
+            $old_status_id = $record['status_id'];
             if (isset($participant_object->status_id)) {
-                $new_status_id = $participant_object->status_id;
+                $new_status_id = (int) $participant_object->status_id;
             } else {
-                $new_status_id = CRM_Core_DAO::singleValueQuery(
+                $new_status_id = (int) CRM_Core_DAO::singleValueQuery(
                     "SELECT status_id FROM civicrm_participant WHERE id = {$participant_id}"
                 );
             }
 
-            // check if there is a change
-            $force_execution = $record[2];
-            if (($old_status_id <> $new_status_id) || $force_execution) {
+            // check if there is a change or execution is enforced
+            if (($old_status_id != $new_status_id) || $record['force_execution']) {
                 CRM_Eventmessages_Logic::processStatusChange(
-                    $participant_object->event_id,
+                    (int) $participant_object->event_id,
                     $old_status_id,
                     $new_status_id,
                     $participant_id
