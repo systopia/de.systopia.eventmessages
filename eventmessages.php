@@ -76,22 +76,32 @@ function eventmessages_civicrm_tabset($tabsetName, &$tabs, $context)
 }
 
 /**
- * Monitor Participant objects
+ * Monitor Participant edits
  */
-function eventmessages_civicrm_pre($op, $objectName, $id, &$params)
+function eventmessages_civicrm_pre(string $op, string $objectName, $id, array &$params): void
 {
-    if (($op == 'edit' || $op == 'create') && $objectName == 'Participant') {
-        CRM_Eventmessages_Logic::recordPre($id, $params);
+    if ($op === 'edit' && $objectName === 'Participant') {
+        CRM_Eventmessages_Logic::recordPreEdit((int) $id, $params);
     }
 }
 
 /**
- * Monitor Participant objects
+ * Monitor Participant creations
  */
-function eventmessages_civicrm_post($op, $objectName, $objectId, &$objectRef)
+function eventmessages_civicrm_post(string $op, string $objectName, int $objectId, &$objectRef): void
 {
-    if (($op == 'edit' || $op == 'create') && $objectName == 'Participant') {
-        CRM_Eventmessages_Logic::recordPost($objectId, $objectRef);
+    if ($op === 'create' && $objectName === 'Participant') {
+        CRM_Eventmessages_Logic::recordPostCreate($objectId);
+    }
+}
+
+/**
+ * Monitor Participant post commit
+ */
+function eventmessages_civicrm_postCommit(string $op, string $objectName, int $objectId, &$objectRef): void
+{
+    if (($op === 'edit' || $op === 'create') && $objectName === 'Participant') {
+        CRM_Eventmessages_Logic::recordPostCommit($objectId, $objectRef);
     }
 }
 
