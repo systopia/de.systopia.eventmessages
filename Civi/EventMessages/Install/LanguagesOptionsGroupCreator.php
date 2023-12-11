@@ -56,7 +56,7 @@ final class LanguagesOptionsGroupCreator
             // code, e.g. en_US, 'value' contains only the language code, e.g. 'en'.
             // Normally both values are unique for each group.
             $languageOption['value'] = $languageOption['name'];
-            [$langCode, $countryCode] = explode('_', $languageOption['value']);
+            [$langCode, $countryCode] = explode('_', $languageOption['value']) + [NULL, NULL];
             $matches = [];
             if (0 === preg_match('/(.*) \([^)]+\)$/', $languageOption['label'], $matches)) {
                 $languageLabel = $languageOption['label'];
@@ -85,9 +85,12 @@ final class LanguagesOptionsGroupCreator
                     ->countMatched() > 1;
             }
 
-            OptionValue::create(false)
-                ->setValues($languageOption)
-                ->execute();
+            // There might be languages not following the format <language code>_<country code>.
+            if (NULL !== $countryCode) {
+                OptionValue::create(false)
+                    ->setValues($languageOption)
+                    ->execute();
+            }
         }
 
         foreach ($countryLessLanguageOptions as $languageOption) {
