@@ -1,5 +1,10 @@
 # Custom Event Communication
 
+## We need your support
+This CiviCRM extension is provided as Free and Open Source Software, and we are happy if you find it useful. However, we have put a lot of work into it (and continue to do so), much of it unpaid for. So if you benefit from our software, please consider making a financial contribution so we can continue to maintain and develop it further.
+
+If you are willing to support us in developing this CiviCRM extension and a lot of other good stuff that helps organizations around the world, please send an email to info@systopia.de to get an invoice or agree a different payment method. Thank you! 
+
 ## Scope
 
 This extension provides an alternative way to send confirmation emails for
