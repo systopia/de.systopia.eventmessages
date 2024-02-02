@@ -547,12 +547,11 @@ class CRM_Eventmessages_Logic
             'option.limit' => 0,
         ]);
         foreach ($custom_fields['values'] as $custom_field) {
-            if (isset($custom_field['0'])) {
-                // this is a single field
-                $contact["custom_{$custom_field['id']}"] = $custom_field['latest'];
-            } else {
-                // skip multi-value fields for now...
-            }
+            $contact["custom_{$custom_field['id']}"] = (string) \CRM_Core_BAO_CustomField::displayValue(
+                $custom_field['latest'],
+                $custom_field['id'],
+                $contact_id
+            );
         }
         // Add checksum
         $contact['checksum'] = \CRM_Contact_BAO_Contact_Utils::generateChecksum($contact_id);
