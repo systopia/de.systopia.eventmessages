@@ -34,15 +34,15 @@ SET FOREIGN_KEY_CHECKS=1;
 -- *
 -- *******************************************************/
 CREATE TABLE `civicrm_event_message_rules` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique EventMessageRule ID',
-  `event_id` int(10) unsigned NOT NULL COMMENT 'FK to Event',
-  `is_active` tinyint(4) DEFAULT NULL COMMENT 'is this rule active',
-  `template_id` int(10) unsigned NOT NULL COMMENT 'civicrm_message_template to be used',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique EventMessageRule ID',
+  `event_id` int unsigned NOT NULL COMMENT 'FK to Event',
+  `is_active` tinyint DEFAULT NULL COMMENT 'is this rule active',
+  `template_id` int unsigned NOT NULL COMMENT 'civicrm_message_template to be used',
   `from_status` varchar(255) DEFAULT NULL COMMENT 'list of (previous) participant status IDs',
   `to_status` varchar(255) DEFAULT NULL COMMENT 'list of (future) participant status IDs',
   `languages` varchar(255) DEFAULT NULL COMMENT 'list of languages',
   `roles` varchar(255) DEFAULT NULL COMMENT 'list of roles',
-  `weight` int(10) DEFAULT NULL COMMENT 'list of weights defining the order',
+  `weight` int DEFAULT NULL COMMENT 'list of weights defining the order',
   `attachments` text DEFAULT NULL COMMENT 'list of attachments',
   PRIMARY KEY (`id`),
   INDEX `INDEX_is_active`(is_active),

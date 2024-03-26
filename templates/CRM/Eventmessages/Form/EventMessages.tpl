@@ -67,6 +67,10 @@
           <td>{$form.event_messages_execute_all_rules.html}</td>
         </tr>
 
+        <tr class="crm-event-manage-eventmessages-form-block-language_provider_names">
+          <td class="label">{$form.language_provider_names.label} {help id="id-language-provider-names" options=$language_provider_options_help|html_entity_decode title=$form.language_provider_names.label}</td>
+          <td>{$form.language_provider_names.html} </td>
+        </tr>
       </table>
 
         {if empty($supports_attachments)}

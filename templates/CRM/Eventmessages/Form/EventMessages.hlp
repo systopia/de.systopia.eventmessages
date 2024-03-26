@@ -45,3 +45,12 @@
   <p>{ts domain="de.systopia.eventmessages"}<strong>Caution:</strong> if those values will be processed or manipulated by CiviCRM after submission, the values sent out might differ from the ones stored in CiviCRM. Test well.{/ts}</p>
 {/htxt}
 
+{htxt id='id-language-provider-names'}
+    <p>
+        {ts domain="de.systopia.eventmessages"}Specifies where and in which order to look for languages to match against the rules. If a rule contains a language at least one options needs to be selected.{/ts}
+    </p>
+    <p>
+        {ts domain="de.systopia.eventmessages"}The following options are available:{/ts}
+    </p>
+    <p>{$params.options|nl2br}</p>
+{/htxt}

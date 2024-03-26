@@ -13,6 +13,9 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use Civi\Api4\Event;
+use Civi\Api4\OptionValue;
+use Civi\EventMessages\Language\LanguageProviderContainer;
 use CRM_Eventmessages_ExtensionUtil as E;
 
 
@@ -29,7 +32,8 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         'event_messages_cc',
         'event_messages_bcc',
         'event_messages_execute_all_rules',
-        'event_messages_custom_data_workaround'
+        'event_messages_custom_data_workaround',
+        'language_provider_names',
     ];
 
     /**
@@ -38,11 +42,14 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
     public function preProcess()
     {
         parent::preProcess();
+        Civi::resources()->addScriptFile(E::LONG_NAME, 'js/language_provider_names_keep_order.js');
         $this->setSelectedChild('eventmessages');
     }
 
     public function buildQuickForm()
     {
+        $event_settings = $this->loadEventSettings();
+
         // add settings fields
         $this->add(
             'checkbox',
@@ -83,6 +90,21 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
             'event_messages_execute_all_rules',
             E::ts("Execute All Matching Rules?")
         );
+
+        // Actually it would be better to have the metadata array available as
+        // variable in the {htxt} block, though it seems that it's only possible
+        // to pass strings...
+        $this->assign('language_provider_options_help', $this->buildLanguageProviderOptionsHelp());
+
+        $this->add(
+            'select',
+            'language_provider_names',
+            E::ts('Language Providers'),
+                $this->getLanguageProviderOptions($event_settings),
+            false,
+            ['class' => 'huge crm-select2', 'multiple' => 'multiple'],
+        );
+
         $this->add(
             'checkbox',
             'event_messages_custom_data_workaround',
@@ -90,20 +112,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
         );
 
         // set defaults for these fields
-        $return_fields = [];
-        foreach (self::SETTINGS_FIELDS as $field_name) {
-            $return_fields[] = CRM_Eventmessages_CustomData::getCustomFieldKey('event_messages_settings', $field_name);
-        }
-        $event_defaults = civicrm_api3('Event', 'getsingle', [
-            'id'     => $this->_id,
-            'return' => implode(',', $return_fields)
-        ]);
-        foreach (self::SETTINGS_FIELDS as $field_name) {
-            $field_key = CRM_Eventmessages_CustomData::getCustomFieldKey('event_messages_settings', $field_name);
-            $this->setDefaults([
-                $field_name => CRM_Utils_Array::value($field_key, $event_defaults)
-            ]);
-        }
+        $this->setDefaults($event_settings);
 
         // add message rules block
         $this->assign('rules_list', range(1, self::MAX_RULE_COUNT));
@@ -351,20 +360,19 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
     /**
      * Get a list of the available participant languages
      */
-    protected function getLanguagesList() {
+    protected function getLanguagesList(): array {
         $list = [];
-        $query = civicrm_api3(
-            'OptionValue',
-            'get',
-            [
-                'option_group_id' => 'languages',
-                'option.limit'    => 0,
-                'return'          => 'name,label',
-            ]
-        );
-        foreach ($query['values'] as $language) {
-            $list[$language['name']] = $language['label'];
+        $languages = OptionValue::get(false)
+            ->addSelect('value', 'label')
+            ->addWhere('option_group_id:name', '=', 'event_messages_languages')
+            ->addWhere('is_active', '=', true)
+            ->addOrderBy('weight')
+            ->execute();
+        /** @phpstan-var array{value: string, label: string} $language */
+        foreach ($languages as $language) {
+            $list[$language['value']] = $language['label'];
         }
+
         return $list;
     }
 
@@ -398,5 +406,79 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent
                 'field' => 'id',
             ];
         }
+    }
+
+    /**
+     * Sort language provider options in the order in settings.
+     *
+     * @phpstan-param array<string, string> $language_provider_options
+     * @phpstan-param array<string, mixed> $event_settings
+     */
+    private function sortLanguageProviderOptions(array &$language_provider_options, array $event_settings): void
+    {
+        /** @phpstan-var array<string> $language_provider_names */
+        $language_provider_names = $event_settings['language_provider_names'] ?? [];
+        uksort(
+            $language_provider_options,
+            fn(string $a, string $b) =>
+                array_search($a, $language_provider_names) - array_search($b, $language_provider_names)
+        );
+    }
+
+    /**
+     * @phpstan-return array<string, mixed>
+     *     Settings keyed by their option name.
+     *
+     * @throws CRM_Core_Exception
+     */
+    private function loadEventSettings(): array
+    {
+        $values = Event::get()
+            ->addSelect('event_messages_settings.*')
+            ->addWhere('id', '=', $this->_id)
+            ->execute()
+            ->single();
+
+        $settings = [];
+        foreach ($values as $key => $value) {
+            [, $optionName] = explode('.', $key, 2);
+            $settings[$optionName] = $value;
+        }
+
+        return $settings;
+    }
+
+    /**
+     * @phpstan-param array<string, mixed> $event_settings
+     *
+     * @phpstan-return array<string, string>
+     *     Mapping of provider name to label ordered by their order in given
+     *     event settings.
+     */
+    private function getLanguageProviderOptions(array $event_settings): array
+    {
+        /** @var \Civi\EventMessages\Language\LanguageProviderContainer $language_provider_container */
+        $language_provider_container = Civi::service(LanguageProviderContainer::class);
+        $language_provider_options = [];
+        foreach ($language_provider_container->getMetadata() as $metadata) {
+            $language_provider_options[$metadata['name']] = $metadata['label'];
+        }
+        // Display options in order of their selection.
+        $this->sortLanguageProviderOptions($language_provider_options, $event_settings);
+
+        return $language_provider_options;
+    }
+
+    private function buildLanguageProviderOptionsHelp(): string
+    {
+        // HTML tags are stripped when used as argument in {help}.
+        /** @var \Civi\EventMessages\Language\LanguageProviderContainer $language_provider_container */
+        $language_provider_container = \civi::service(LanguageProviderContainer::class);
+        $help = [];
+        foreach ($language_provider_container->getMetadata() as $metadata) {
+            $help[] = sprintf('• %s: %s', $metadata['label'], $metadata['description']);
+        }
+
+        return implode("\n", $help);
     }
 }
