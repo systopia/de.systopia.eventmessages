@@ -25,7 +25,7 @@ final class EventLanguageProvider extends AbstractCustomFieldLanguageProvider
 {
     public static function getDescription(): string
     {
-        return E::ts('Event custom fields using Event Messages Languages option group.');
+        return E::ts('Custom fields for events using "Event Message Languages" option group.');
     }
 
     public static function getLabel(): string

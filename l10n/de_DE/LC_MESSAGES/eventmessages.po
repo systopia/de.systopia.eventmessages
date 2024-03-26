@@ -274,25 +274,35 @@ msgstr "Event Message Sprachen"
 
 #: Civi/EventMessages/Language/Provider/ContactLanguageProvider.php
 msgid ""
-"Contact custom fields using Event Messages Languages option group and "
-"preferred language."
+"Custom fields for contacts using \"Event Message Languages\" option group "
+"and contact's preferred language."
 msgstr ""
+"Benutzerdefinierte Felder für Kontakte, welche die \"Event Message "
+"Sprachen\" Optionsgruppen verwenden sowie die bevorzugte Sprache des "
+"Kontakts."
 
 #: Civi/EventMessages/Language/Provider/ContactLanguageProvider.php
 msgid "Contact"
 msgstr "Kontakt"
 
 #: Civi/EventMessages/Language/Provider/EventLanguageProvider.php
-msgid "Event custom fields using Event Messages Languages option group."
+msgid ""
+"Custom fields for events using \"Event Message Languages\" option group."
 msgstr ""
+"Benutzerdefinierte Felder für Veranstaltungen, welche die \"Event Message "
+"Sprachen\" Optionsgruppen verwenden."
 
 #: Civi/EventMessages/Language/Provider/EventLanguageProvider.php
 msgid "Event"
 msgstr "Veranstaltung"
 
 #: Civi/EventMessages/Language/Provider/ParticipantLanguageProvider.php
-msgid "Participant custom fields using Event Messages Languages option group."
+msgid ""
+"Custom fields for participants using \"Event Message Languages\" option "
+"group."
 msgstr ""
+"Benutzerdefinierte Felder für Teilnehmende, welche die \"Event Message "
+"Sprachen\" Optionsgruppen verwenden"
 
 #: Civi/EventMessages/Language/Provider/ParticipantLanguageProvider.php
 msgid "Participant"
