@@ -16,6 +16,7 @@
 namespace Civi\EventMessages\AttachmentProvider;
 
 use Civi\Api4\Participant;
+use Civi\EventMessages\CalendarFile;
 use CRM_Eventmessages_ExtensionUtil as E;
 use Civi\Mailattachment\AttachmentType\AttachmentTypeInterface;
 
@@ -80,6 +81,12 @@ class ICal implements AttachmentTypeInterface
             $template->assign('timezone', @date_default_timezone_get());
             $ical_data = $template->fetch('CRM/Core/Calendar/ICal.tpl');
             $ical_data = preg_replace('/(?<!\r)\n/', "\r\n", $ical_data);
+
+            // trigger Symfony event to adjust content
+            $ical_event = new CalendarFile($ical_data, $event_id);
+            \Civi::dispatcher()->dispatch('civi.eventmessages.icsfile', $ical_event);
+            $ical_data = $ical_event->getIcalData();
+
             // write to tmp file
             $tmp_file = \System::mktemp("event_{$event_id}.ics");
             file_put_contents($tmp_file, $ical_data);
