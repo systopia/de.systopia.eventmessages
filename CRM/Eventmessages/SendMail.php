@@ -145,12 +145,14 @@ class CRM_Eventmessages_SendMail
      * @param object $mailer
      *      the currently used mailer, to be manipulated
      */
-    public static function suppressSystemMails(&$mailer)
+    public static function suppressSystemMails(&$mailer,$driver, $params)
     {
-        $mailer = new class($mailer) {
-            public function __construct($mailer)
+        $mailer = new class($mailer,$driver, $params) {
+            public function __construct($mailer,$driver, $params)
             {
                 $this->mailer = $mailer;
+                $this->driver = $driver;
+                $this->params = $params;
             }
 
             /**
@@ -243,6 +245,12 @@ class CRM_Eventmessages_SendMail
                 // we're done filtering -> send it already...
                 $this->mailer->send($recipients, $headers, $body);
             }
+          /**
+           * @return Mail|null
+           */
+          function getDriver() {
+            return $this->driver;
+          }
 
             /**
              * If we really drop/suppress a system mail, let's at least

@@ -131,7 +131,7 @@ function eventmessages_civicrm_postCommit(string $op, string $objectName, int $o
  */
 function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params)
 {
-    CRM_Eventmessages_SendMail::suppressSystemMails($mailer);
+    CRM_Eventmessages_SendMail::suppressSystemMails($mailer,$driver, $params);
 }
 
 /**
