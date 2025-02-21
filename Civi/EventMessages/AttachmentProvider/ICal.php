@@ -65,29 +65,9 @@ class ICal implements AttachmentTypeInterface
             $event_id = \Civi::$statics[__CLASS__]['participants'][$context['entity_id']]['event_id'];
         }
 
-        // simply use the CiviCRM ical function, copied from CRM_Utils_ICalendar
-        // let's see if we have it
         if (!isset(\Civi::$statics[__CLASS__]['ical_files'][$event_id])) {
-            // no? render ical data
-            $template = \CRM_Core_Smarty::singleton();
-            $event_data = \CRM_Event_BAO_Event::getCompleteInfo(null, null, $event_id, null, false);
-            foreach (['title', 'description', 'event_type', 'location', 'contact_email'] as $field) {
-                if (isset($event_data[0][$field])) {
-                    $event_data[0][$field] = html_entity_decode($event_data[0][$field], ENT_QUOTES | ENT_HTML401, 'UTF-8');
-                }
-            }
-            $template->assign('events', $event_data);
-            $template->assign('timezone', @date_default_timezone_get());
-            $ical_data = $template->fetch('CRM/Core/Calendar/ICal.tpl');
-            $ical_data = preg_replace('/(?<!\r)\n/', "\r\n", $ical_data);
-
-            // TODO: Utilize new Core method, once it's there, see
-            //       https://github.com/civicrm/civicrm-core/pull/26980
-            // $ical_data = \CRM_Utils_ICalendar::createCalendarFileForEvent($event_id);
-
-            // write to tmp file
             $tmp_file = \System::mktemp("event_{$event_id}.ics");
-            file_put_contents($tmp_file, $ical_data);
+            file_put_contents($tmp_file, \CRM_Utils_ICalendar::createCalendarFileForEvent($event_id));
             \Civi::$statics[__CLASS__]['ical_files'][$event_id] = $tmp_file;
         }
 
