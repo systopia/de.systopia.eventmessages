@@ -127,7 +127,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
                         E::ts("Sending Emails %1 - %2", [
                             1 => $next_offset, // keep in mind that this is showing when the _next_ task is running
                             2 => $next_offset + self::RUNNER_BATCH_SIZE]),
-                        $values['attachments']
+                        $values['attachments'] ?? []
                     )
                 );
                 $next_offset += self::RUNNER_BATCH_SIZE;
@@ -139,7 +139,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
         $queue->createItem(
             new CRM_Eventmessages_SendMailJob(
                 $current_batch,
-                $values['template_id'],
+                (int) $values['template_id'],
                 E::ts("Finishing"),
                 $values['attachments']
             )
@@ -226,4 +226,3 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
               AND email.id IS NULL");
     }
 }
-
