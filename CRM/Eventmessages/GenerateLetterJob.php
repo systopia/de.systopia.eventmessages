@@ -13,6 +13,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use Civi\Api4\Participant;
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -24,34 +25,34 @@ class CRM_Eventmessages_GenerateLetterJob
      * @var string $op
      *  The operation to perform during the job.
      */
-    protected $op = 'run';
+    protected string $op;
 
     /**
      * @var string $title
      *   The job title.
      */
-    public $title = '';
+    public string $title;
 
     /**
      * @var int[] $participant_ids
      *   List of participant IDs.
      */
-    protected $participant_ids;
+    protected array $participant_ids;
 
     /**
      * @var int $template_id
      *   The template to use for generating the letter.
      */
-    protected $template_id;
+    protected int $template_id;
 
     /**
      * @var string $temp_folder
      *   The temporary directory where PDFs are being stored for the current
      *   queue.
      */
-    protected $temp_folder;
+    protected string $temp_folder;
 
-    public function __construct($op = 'run', $participant_ids, $template_id, $temp_folder, $title)
+    public function __construct(string $op, array $participant_ids, int $template_id, string $temp_folder, string $title)
     {
         $this->op = $op;
         $this->participant_ids = $participant_ids;
@@ -72,17 +73,12 @@ class CRM_Eventmessages_GenerateLetterJob
             case 'run':
                 if (!empty($this->participant_ids)) {
                     // Load participants.
-                    $participants = civicrm_api3(
-                        'Participant',
-                        'get',
-                        [
-                            'id' => ['IN' => $this->participant_ids],
-                            'return' => 'id,contact_id,event_id,status_id',
-                            'option.limit' => 0,
-                        ]
-                    );
+                    $participants = Participant::get(FALSE)
+                      ->addSelect('id', 'contact_id', 'event_id', 'status_id')
+                      ->addWhere('id', 'IN', $this->participant_ids)
+                      ->execute();
                     // Generate PDF letters for participants.
-                    foreach ($participants['values'] as $participant) {
+                    foreach ($participants as $participant) {
                         try {
                             // Generate PDF letters.
                             $pdf = CRM_Eventmessages_GenerateLetter::generateLetterFor(

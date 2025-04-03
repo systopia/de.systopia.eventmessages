@@ -110,7 +110,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
             new CRM_Eventmessages_GenerateLetterJob(
                 'init',
                 [],
-                $values['template_id'],
+                (int) $values['template_id'],
                 $temp_folder,
                 E::ts("Initialized")
             )
@@ -152,7 +152,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
                 new CRM_Eventmessages_GenerateLetterJob(
                     'run',
                     $current_batch,
-                    $values['template_id'],
+                    (int) $values['template_id'],
                     $temp_folder,
                     E::ts(
                         "Generated letters %1 of %2",
@@ -172,7 +172,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task
             new CRM_Eventmessages_GenerateLetterJob(
                 'finish',
                 [],
-                $values['template_id'],
+                (int) $values['template_id'],
                 $temp_folder,
                 E::ts("Finished")
             )

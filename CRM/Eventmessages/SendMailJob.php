@@ -13,6 +13,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use Civi\Api4\Participant;
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -21,21 +22,21 @@ use CRM_Eventmessages_ExtensionUtil as E;
 class CRM_Eventmessages_SendMailJob
 {
     /** @var string job title */
-    public $title = '';
+    public string $title;
 
     /** @var array list of (int) participant IDs */
-    protected $participant_ids;
+    protected array $participant_ids;
 
     /** @var integer template to send to */
-    protected $template_id;
+    protected int $template_id;
 
     /**
      * @var array
      *   A list of attachment IDs to add to the e-mail.
      */
-    protected $attachments;
+    protected array $attachments;
 
-    public function __construct($participant_ids, $template_id, $title, $attachments = [])
+    public function __construct(array $participant_ids, int $template_id, string $title, array $attachments = [])
     {
         $this->participant_ids = $participant_ids;
         $this->template_id = $template_id;
@@ -52,13 +53,12 @@ class CRM_Eventmessages_SendMailJob
     {
         if (!empty($this->participant_ids)) {
             // load the participants
-            $participants = civicrm_api3('Participant', 'get', [
-                'id'           => ['IN' => $this->participant_ids],
-                'return'       => 'id,contact_id,event_id,status_id',
-                'option.limit' => 0,
-            ]);
+            $participants = Participant::get(FALSE)
+              ->addSelect('id', 'contact_id', 'event_id', 'status_id')
+              ->addWhere('id', 'IN', $this->participant_ids)
+              ->execute();
             // trigger sendMessageTo for each one of them
-            foreach ($participants['values'] as $participant) {
+            foreach ($participants as $participant) {
                 try {
                     CRM_Eventmessages_SendMail::sendMessageTo(
                         [
