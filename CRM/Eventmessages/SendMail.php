@@ -68,7 +68,27 @@ class CRM_Eventmessages_SendMail {
         }
 
         // resolve/beautify sender (use name instead of value of the option_value)
-        $from_addresses = CRM_Core_OptionGroup::values('from_email_address');
+        // TODO: Remove check when minimum core version requirement is >= 6.0.0.
+        if (class_exists('\Civi\Api4\SiteEmailAddress')) {
+          $from_addresses = \Civi\Api4\SiteEmailAddress::get(FALSE)
+            ->addSelect('display_name', 'id')
+            ->addWhere('domain_id', '=', 'current_domain')
+            ->addWhere('is_active', '=', TRUE)
+            ->addOrderBy('id')
+            ->execute()
+            ->indexBy('id')
+            ->column('display_name');
+        }
+        else {
+          $from_addresses = \Civi\Api4\OptionValue::get(FALSE)
+            ->addSelect('value', 'label')
+            ->addWhere('option_group_id:name', '=', 'from_email_address')
+            ->addWhere('is_active', '=', TRUE)
+            ->addOrderBy('value')
+            ->execute()
+            ->indexBy('value')
+            ->column('label');
+        }
         if (isset($from_addresses[$email_data['from']])) {
           $email_data['from'] = $from_addresses[$email_data['from']];
         }

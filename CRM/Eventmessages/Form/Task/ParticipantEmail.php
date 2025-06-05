@@ -178,31 +178,6 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
   }
 
   /**
-   * Get a list of the available/allowed sender email addresses
-   *
-   * @return array
-   *   list of sender options
-   */
-  private function getSenderOptions(): array {
-    $list = [];
-    $query = civicrm_api3(
-        'OptionValue',
-        'get',
-        [
-          'option_group_id' => 'from_email_address',
-          'option.limit' => 0,
-          'return' => 'value,label',
-        ]
-    );
-
-    foreach ($query['values'] as $sender) {
-      $list[$sender['value']] = $sender['label'];
-    }
-
-    return $list;
-  }
-
-  /**
    * Get the number of participants that
    *   do not have a viable email address
    */
