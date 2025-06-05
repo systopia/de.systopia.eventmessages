@@ -39,7 +39,7 @@ final class CiviTestContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE)
+    public function get(string $id, int $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE): ?object
     {
         return $this->services[$id] ?? $this->container->get($id, $invalidBehavior);
     }
@@ -47,7 +47,7 @@ final class CiviTestContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function has($id): bool
+    public function has(string $id): bool
     {
         return isset($this->services[$id]) || $this->container->has($id);
     }
@@ -55,14 +55,14 @@ final class CiviTestContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function set($id, $service): void {
+    public function set(string $id, ?object $service): void {
         $this->services[$id] = $service;
     }
 
     /**
      * @inheritDoc
      */
-    public function initialized($id): bool
+    public function initialized(string $id): bool
     {
         return $this->container->initialized($id);
     }
@@ -70,7 +70,7 @@ final class CiviTestContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function getParameter($name)
+    public function getParameter(string $name)
     {
         return $this->container->getParameter($name);
     }
@@ -78,7 +78,7 @@ final class CiviTestContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function hasParameter($name): bool
+    public function hasParameter(string $name): bool
     {
         return $this->container->hasParameter($name);
     }
@@ -86,7 +86,7 @@ final class CiviTestContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function setParameter($name, $value): void
+    public function setParameter(string $name, array|bool|string|int|float|\UnitEnum|null $value): void
     {
         $this->container->setParameter($name, $value);
     }
