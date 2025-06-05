@@ -16,6 +16,7 @@
         "sort-packages": true
     },
     "require": {
+        "php": "^8.1"
     },
     "scripts": {
         "composer-phpcs": [
