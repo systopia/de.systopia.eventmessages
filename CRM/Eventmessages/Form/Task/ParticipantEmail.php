@@ -36,15 +36,6 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
         // calculate and add the number of contacts with no valid E-Mail
         $this->assign('no_email_count', $no_email_count);
 
-//        $this->add(
-//            'select',
-//            'sender_email',
-//            E::ts('E-mail sender address'),
-//            $this->getSenderOptions(),
-//            true,
-//            ['class' => 'crm-select2 huge']
-//        );
-
         $this->add(
             'select',
             'template_id',
@@ -178,32 +169,6 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task
             $list[$status['id']] = $status['msg_title'];
         }
         asort($list);
-
-        return $list;
-    }
-
-    /**
-     * Get a list of the available/allowed sender email addresses
-     *
-     * @return array
-     *   list of sender options
-     */
-    private function getSenderOptions(): array
-    {
-        $list = [];
-        $query = civicrm_api3(
-            'OptionValue',
-            'get',
-            [
-                'option_group_id' => 'from_email_address',
-                'option.limit' => 0,
-                'return' => 'value,label',
-            ]
-        );
-
-        foreach ($query['values'] as $sender) {
-            $list[$sender['value']] = $sender['label'];
-        }
 
         return $list;
     }
