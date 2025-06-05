@@ -56,7 +56,7 @@ function eventmessages_civicrm_container(ContainerBuilder $container): void {
 
     if (function_exists('_eventmessages_test_civicrm_container')) {
         // Allow to use different services in tests.
-        _funding_test_civicrm_container($container);
+        _eventmessages_test_civicrm_container($container);
     }
 }
 
