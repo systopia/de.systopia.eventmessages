@@ -30,10 +30,6 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
      */
     public function install(): void
     {
-        // create table
-        $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
-        $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
-
         (new LanguagesOptionsGroupCreator())->createLanguagesOptionGroup();
     }
 
@@ -55,10 +51,8 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
      */
     public function upgrade_0001()
     {
-        $this->ctx->log->info('Adding settings');
-        $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
-        $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
-        return true;
+      // Removed unnecessary synchronisation of custom group, now done via managed entities.
+      return true;
     }
 
     /**
@@ -115,18 +109,13 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
    */
   public function upgrade_0005()
   {
-    $this->ctx->log->info('Adding custom data workaround option');
-    $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
-    $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
+    // Removed unnecessary synchronisation of custom group, now done via managed entities.
     return true;
   }
 
   public function upgrade_0006(): bool
   {
       $this->ctx->log->info('Add custom field');
-      $customData = new CRM_Eventmessages_CustomData(E::LONG_NAME);
-      $customData->syncCustomGroup(E::path('resources/custom_group_event_messages_settings.json'));
-
       // Set language_provider_names on existing events to keep previous behavior.
       Event::update(FALSE)
           ->addValue('event_messages_settings.language_provider_names', [ContactLanguageProvider::getName()])
