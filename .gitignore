@@ -1,3 +1,10 @@
-tools/*/composer.lock
-tools/*/vendor/
+/.phpcs.cache
 /.phpunit.result.cache
+/.phpstan/
+/ci/composer.lock
+/ci/vendor/
+/composer.lock
+/phpstan.neon
+/tools/*/vendor/
+/tools/*/composer.lock
+/vendor/

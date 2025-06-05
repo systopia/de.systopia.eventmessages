@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
          colors="true"
          failOnRisky="true"
          failOnWarning="true"
@@ -8,24 +8,30 @@
          bootstrap="tests/phpunit/bootstrap.php">
 
   <php>
-    <ini name="error_reporting" value="-1" />
+    <ini name="error_reporting" value="-1"/>
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[direct]=0&amp;baselineFile=./tests/ignored-deprecations.json"/>
   </php>
 
   <testsuites>
-    <testsuite name="My Test Suite">
+    <testsuite name="de.systopia.eventmessages Test Suite">
       <directory>./tests/phpunit</directory>
     </testsuite>
   </testsuites>
-  <filter>
-    <whitelist>
+
+  <coverage>
+    <include>
       <directory suffix=".php">CRM</directory>
       <directory suffix=".php">Civi</directory>
-    </whitelist>
-  </filter>
+    </include>
+    <exclude>
+      <directory>CRM/Eventmessages/DAO</directory>
+    </exclude>
+  </coverage>
+
   <listeners>
     <listener class="Civi\Test\CiviTestListener">
       <arguments/>
     </listener>
   </listeners>
+
 </phpunit>
