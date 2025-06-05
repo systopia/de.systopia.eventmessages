@@ -344,7 +344,7 @@ main() {
   run git commit -m "Set version to $version"
   run git tag "$version"
 
-  run updateInfoXml "$version" "dev"
+  run updateInfoXml "$nextVersion" "dev"
   run git add info.xml
 
   if [ $noComposer -eq 0 ]; then
