@@ -4,6 +4,11 @@ set -eu -o pipefail
 EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 EXT_NAME=$(basename "$EXT_DIR")
 
+if ! type git >/dev/null 2>&1; then
+  apt -y update
+  apt -y install git
+fi
+
 # Prevent this git error: The repository does not have the correct ownership and git refuses to use it
 git config --global --add safe.directory "/var/www/html/sites/default/files/civicrm/ext/$EXT_NAME"
 
