@@ -15,36 +15,32 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language\Provider;
 
 use CRM_Eventmessages_ExtensionUtil as E;
 
-final class ParticipantLanguageProvider extends AbstractCustomFieldLanguageProvider
-{
-    public static function getDescription(): string
-    {
-        return E::ts('Custom fields for participants using "Event Message Languages" option group.');
-    }
+final class ParticipantLanguageProvider extends AbstractCustomFieldLanguageProvider {
 
-    public static function getLabel(): string
-    {
-        return E::ts('Participant');
-    }
+  public static function getDescription(): string {
+    return E::ts('Custom fields for participants using "Event Message Languages" option group.');
+  }
 
-    public static function getName(): string
-    {
-        return 'participant';
-    }
+  public static function getLabel(): string {
+    return E::ts('Participant');
+  }
 
-    public function __construct()
-    {
-        parent::__construct('Participant');
-    }
+  public static function getName(): string {
+    return 'participant';
+  }
 
-    protected function getWhere(int $eventId, int $participantId): array
-    {
-        return [['id', '=', $participantId]];
-    }
+  public function __construct() {
+    parent::__construct('Participant');
+  }
+
+  protected function getWhere(int $eventId, int $participantId): array {
+    return [['id', '=', $participantId]];
+  }
+
 }

@@ -18,36 +18,35 @@ namespace Civi\EventMessages;
 use CRM_Eventmessages_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AttachmentProvider implements EventSubscriberInterface
-{
-    /**
-     * {@inheritDoc}
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            'civi.mailattachment.attachmentTypes' => 'getAttachmentTypes',
-        ];
-    }
+class AttachmentProvider implements EventSubscriberInterface {
 
-    public static function getAttachmentTypes($event)
-    {
-        // Add attachment provider for iCal files.
-        $event->attachment_types['ical'] = [
-            'label' => E::ts('iCalendar file'),
-            'controller' => \Civi\EventMessages\AttachmentProvider\ICal::class,
-            'context' => [
-                'entity_types' => ['participant'],
-            ],
-        ];
+  /**
+   * {@inheritDoc}
+   */
+  public static function getSubscribedEvents() {
+    return [
+      'civi.mailattachment.attachmentTypes' => 'getAttachmentTypes',
+    ];
+  }
 
-        // Add attachment provider for rendering message templates as PDF.
-        $event->attachment_types['message_template_pdf'] = [
-            'label' => E::ts('Message Template as PDF'),
-            'controller' => \Civi\EventMessages\AttachmentProvider\MessageTemplatePDF::class,
-            'context' => [
-                'entity_types' => ['participant'],
-            ],
-        ];
-    }
+  public static function getAttachmentTypes($event) {
+    // Add attachment provider for iCal files.
+    $event->attachment_types['ical'] = [
+      'label' => E::ts('iCalendar file'),
+      'controller' => \Civi\EventMessages\AttachmentProvider\ICal::class,
+      'context' => [
+        'entity_types' => ['participant'],
+      ],
+    ];
+
+    // Add attachment provider for rendering message templates as PDF.
+    $event->attachment_types['message_template_pdf'] = [
+      'label' => E::ts('Message Template as PDF'),
+      'controller' => \Civi\EventMessages\AttachmentProvider\MessageTemplatePDF::class,
+      'context' => [
+        'entity_types' => ['participant'],
+      ],
+    ];
+  }
+
 }

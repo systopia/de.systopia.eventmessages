@@ -15,50 +15,46 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language;
 
-use Civi\EventMessages\Language\Provider\EventLanguageProvider;
+class LanguageMatcher {
+  private EventMessagesLanguageProvider $languageProvider;
 
-class LanguageMatcher
-{
-    private EventMessagesLanguageProvider $languageProvider;
+  public function __construct(EventMessagesLanguageProvider $languageProvider) {
+    $this->languageProvider = $languageProvider;
+  }
 
-    public function __construct(EventMessagesLanguageProvider $languageProvider)
-    {
-        $this->languageProvider = $languageProvider;
+  /**
+   * @phpstan-param array<string> $languages
+   * @phpstan-param array{
+   *   id: int,
+   *   'event_messages_settings.language_provider_names': array<string>|null,
+   * } $event
+   *
+   * @return bool true if the languages linked to the given event and
+   *   participant matches any of the given languages, or the languages array
+   *   is empty.
+   */
+  public function match(array $languages, array $event, int $participantId): bool {
+    if ([] === $languages) {
+      return TRUE;
     }
 
-    /**
-     * @phpstan-param array<string> $languages
-     * @phpstan-param array{
-     *   id: int,
-     *   'event_messages_settings.language_provider_names': array<string>|null,
-     * } $event
-     *
-    * @return bool true if the languages linked to the given event and
-     *   participant matches any of the given languages, or the languages array
-     *   is empty.
-     */
-    public function match(array $languages, array $event, int $participantId): bool
-    {
-        if ([] === $languages) {
-            return true;
-        }
+    $providerNames = $event['event_messages_settings.language_provider_names'] ?? [];
+    foreach ($this->languageProvider->getLanguages($providerNames, $event['id'], $participantId) as $language) {
+      if (in_array($language, $languages, TRUE)) {
+        return TRUE;
+      }
 
-        $providerNames = $event['event_messages_settings.language_provider_names'] ?? [];
-        foreach ($this->languageProvider->getLanguages($providerNames, $event['id'], $participantId) as $language) {
-            if (in_array($language, $languages, true)) {
-                return true;
-            }
-
-            [$langCode] = explode('_', $language, 2);
-            if (in_array($langCode, $languages, true)) {
-                return true;
-            }
-        }
-
-        return false;
+      [$langCode] = explode('_', $language, 2);
+      if (in_array($langCode, $languages, TRUE)) {
+        return TRUE;
+      }
     }
+
+    return FALSE;
+  }
+
 }

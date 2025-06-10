@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\DependencyInjection\Compiler;
 
@@ -26,53 +26,52 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class LanguageProviderPass implements CompilerPassInterface
-{
+final class LanguageProviderPass implements CompilerPassInterface {
 
-    /**
-     * @inheritDoc
-     */
-    public function process(ContainerBuilder $container): void
-    {
-        $metadata = [];
-        $services = [];
+  /**
+   * @inheritDoc
+   */
+  public function process(ContainerBuilder $container): void {
+    $metadata = [];
+    $services = [];
 
-        foreach ($container->findTaggedServiceIds(LanguageProviderInterface::SERVICE_TAG) as $id => $tags) {
-            $class = $this->getServiceClass($container, $id);
-            if (!is_a($class, LanguageProviderInterface::class, true)) {
-                throw new \RuntimeException(sprintf('Class "%s" is not an instance of "%s"', $class, LanguageProviderInterface::class));
-            }
+    foreach ($container->findTaggedServiceIds(LanguageProviderInterface::SERVICE_TAG) as $id => $tags) {
+      $class = $this->getServiceClass($container, $id);
+      if (!is_a($class, LanguageProviderInterface::class, TRUE)) {
+        throw new \RuntimeException(sprintf('Class "%s" is not an instance of "%s"', $class, LanguageProviderInterface::class));
+      }
 
-            $name = $class::getName();
+      $name = $class::getName();
 
-            if (isset($metadata[$name])) {
-                throw new \RuntimeException(sprintf('Duplicate language provider name "%s"', $name));
-            }
+      if (isset($metadata[$name])) {
+        throw new \RuntimeException(sprintf('Duplicate language provider name "%s"', $name));
+      }
 
-            $metadata[$name] = [
-                'name' => $name,
-                'label' => $class::getLabel(),
-                'description' => $class::getDescription(),
-            ];
+      $metadata[$name] = [
+        'name' => $name,
+        'label' => $class::getLabel(),
+        'description' => $class::getDescription(),
+      ];
 
-            $services[$name] = new Reference($id);
-        }
-
-        $container->register(LanguageProviderContainer::class, LanguageProviderContainer::class)
-            ->addArgument(ServiceLocatorTagPass::register($container, $services))
-            ->addArgument($metadata)
-            ->setPublic(true);
+      $services[$name] = new Reference($id);
     }
 
-    /**
-     * @phpstan-return class-string
-     */
-    private function getServiceClass(ContainerBuilder $container, string $id): string {
-        $definition = $container->getDefinition($id);
+    $container->register(LanguageProviderContainer::class, LanguageProviderContainer::class)
+      ->addArgument(ServiceLocatorTagPass::register($container, $services))
+      ->addArgument($metadata)
+      ->setPublic(TRUE);
+  }
 
-        /** @phpstan-var class-string $class */
-        $class = $definition->getClass() ?? $id;
+  /**
+   * @phpstan-return class-string
+   */
+  private function getServiceClass(ContainerBuilder $container, string $id): string {
+    $definition = $container->getDefinition($id);
 
-        return $class;
-    }
+    /** @phpstan-var class-string $class */
+    $class = $definition->getClass() ?? $id;
+
+    return $class;
+  }
+
 }

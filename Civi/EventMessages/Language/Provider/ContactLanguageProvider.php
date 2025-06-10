@@ -15,48 +15,43 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language\Provider;
 
 use Civi\Api4\Participant;
 use CRM_Eventmessages_ExtensionUtil as E;
 
-final class ContactLanguageProvider extends AbstractCustomFieldLanguageProvider
-{
-    public static function getDescription(): string
-    {
-        return E::ts('Custom fields for contacts using "Event Message Languages" option group and contact\'s preferred language.');
-    }
+final class ContactLanguageProvider extends AbstractCustomFieldLanguageProvider {
 
-    public static function getLabel(): string
-    {
-        return E::ts('Contact');
-    }
+  public static function getDescription(): string {
+    return E::ts('Custom fields for contacts using "Event Message Languages" option group and contact\'s preferred language.');
+  }
 
-    public static function getName(): string
-    {
-        return 'contact';
-    }
+  public static function getLabel(): string {
+    return E::ts('Contact');
+  }
 
-    public function __construct()
-    {
-        parent::__construct('Contact');
-    }
+  public static function getName(): string {
+    return 'contact';
+  }
 
-    protected function getLanguageFieldNames(): array
-    {
-        return array_merge(parent::getLanguageFieldNames(), ['preferred_language']);
-    }
+  public function __construct() {
+    parent::__construct('Contact');
+  }
 
-    protected function getWhere(int $eventId, int $participantId): array
-    {
-        $contactId = Participant::get(false)
-            ->addSelect('contact_id')
-            ->addWhere('id', '=', $participantId)
-            ->execute()
-            ->single()['contact_id'];
+  protected function getLanguageFieldNames(): array {
+    return array_merge(parent::getLanguageFieldNames(), ['preferred_language']);
+  }
 
-        return [['id', '=', $contactId]];
-    }
+  protected function getWhere(int $eventId, int $participantId): array {
+    $contactId = Participant::get(FALSE)
+      ->addSelect('contact_id')
+      ->addWhere('id', '=', $participantId)
+      ->execute()
+      ->single()['contact_id'];
+
+    return [['id', '=', $contactId]];
+  }
+
 }
