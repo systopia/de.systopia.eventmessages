@@ -13,21 +13,22 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Eventmessages_ExtensionUtil as E;
-use \Civi\EventMessages\MessageTokenList as MessageTokenList;
+use Civi\EventMessages\MessageTokenList as MessageTokenList;
 
-class CRM_Eventmessages_Page_TokenList extends CRM_Core_Page
-{
-    public function run()
-    {
-        CRM_Utils_System::setTitle(E::ts('EventMessages: List of (potential) E-Mail Tokens'));
+class CRM_Eventmessages_Page_TokenList extends CRM_Core_Page {
 
-        // collect all tokens
-        $message_tokens = new MessageTokenList();
-        Civi::dispatcher()->dispatch('civi.eventmessages.tokenlist', $message_tokens);
-        $this->assign('token_list', $message_tokens->getTokens(true));
+  public function run() {
+    CRM_Utils_System::setTitle(E::ts('EventMessages: List of (potential) E-Mail Tokens'));
 
-        parent::run();
-    }
+    // collect all tokens
+    $message_tokens = new MessageTokenList();
+    Civi::dispatcher()->dispatch('civi.eventmessages.tokenlist', $message_tokens);
+    $this->assign('token_list', $message_tokens->getTokens(TRUE));
+
+    parent::run();
+  }
 
 }
