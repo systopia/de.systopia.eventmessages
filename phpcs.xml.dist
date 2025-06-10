@@ -9,6 +9,7 @@
     <file>eventmessages.php</file>
 
     <exclude-pattern>/CRM/Eventmessages/DAO/.*\.php$</exclude-pattern>
+    <exclude-pattern>/CRM/Eventmessages/CustomData\.php$</exclude-pattern>
 
     <arg name="extensions" value="php"/>
     <arg name="cache" value=".phpcs.cache"/>
