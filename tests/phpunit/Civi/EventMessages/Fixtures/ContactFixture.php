@@ -32,7 +32,7 @@ final class ContactFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addIndividual(array $values = []): array {
-    return Contact::create(false)
+    return Contact::create(FALSE)
       ->setValues($values + [
         'contact_type' => 'Individual',
         'first_name' => 'Some',
@@ -49,7 +49,7 @@ final class ContactFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addOrganization(array $values = []): array {
-    return Contact::create(false)
+    return Contact::create(FALSE)
       ->setValues($values + [
         'contact_type' => 'Organization',
         'legal_name' => 'Test organization',

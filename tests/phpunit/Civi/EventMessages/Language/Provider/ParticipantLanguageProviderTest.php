@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language\Provider;
 
@@ -32,78 +32,76 @@ use Civi\EventMessages\Fixtures\ParticipantFixture;
  *
  * @group headless
  */
-final class ParticipantLanguageProviderTest extends AbstractEventmessagesHeadlessTestCase
-{
+final class ParticipantLanguageProviderTest extends AbstractEventmessagesHeadlessTestCase {
 
-    private ParticipantLanguageProvider $provider;
+  private ParticipantLanguageProvider $provider;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->provider = new ParticipantLanguageProvider();
+  protected function setUp(): void {
+    parent::setUp();
+    $this->provider = new ParticipantLanguageProvider();
 
-        $customGroup = CustomGroup::create(false)
-            ->setValues([
-                'title' => 'Participant Custom Test',
-                'name' => 'group',
-                'extends' => 'Participant',
-            ])->execute()->first();
+    $customGroup = CustomGroup::create(FALSE)
+      ->setValues([
+        'title' => 'Participant Custom Test',
+        'name' => 'group',
+        'extends' => 'Participant',
+      ])->execute()->first();
 
-        CustomField::create(false)
-            ->setValues([
-                'custom_group_id' => $customGroup['id'],
-                'name' => 'language',
-                'option_group_id:name' => 'event_messages_languages',
-                'label' => 'Language',
-                'data_type' => 'String',
-                'html_type' => 'Select',
-                'is_required' => false,
-                'is_searchable' => false,
-                'is_search_range' => false,
-                'is_view' => false,
-                'serialize' => 0,
-                'in_selector' => false,
-                'weight' => 2,
-            ])->execute();
+    CustomField::create(FALSE)
+      ->setValues([
+        'custom_group_id' => $customGroup['id'],
+        'name' => 'language',
+        'option_group_id:name' => 'event_messages_languages',
+        'label' => 'Language',
+        'data_type' => 'String',
+        'html_type' => 'Select',
+        'is_required' => FALSE,
+        'is_searchable' => FALSE,
+        'is_search_range' => FALSE,
+        'is_view' => FALSE,
+        'serialize' => 0,
+        'in_selector' => FALSE,
+        'weight' => 2,
+      ])->execute();
 
-        CustomField::create(false)
-            ->setValues([
-                'custom_group_id' => $customGroup['id'],
-                'name' => 'languages',
-                'option_group_id:name' => 'event_messages_languages',
-                'label' => 'Languages',
-                'data_type' => 'String',
-                'html_type' => 'Select',
-                'is_required' => false,
-                'is_searchable' => false,
-                'is_search_range' => false,
-                'is_view' => false,
-                'serialize' => 1,
-                'in_selector' => false,
-                'weight' => 1,
-            ])->execute();
-    }
+    CustomField::create(FALSE)
+      ->setValues([
+        'custom_group_id' => $customGroup['id'],
+        'name' => 'languages',
+        'option_group_id:name' => 'event_messages_languages',
+        'label' => 'Languages',
+        'data_type' => 'String',
+        'html_type' => 'Select',
+        'is_required' => FALSE,
+        'is_searchable' => FALSE,
+        'is_search_range' => FALSE,
+        'is_view' => FALSE,
+        'serialize' => 1,
+        'in_selector' => FALSE,
+        'weight' => 1,
+      ])->execute();
+  }
 
-    protected function tearDown(): void
-    {
-        CustomGroup::delete(false)
-            ->addWhere('name', '=', 'group')
-            ->execute();
-        parent::tearDown();
-    }
+  protected function tearDown(): void {
+    CustomGroup::delete(FALSE)
+      ->addWhere('name', '=', 'group')
+      ->execute();
+    parent::tearDown();
+  }
 
-    public function test(): void {
-        $event = EventFixture::addFixture();
+  public function test(): void {
+    $event = EventFixture::addFixture();
 
-        $contact = ContactFixture::addIndividual(['preferred_language' => 'de_DE']);
-        $participant = ParticipantFixture::addFixture($contact['id'], $event['id'], [
-            'group.language' => 'en_US',
-            'group.languages' => ['de_DE', 'fr'],
-        ]);
+    $contact = ContactFixture::addIndividual(['preferred_language' => 'de_DE']);
+    $participant = ParticipantFixture::addFixture($contact['id'], $event['id'], [
+      'group.language' => 'en_US',
+      'group.languages' => ['de_DE', 'fr'],
+    ]);
 
-        static::assertSame(
-            ['de_DE', 'fr', 'en_US'],
-            [...$this->provider->getLanguages($event['id'], $participant['id'])]
-        );
-    }
+    static::assertSame(
+        ['de_DE', 'fr', 'en_US'],
+        [...$this->provider->getLanguages($event['id'], $participant['id'])]
+    );
+  }
+
 }

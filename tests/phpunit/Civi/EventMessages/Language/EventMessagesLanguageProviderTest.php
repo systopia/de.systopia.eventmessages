@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language;
 
@@ -25,55 +25,53 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\EventMessages\Language\EventMessagesLanguageProvider
  */
-final class EventMessagesLanguageProviderTest extends TestCase
-{
+final class EventMessagesLanguageProviderTest extends TestCase {
 
-    /**
-     * @var LanguageProviderContainer&\PHPUnit\Framework\MockObject\MockObject)|(object&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private MockObject $providerContainerMock;
+  /**
+   * @var LanguageProviderContainer&\PHPUnit\Framework\MockObject\MockObject)|(object&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $providerContainerMock;
 
-    private EventMessagesLanguageProvider $eventMessagesLanguageProvider;
+  private EventMessagesLanguageProvider $eventMessagesLanguageProvider;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->providerContainerMock = $this->createMock(LanguageProviderContainer::class);
-        $this->eventMessagesLanguageProvider = new EventMessagesLanguageProvider($this->providerContainerMock);
-    }
+  protected function setUp(): void {
+    parent::setUp();
+    $this->providerContainerMock = $this->createMock(LanguageProviderContainer::class);
+    $this->eventMessagesLanguageProvider = new EventMessagesLanguageProvider($this->providerContainerMock);
+  }
 
-    public function test(): void
-    {
-        $providerMock = $this->createMock(LanguageProviderInterface::class);
+  public function test(): void {
+    $providerMock = $this->createMock(LanguageProviderInterface::class);
 
-        $this->providerContainerMock->expects(static::once())->method('has')
-            ->with('name')
-            ->willReturn(true);
-        $this->providerContainerMock->expects(static::once())->method('get')
-            ->with('name')
-            ->willReturn($providerMock);
+    $this->providerContainerMock->expects(static::once())->method('has')
+      ->with('name')
+      ->willReturn(TRUE);
+    $this->providerContainerMock->expects(static::once())->method('get')
+      ->with('name')
+      ->willReturn($providerMock);
 
-        $providerMock->expects(static::once())->method('getLanguages')
-            ->with(2, 3)
-            ->willReturn(['en_US', 'fr_FR', 'en_US']);
+    $providerMock->expects(static::once())->method('getLanguages')
+      ->with(2, 3)
+      ->willReturn(['en_US', 'fr_FR', 'en_US']);
 
-        static::assertSame(
-            ['en_US', 'fr_FR'],
-            [...$this->eventMessagesLanguageProvider->getLanguages(['name'], 2, 3)]
-        );
-        // Test languages are cached. (Mocked methods are expected to only run once.)
-        static::assertSame(
-            ['en_US', 'fr_FR'],
-            [...$this->eventMessagesLanguageProvider->getLanguages(['name'], 2, 3)]
-        );
-    }
+    static::assertSame(
+        ['en_US', 'fr_FR'],
+        [...$this->eventMessagesLanguageProvider->getLanguages(['name'], 2, 3)]
+    );
+    // Test languages are cached. (Mocked methods are expected to only run once.)
+    static::assertSame(
+        ['en_US', 'fr_FR'],
+        [...$this->eventMessagesLanguageProvider->getLanguages(['name'], 2, 3)]
+    );
+  }
 
-    public function testProviderNotAvailable(): void {
-        $this->providerContainerMock->expects(static::once())->method('has')
-                ->with('name')
-                ->willReturn(false);
-        $this->providerContainerMock->expects(static::never())->method('get');
+  public function testProviderNotAvailable(): void {
+    $this->providerContainerMock->expects(static::once())->method('has')
+      ->with('name')
+      ->willReturn(FALSE);
+    $this->providerContainerMock->expects(static::never())->method('get');
 
-        static::assertSame([], [...$this->eventMessagesLanguageProvider->getLanguages(['name'], 2, 3)]);
-    }
+    static::assertSame([], [...$this->eventMessagesLanguageProvider->getLanguages(['name'], 2, 3)]);
+  }
+
 }

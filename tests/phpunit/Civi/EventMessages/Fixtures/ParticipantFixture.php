@@ -15,14 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Fixtures;
 
 use Civi\Api4\Participant;
 
-final class ParticipantFixture
-{
+final class ParticipantFixture {
 
   /**
    * @param array<string, scalar> $values
@@ -32,14 +31,13 @@ final class ParticipantFixture
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addFixture(int $contactId, int $eventId, array $values = []): array
-  {
-      return Participant::create(false)
-          ->setValues($values + [
-              'contact_id' => $contactId,
-              'event_id' => $eventId,
-              'status_id:name' => 'Registered',
-          ])->execute()->first();
+  public static function addFixture(int $contactId, int $eventId, array $values = []): array {
+    return Participant::create(FALSE)
+      ->setValues($values + [
+        'contact_id' => $contactId,
+        'event_id' => $eventId,
+        'status_id:name' => 'Registered',
+      ])->execute()->first();
   }
 
 }
