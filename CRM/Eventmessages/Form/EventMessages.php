@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use Civi\Api4\Event;
 use Civi\Api4\OptionValue;
 use Civi\EventMessages\Language\LanguageProviderContainer;
@@ -22,8 +24,8 @@ use CRM_Eventmessages_ExtensionUtil as E;
  * Form controller for event online registration settings
  */
 class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
-  const MAX_RULE_COUNT = 50;
-  const SETTINGS_FIELDS = [
+  protected const MAX_RULE_COUNT = 50;
+  public const SETTINGS_FIELDS = [
     'event_messages_disable_default',
     'event_messages_sender',
     'event_messages_reply_to',
@@ -268,7 +270,10 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
         'weight'    => (10 + count($rules) * 10),
       ];
       if (class_exists('\Civi\Mailattachment\Form\Attachments')) {
-        $rule['attachments'] = \Civi\Mailattachment\Form\Attachments::processAttachments($this, ['prefix' => $i . '--']);
+        $rule['attachments'] = \Civi\Mailattachment\Form\Attachments::processAttachments(
+          $this,
+          ['prefix' => $i . '--']
+        );
       }
       if (!empty($rule['template'])) {
         $rules[] = $rule;

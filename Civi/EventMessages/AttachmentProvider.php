@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 namespace Civi\EventMessages;
 
 use CRM_Eventmessages_ExtensionUtil as E;

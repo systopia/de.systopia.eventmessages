@@ -13,6 +13,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
 
 namespace Civi\EventMessages;
 
@@ -105,6 +106,7 @@ class MessageTokenList extends Event {
       }
     }
 
+    // phpcs:disable Generic.Files.LineLength.TooLong
     $this->addToken('$contact.checksum', E::ts('Contact Checksum'));
 
     // add additional stuff that the API returns, but doesn't list in getfields
@@ -113,13 +115,24 @@ class MessageTokenList extends Event {
     $this->addToken('$participant.participant_roles_string', E::ts('Participant Role(s) (string)'));
     $this->addToken('$participant.participant_role_ids', E::ts('Participant Role ID(s) (array)'));
     $this->addToken('$participant.participant_role_ids_string', E::ts('Participant Role ID(s) (string)'));
-    $this->addToken('$participant.participant_register_date', E::ts('Registration Time/Date. You can format this value using smarty modifiers, e.g. <code>{$participant.participant_register_date|crmDate}</code> or <code>{$participant.participant_register_date|date_format:"%d.%m.%Y"}</code>.'));
+    $this->addToken(
+      '$participant.participant_register_date',
+      E::ts(
+        'Registration Time/Date. You can format this value using smarty modifiers, e.g. <code>{$participant.participant_register_date|crmDate}</code> or <code>{$participant.participant_register_date|date_format:"%d.%m.%Y"}</code>.'
+      )
+    );
     $this->addToken('$participant.participant_source', E::ts('Participant Source'));
     $this->addToken('$participant.participant_note', E::ts('Participant Note'));
-    $this->addToken('$participant.participant_fee_amount', E::ts('Participant Fee Amount. You can format this value using smarty modifiers, e.g. <code>{$participant.participant_fee_amount|crmMoney:$participant.participant_fee_currency}</code>.'));
+    $this->addToken(
+      '$participant.participant_fee_amount',
+      E::ts(
+        'Participant Fee Amount. You can format this value using smarty modifiers, e.g. <code>{$participant.participant_fee_amount|crmMoney:$participant.participant_fee_currency}</code>.'
+      )
+    );
     $this->addToken('$participant.participant_fee_currency', E::ts('Participant Fee Currency'));
     $this->addToken('$participant.participant_fee_level', E::ts('Participant Fee Level (array)'));
     $this->addToken('$participant.participant_fee_level_string', E::ts('Participant Fee Level (string)'));
+    // phpcs:enable
   }
 
 }

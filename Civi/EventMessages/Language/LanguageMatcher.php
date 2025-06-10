@@ -30,10 +30,11 @@ class LanguageMatcher {
    * @phpstan-param array<string> $languages
    * @phpstan-param array{
    *   id: int,
-   *   'event_messages_settings.language_provider_names': array<string>|null,
+   *   "event_messages_settings.language_provider_names": array<string>|null,
    * } $event
    *
-   * @return bool true if the languages linked to the given event and
+   * @return bool
+   *   true if the languages linked to the given event and
    *   participant matches any of the given languages, or the languages array
    *   is empty.
    */

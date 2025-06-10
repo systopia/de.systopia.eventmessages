@@ -38,7 +38,9 @@ final class LanguageProviderPass implements CompilerPassInterface {
     foreach ($container->findTaggedServiceIds(LanguageProviderInterface::SERVICE_TAG) as $id => $tags) {
       $class = $this->getServiceClass($container, $id);
       if (!is_a($class, LanguageProviderInterface::class, TRUE)) {
-        throw new \RuntimeException(sprintf('Class "%s" is not an instance of "%s"', $class, LanguageProviderInterface::class));
+        throw new \RuntimeException(sprintf(
+          'Class "%s" is not an instance of "%s"', $class, LanguageProviderInterface::class)
+        );
       }
 
       $name = $class::getName();

@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use Civi\Api4\Participant;
 use CRM_Eventmessages_ExtensionUtil as E;
 
@@ -51,7 +53,12 @@ class CRM_Eventmessages_GenerateLetterJob {
    */
   protected string $temp_folder;
 
-  public function __construct(string $op, array $participant_ids, int $template_id, string $temp_folder, string $title) {
+  public function __construct(string $op,
+    array $participant_ids,
+    int $template_id,
+    string $temp_folder,
+    string $title
+  ) {
     $this->op = $op;
     $this->participant_ids = $participant_ids;
     $this->template_id = $template_id;
@@ -89,11 +96,16 @@ class CRM_Eventmessages_GenerateLetterJob {
                 'template_id' => $this->template_id,
               ]
               );
-              $filename = $this->temp_folder . DIRECTORY_SEPARATOR . 'eventmessages_letter_' . $participant['id'] . '.pdf';
+              $filename = $this->temp_folder . DIRECTORY_SEPARATOR
+                . 'eventmessages_letter_' . $participant['id'] . '.pdf';
               file_put_contents($filename, $pdf);
             }
             catch (Exception $exception) {
-              Civi::log()->notice("EventMessages.GenerateLetterJob: Error generating letter for participant [{$participant['id']}]: " . $exception->getMessage());
+              // phpcs:disable Generic.Files.LineLength.TooLong
+              Civi::log()->notice(
+                "EventMessages.GenerateLetterJob: Error generating letter for participant [{$participant['id']}]: " . $exception->getMessage()
+              );
+              // phpcs:enable
             }
           }
         }

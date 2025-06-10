@@ -13,13 +13,16 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
  * Send E-Mail to participants task
  */
 class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
-  const RUNNER_BATCH_SIZE = 2;
+
+  protected const RUNNER_BATCH_SIZE = 2;
 
   /**
    * Compile task form
@@ -33,15 +36,6 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
 
     // calculate and add the number of contacts with no valid E-Mail
     $this->assign('no_email_count', $no_email_count);
-
-    //        $this->add(
-    //            'select',
-    //            'sender_email',
-    //            E::ts('E-mail sender address'),
-    //            $this->getSenderOptions(),
-    //            true,
-    //            ['class' => 'crm-select2 huge']
-    //        );
 
     $this->add(
         'select',
@@ -59,10 +53,10 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
     // Set default values.
     $defaults = [
       'template_id'  => Civi::settings()->get('eventmessages_participant_send_template_id'),
-    //            'sender_email' => Civi::settings()->get('eventmessages_participant_send_sender_email'),
     ];
     if (class_exists('Civi\Mailattachment\Form\Attachments')) {
       // TODO: Set default values for attachments?
+      ;
     }
     $this->setDefaults($defaults);
 
@@ -76,7 +70,6 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
     // store default values
     Civi::settings()->set('eventmessages_participant_send_template_id', $values['template_id']);
     Civi::settings()->set('eventmessages_participant_send_attachments', $values['attachments']);
-    //        Civi::settings()->set('eventmessages_participant_send_sender_email', $values['sender_email']);
 
     if (class_exists('Civi\Mailattachment\Form\Attachments')) {
       $values['attachments'] = \Civi\Mailattachment\Form\Attachments::processAttachments($this);
@@ -101,16 +94,19 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
 
     // run query to get all participants
     $participant_id_list = implode(',', $this->_participantIds);
-    $participant_query = CRM_Core_DAO::executeQuery("
-            SELECT participant.id AS participant_id
-            FROM civicrm_participant participant
-            LEFT JOIN civicrm_email email
-                   ON email.contact_id = participant.contact_id
-                   AND email.is_primary = 1
-                   AND email.on_hold = 0
-            WHERE participant.id IN ({$participant_id_list})
-              AND email.id IS NOT NULL
-            ORDER BY participant.event_id ASC");
+    $participant_query = CRM_Core_DAO::executeQuery(
+      <<<SQL
+      SELECT participant.id AS participant_id
+      FROM civicrm_participant participant
+      LEFT JOIN civicrm_email email
+        ON email.contact_id = participant.contact_id
+        AND email.is_primary = 1
+        AND email.on_hold = 0
+      WHERE participant.id IN ({$participant_id_list})
+        AND email.id IS NOT NULL
+      ORDER BY participant.event_id ASC
+      SQL
+    );
 
     // batch the participants into bite-sized jobs
     $current_batch = [];
@@ -212,15 +208,18 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
    */
   private function getNoEmailCount() {
     $participant_id_list = implode(',', $this->_participantIds);
-    return CRM_Core_DAO::singleValueQuery("
-            SELECT COUNT(DISTINCT(participant.id))
-            FROM civicrm_participant participant
-            LEFT JOIN civicrm_email email
-                   ON email.contact_id = participant.contact_id
-                   AND email.is_primary = 1
-                   AND email.on_hold = 0
-            WHERE participant.id IN ({$participant_id_list})
-              AND email.id IS NULL");
+    return CRM_Core_DAO::singleValueQuery(
+      <<<SQL
+      SELECT COUNT(DISTINCT(participant.id))
+      FROM civicrm_participant participant
+      LEFT JOIN civicrm_email email
+        ON email.contact_id = participant.contact_id
+        AND email.is_primary = 1
+        AND email.on_hold = 0
+      WHERE participant.id IN ({$participant_id_list})
+        AND email.id IS NULL
+      SQL
+    );
   }
 
 }

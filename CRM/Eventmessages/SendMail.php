@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -58,7 +60,7 @@ class CRM_Eventmessages_SendMail {
           $attachments = $context['attachments'] ?? $context['rule']['attachments'];
           foreach ($attachments as $attachment_id => $attachment_values) {
             $attachment_type = $attachment_types[$attachment_values['type']];
-            /* @var \Civi\Mailattachment\AttachmentType\AttachmentTypeInterface $controller */
+            /** @var \Civi\Mailattachment\AttachmentType\AttachmentTypeInterface $controller */
             $controller = $attachment_type['controller'];
             if (
             !($attachment = $controller::buildAttachment(
@@ -92,7 +94,11 @@ class CRM_Eventmessages_SendMail {
 
         // send the mail
         if (self::isMailingDisabled()) {
-          Civi::log()->info("EventMessages: Outbound mailing disabled, NOT sending email to '{$data->contact_email}' from '{$email_data['from']}'");
+          // phpcs:disable Generic.Files.LineLength.TooLong
+          Civi::log()->info(
+            "EventMessages: Outbound mailing disabled, NOT sending email to '{$data->contact_email}' from '{$email_data['from']}'"
+          );
+          // phpcs:enable
         }
         else {
           Civi::log()->debug("EventMessages: Sending email to '{$data->contact_email}' from '{$email_data['from']}'");
@@ -101,7 +107,9 @@ class CRM_Eventmessages_SendMail {
 
       }
       else {
-        Civi::log()->warning("Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set.");
+        Civi::log()->warning(
+          "Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set."
+        );
       }
     }
     catch (Exception $exception) {
@@ -148,6 +156,10 @@ class CRM_Eventmessages_SendMail {
   public static function suppressSystemMails(&$mailer, $driver, $params) {
     $mailer = new class($mailer, $driver, $params) {
 
+      protected $mailer = NULL;
+      protected $driver = NULL;
+      protected $params = NULL;
+
       public function __construct($mailer, $driver, $params) {
         $this->mailer = $mailer;
         $this->driver = $driver;
@@ -165,8 +177,6 @@ class CRM_Eventmessages_SendMail {
         foreach ($callstack as $stack_idx => $call) {
 
           if (isset($call['class']) && isset($call['function'])) {
-            // Civi::log()->debug("Screening {$call['class']} : {$call['function']}");
-
             // 1. check for emails coming through CRM_Event_BAO_Event::sendMessageTo
             if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
               // these are ours, continue to send
@@ -204,19 +214,26 @@ class CRM_Eventmessages_SendMail {
             if ($call['class'] == 'CRM_Event_Form_SelfSvcUpdate'
             && ($call['function'] == 'cancelParticipant' || $call['function'] == 'transferParticipant')) {
               // extract participant_id
-              // this is extremely hacky, if anyone finds a better way to extract the participant_id, please let us know!
+              // This is extremely hacky, if anyone finds a better way to extract the participant_id,
+              // please let us know!
               $entry_url = $call['args'][0]['entryURL'];
               if (preg_match('/pid=(\d+)\D/', $entry_url, $matches)) {
                 $participant_id = $matches[1];
                 if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
-                  Civi::log()->debug('EventMessages: CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant detected!');
+                  Civi::log()->debug(
+                    'EventMessages: CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant detected!'
+                  );
                   $this->logDroppedMail($recipients, $headers, $body);
                   // don't send
                   return;
                 }
               }
               else {
-                Civi::log()->debug("EventMessages: couldn't extract participant ID from CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant");
+                // phpcs:disable Generic.Files.LineLength.TooLong
+                Civi::log()->debug(
+                  "EventMessages: couldn't extract participant ID from CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant"
+                );
+                // phpcs:enable
               }
               // no suppression, continue to send
               break;
@@ -227,7 +244,11 @@ class CRM_Eventmessages_SendMail {
               // this is transition confirmation...hope it's ok to filter out all of them
               $participant_id = $call['args'][0];
               if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
-                Civi::log()->debug("EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!");
+                // phpcs:disable Generic.Files.LineLength.TooLong
+                Civi::log()->debug(
+                  "EventMessages: CRM_Event_BAO_Participant::sendTransitionParticipantMail [{$participant_id}] detected!"
+                );
+                // phpcs:enable
                 $this->logDroppedMail($recipients, $headers, $body);
                 // don't send
                 return;
@@ -243,7 +264,8 @@ class CRM_Eventmessages_SendMail {
           $stack_trace = 'EVENTMESSAGES - MESSAGE SENT STACK TRACE:';
           foreach ($callstack as $call) {
             if (isset($call['class']) && isset($call['function'])) {
-              $stack_trace .= "\n{$call['class']}:{$call['line']} - {$call['function']}:" . json_encode($call['args'], 0, 1);
+              $stack_trace .= "\n{$call['class']}:{$call['line']} - {$call['function']}:"
+                . json_encode($call['args'], 0, 1);
             }
           }
           Civi::log()->debug($stack_trace);
@@ -288,16 +310,22 @@ class CRM_Eventmessages_SendMail {
   public static function suppressSystemEventMailsForParticipant($participant_id, $event_id = NULL) {
     // check if something's slipped through, despite our efforts to identify the participant
     if (empty($participant_id)) {
-      Civi::log()->debug('EventMessages: empty participant ID encountered! Will NOT suppress, but this should be fixed.');
+      Civi::log()->debug(
+        'EventMessages: empty participant ID encountered! Will NOT suppress, but this should be fixed.'
+      );
       return FALSE;
     }
 
     // get the current setting
-    $disable_default = (boolean) self::getEventMailsSettingsForParticipant('disable_default', $participant_id, $event_id);
+    $disable_default = (boolean) self::getEventMailsSettingsForParticipant(
+      'disable_default', $participant_id, $event_id
+    );
 
     // TODO: remove logging
-    Civi::log()->debug("EventMessages: suppress system messages for event [{$event_id}] / participant [{$participant_id}]: " .
-                     ($disable_default ? 'yes' : 'no'));
+    Civi::log()->debug(
+      "EventMessages: suppress system messages for event [{$event_id}] / participant [{$participant_id}]: "
+      . ($disable_default ? 'yes' : 'no')
+    );
 
     return $disable_default;
   }
@@ -314,10 +342,14 @@ class CRM_Eventmessages_SendMail {
    * @see https://github.com/systopia/de.systopia.eventmessages/issues/31
    */
   public static function applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, &$participant) {
-    $custom_data_workaround = (boolean) self::getEventMailsSettingsForParticipant('custom_data_workaround', $participant_id, $participant['event_id']);
+    $custom_data_workaround = (boolean) self::getEventMailsSettingsForParticipant(
+      'custom_data_workaround', $participant_id, $participant['event_id']
+    );
     if ($custom_data_workaround) {
       $event_id = $participant['event_id'] ?? 'n/a';
-      Civi::log()->debug("EventMessages: adding custom data submission for event [{$event_id}] / participant [{$participant_id}]");
+      Civi::log()->debug(
+        "EventMessages: adding custom data submission for event [{$event_id}] / participant [{$participant_id}]"
+      );
 
       // get all potential sources of the registration data submission
       $submission_sources = [];
@@ -338,9 +370,6 @@ class CRM_Eventmessages_SendMail {
       foreach ($submission_sources as $submission_source) {
         foreach ($submission_source as $key => $value) {
           if (preg_match('/^custom_[0-9]+$/', $key)) {
-            // uncomment this for debugging
-            //            if (isset($participant[$key]))
-            //              Civi::log()->debug("EventMessages: overwriting participant value for [{$key}] with submission data for event [{$event_id}] / participant [{$participant_id}]");
             $participant[$key] = $value;
           }
         }
@@ -374,10 +403,13 @@ class CRM_Eventmessages_SendMail {
     $event_id = (int) $event_id;
     if ($event_id) {
       if (!isset($cached_event_results[$setting_name][$event_id])) {
-        $settings = CRM_Core_DAO::executeQuery("
-                    SELECT disable_default, custom_data_workaround
-                    FROM civicrm_value_event_messages_settings settings
-                    WHERE settings.entity_id = {$event_id}");
+        $settings = CRM_Core_DAO::executeQuery(
+          <<<SQL
+          SELECT disable_default, custom_data_workaround
+          FROM civicrm_value_event_messages_settings settings
+          WHERE settings.entity_id = {$event_id};
+          SQL
+        );
 
         $settings->fetch();
         $cached_event_results['disable_default'][$event_id] = $settings->disable_default ?? FALSE;
@@ -390,15 +422,19 @@ class CRM_Eventmessages_SendMail {
     $participant_id = (int) $participant_id;
     if ($participant_id) {
       if (!isset($cached_participant_results[$setting_name][$participant_id])) {
-        $settings = CRM_Core_DAO::executeQuery("
-                    SELECT disable_default, custom_data_workaround
-                    FROM civicrm_participant participant
-                    LEFT JOIN civicrm_value_event_messages_settings settings
-                           ON settings.entity_id = participant.event_id
-                    WHERE participant.id = {$participant_id}");
+        $settings = CRM_Core_DAO::executeQuery(
+          <<<SQL
+          SELECT disable_default, custom_data_workaround
+          FROM civicrm_participant participant
+          LEFT JOIN civicrm_value_event_messages_settings settings
+            ON settings.entity_id = participant.event_id
+          WHERE participant.id = {$participant_id};
+          SQL
+        );
         $settings->fetch();
         $cached_participant_results['disable_default'][$participant_id] = (boolean) $settings->disable_default ?? FALSE;
-        $cached_participant_results['custom_data_workaround'][$participant_id] = (boolean) $settings->custom_data_workaround ?? FALSE;
+        $cached_participant_results['custom_data_workaround'][$participant_id]
+          = (boolean) $settings->custom_data_workaround ?? FALSE;
       }
       return $cached_participant_results[$setting_name][$participant_id];
     }
@@ -419,24 +455,24 @@ class CRM_Eventmessages_SendMail {
    */
   protected static function buildDataQuery($context) {
     $participant_id = (int) $context['participant_id'];
-    return "
-                SELECT
-                  email.email          AS contact_email,
-                  contact.display_name AS contact_name,
-                  contact.id           AS contact_id,
-                  participant.id       AS participant_id
-                FROM civicrm_participant   participant
-                INNER JOIN civicrm_contact contact
-                        ON contact.id = participant.contact_id
-                INNER JOIN civicrm_email   email
-                        ON email.contact_id = contact.id
-                        AND (email.on_hold IS NULL OR email.on_hold = 0)
-                INNER JOIN civicrm_event   event
-                        ON event.id = participant.event_id
-                WHERE participant.id = {$participant_id}
-                  AND (contact.is_deleted IS NULL OR contact.is_deleted = 0)
-                ORDER BY email.is_primary DESC, email.is_bulkmail ASC, email.is_billing ASC
-            ";
+    return <<<SQL
+      SELECT
+        email.email          AS contact_email,
+        contact.display_name AS contact_name,
+        contact.id           AS contact_id,
+        participant.id       AS participant_id
+      FROM civicrm_participant   participant
+      INNER JOIN civicrm_contact contact
+        ON contact.id = participant.contact_id
+      INNER JOIN civicrm_email   email
+        ON email.contact_id = contact.id
+        AND (email.on_hold IS NULL OR email.on_hold = 0)
+      INNER JOIN civicrm_event   event
+        ON event.id = participant.event_id
+      WHERE participant.id = {$participant_id}
+        AND (contact.is_deleted IS NULL OR contact.is_deleted = 0)
+      ORDER BY email.is_primary DESC, email.is_bulkmail ASC, email.is_billing ASC
+      SQL;
   }
 
   /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * -------------------------------------------------------+
+ * ---------------------------------------------------------+
  * | SYSTOPIA CUSTOM DATA HELPER                            |
  * | Copyright (C) 2018-2023 SYSTOPIA                       |
  * | Author: B. Endres (endres@systopia.de)                 |
@@ -15,6 +15,8 @@
  * | written permission from the original author(s).        |
  * +--------------------------------------------------------
  */
+
+declare(strict_types = 1);
 class CRM_Eventmessages_CustomData {
   const CUSTOM_DATA_HELPER_VERSION   = '0.10';
   const CUSTOM_DATA_HELPER_LOG_LEVEL = 0;

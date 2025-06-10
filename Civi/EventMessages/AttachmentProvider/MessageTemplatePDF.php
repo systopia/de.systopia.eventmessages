@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 namespace Civi\EventMessages\AttachmentProvider;
 
 use Civi\Api4\Participant;
@@ -88,7 +90,10 @@ class MessageTemplatePDF implements AttachmentTypeInterface {
           'template_id' => $attachment_values['template_id'],
         ]
     );
-    $filename = \System::mktemp('eventmessages_attachment_template_' . $attachment_values['template_id'] . '_participant_' . $context['entity_id'] . '.pdf');
+    $filename = \System::mktemp(
+      'eventmessages_attachment_template_' . $attachment_values['template_id']
+      . '_participant_' . $context['entity_id'] . '.pdf'
+    );
     file_put_contents($filename, $pdf);
     $attachment = [
       'fullPath' => $filename,

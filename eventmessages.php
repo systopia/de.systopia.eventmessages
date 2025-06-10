@@ -13,7 +13,11 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
+// phpcs:disable PSR1.Files.SideEffects
 require_once 'eventmessages.civix.php';
+// phpcs:enable
 
 use CRM_Eventmessages_ExtensionUtil as E;
 use Symfony\Component\Config\Resource\FileResource;
@@ -43,6 +47,9 @@ function eventmessages_civicrm_config(&$config) {
   }
 }
 
+/**
+ * Implements hook_civicrm_container().
+ */
 function eventmessages_civicrm_container(ContainerBuilder $container): void {
   $globResource = new GlobResource(__DIR__ . '/services', '/*.php', FALSE);
   // Container will be rebuilt if a *.php file is added to services
@@ -78,9 +85,10 @@ function eventmessages_civicrm_enable() {
 }
 
 /**
- * Add event configuration tabs
+ * Implements hook_civicrm_tabset().
  */
 function eventmessages_civicrm_tabset($tabsetName, &$tabs, $context) {
+  // Add event configuration tabs
   if ($tabsetName == 'civicrm/event/manage') {
     if (!empty($context['event_id'])) {
       CRM_Eventmessages_Form_EventMessages::addToTabs($context['event_id'], $tabs);
@@ -92,49 +100,49 @@ function eventmessages_civicrm_tabset($tabsetName, &$tabs, $context) {
 }
 
 /**
- * Monitor Participant edits
+ * Implements hook_civicrm_pre().
  */
 function eventmessages_civicrm_pre(string $op, string $objectName, $id, array &$params): void {
+  // Monitor Participant edits
   if ($op === 'edit' && $objectName === 'Participant') {
     CRM_Eventmessages_Logic::recordPreEdit((int) $id, $params);
   }
 }
 
 /**
- * Monitor Participant creations
+ * Implements hook_civicrm_post().
  */
 function eventmessages_civicrm_post(string $op, string $objectName, int $objectId, &$objectRef): void {
+  // Monitor Participant creations
   if ($op === 'create' && $objectName === 'Participant') {
     CRM_Eventmessages_Logic::recordPostCreate($objectId);
   }
 }
 
 /**
- * Monitor Participant post commit
+ * Implements hook_civicrm_postCommit().
  */
 function eventmessages_civicrm_postCommit(string $op, string $objectName, int $objectId, &$objectRef): void {
+  // Monitor Participant post commit
   if (($op === 'edit' || $op === 'create') && $objectName === 'Participant') {
     CRM_Eventmessages_Logic::recordPostCommit($objectId, $objectRef);
   }
 }
 
 /**
- * Implementation of hook_civicrm_alterMailer
- *
- * Replace the normal mailer with our custom mailer
+ * Implements hook_civicrm_alterMailer().
  */
 function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
+  // Replace the normal mailer with our custom mailer
   CRM_Eventmessages_SendMail::suppressSystemMails($mailer, $driver, $params);
 }
 
 /**
- * Implementation of hook_civicrm_buildForm
- *
- *   inject some UI modifications into selected forms
+ * Implements hook_civicrm_buildForm().
  */
 function eventmessages_civicrm_buildForm($formName, &$form) {
+  // Inject some UI modifications into selected forms
   if ($form instanceof CRM_Event_Form_Participant) {
-    //Civi::log()->debug("EventMessages: injecting 'event_form_new_participant_mods.js'");
     $disabled_field = CRM_Eventmessages_CustomData::getCustomFieldKey(
         'event_messages_settings',
         'event_messages_disable_default'
@@ -145,8 +153,7 @@ function eventmessages_civicrm_buildForm($formName, &$form) {
 }
 
 /**
- * Implementation of hook_civicrm_searchTasks,
- *  to inject our 'Send E-Mail' task
+ * Implements hook_civicrm_searchTasks().
  */
 function eventmessages_civicrm_searchTasks($objectType, &$tasks) {
   // add "Send E-Mail" task to participant list
@@ -166,11 +173,10 @@ function eventmessages_civicrm_searchTasks($objectType, &$tasks) {
 }
 
 /**
- * Implementation of hook_civicrm_copy
- *
- *   inject some UI modifications into selected forms
+ * Implements hook_civicrm_copy().
  */
 function eventmessages_civicrm_copy($objectName, &$object) {
+  // Inject some UI modifications into selected forms
   if ($objectName == 'Event') {
     // we have the new event ID...
     $new_event_id = $object->id;

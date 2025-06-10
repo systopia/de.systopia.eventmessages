@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -20,9 +22,9 @@ use CRM_Eventmessages_ExtensionUtil as E;
  */
 class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task {
   /**
-     * Number of participants being processed per queue item.
-     */
-  const RUNNER_BATCH_SIZE = 2;
+   * Number of participants being processed per queue item.
+   */
+  protected const RUNNER_BATCH_SIZE = 2;
 
   public function buildQuickForm() {
     $participant_count = count($this->_participantIds);

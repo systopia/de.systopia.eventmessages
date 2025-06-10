@@ -25,7 +25,9 @@ use CRM_Eventmessages_ExtensionUtil as E;
 final class ContactLanguageProvider extends AbstractCustomFieldLanguageProvider {
 
   public static function getDescription(): string {
-    return E::ts('Custom fields for contacts using "Event Message Languages" option group and contact\'s preferred language.');
+    return E::ts(
+      'Custom fields for contacts using "Event Message Languages" option group and contact\'s preferred language.'
+    );
   }
 
   public static function getLabel(): string {

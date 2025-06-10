@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -72,7 +74,7 @@ class CRM_Eventmessages_GenerateLetter {
         );
 
         // Pass tokens as Smarty variables.
-        /* @var CRM_Core_Smarty $smarty */
+        /** @var CRM_Core_Smarty $smarty */
         $smarty = CRM_Core_Smarty::singleton();
         foreach ($message_tokens->getTokens() as $key => $value) {
           $smarty->assign($key, $value);
@@ -139,7 +141,7 @@ class CRM_Eventmessages_GenerateLetter {
   protected static function buildDataQuery($context) {
     $participant_id = (int) $context['participant_id'];
     return "
-            SELECT 
+            SELECT
               address.street_address AS contact_street_address,
               address.postal_code AS contact_postal_code,
               address.city AS contact_city,
@@ -152,13 +154,13 @@ class CRM_Eventmessages_GenerateLetter {
             FROM
               civicrm_participant participant
             INNER JOIN
-              civicrm_contact contact  
+              civicrm_contact contact
               ON
                 contact.id = participant.contact_id
             LEFT JOIN
               civicrm_address   address
               ON
-                address.contact_id = contact.id  
+                address.contact_id = contact.id
             INNER JOIN
               civicrm_event   event
               ON

@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use Civi\Api4\CustomGroup;
 use Civi\Api4\Event;
 use Civi\Api4\OptionGroup;
@@ -97,7 +99,10 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
   public function upgrade_0004() {
     $this->ctx->log->info('Change data type of column "attachments" to TEXT in "civicrm_event_message_rules" table.');
     CRM_Core_DAO::executeQuery(
-        "ALTER TABLE `civicrm_event_message_rules` MODIFY `attachments` text DEFAULT NULL COMMENT 'list of attachments';"
+      <<<SQL
+      ALTER TABLE `civicrm_event_message_rules`
+        MODIFY `attachments` text DEFAULT NULL COMMENT 'list of attachments';
+      SQL
     );
     return TRUE;
   }
