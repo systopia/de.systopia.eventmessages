@@ -39,8 +39,7 @@ final class EventMessageRuleFixture
           ->setValues($values + [
               'event_id' => $eventId,
               'template_id' => 1,
-//              'to_status' => [],
-//              'languages' => [],
+              'is_active' => TRUE,
           ])->execute()->first();
   }
 
