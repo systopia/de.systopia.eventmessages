@@ -15,15 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Fixtures;
 
-use Civi\Api4\Email;
 use Civi\Api4\EventMessageRule;
 
-final class EventMessageRuleFixture
-{
+final class EventMessageRuleFixture {
 
   /**
    * @param array<string, scalar> $values
@@ -33,14 +31,13 @@ final class EventMessageRuleFixture
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addFixture(int $eventId, array $values = []): array
-  {
-      return EventMessageRule::create(false)
-          ->setValues($values + [
-              'event_id' => $eventId,
-              'template_id' => 1,
-              'is_active' => TRUE,
-          ])->execute()->first();
+  public static function addFixture(int $eventId, array $values = []): array {
+    return EventMessageRule::create(FALSE)
+      ->setValues($values + [
+        'event_id' => $eventId,
+        'template_id' => 1,
+        'is_active' => TRUE,
+      ])->execute()->first();
   }
 
 }

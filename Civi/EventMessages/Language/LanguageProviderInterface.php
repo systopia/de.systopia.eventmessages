@@ -15,24 +15,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language;
 
-interface LanguageProviderInterface
-{
-    public const SERVICE_TAG = 'eventmessages.language.provider';
+interface LanguageProviderInterface {
+  public const SERVICE_TAG = 'eventmessages.language.provider';
 
-    public static function getDescription(): string;
+  public static function getDescription(): string;
 
-    public static function getLabel(): string;
+  public static function getLabel(): string;
 
-    public static function getName(): string;
+  public static function getName(): string;
 
-    /**
-     * @phpstan-return iterable<string>
-     *   Language code optionally together with country code, e.g. 'en_US' or
-     *   'en'.
-     */
-    public function getLanguages(int $eventId, int $participantId): iterable;
+  /**
+   * @phpstan-return iterable<string>
+   *   Language code optionally together with country code, e.g. 'en_US' or
+   *   'en'.
+   */
+  public function getLanguages(int $eventId, int $participantId): iterable;
+
 }

@@ -75,7 +75,7 @@ final class ServiceRegistrator {
     array $tags,
     array $options
   ): array {
-    $container->addResource(new GlobResource($dir, '/*.php', true));
+    $container->addResource(new GlobResource($dir, '/*.php', TRUE));
 
     $definitions = [];
     $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
@@ -86,9 +86,9 @@ final class ServiceRegistrator {
         if (static::isServiceClass($class, $classOrInterface) && !$container->has($class)) {
           /** @phpstan-var class-string $class */
           $definition = $container->autowire($class);
-          $definition->setLazy($options['lazy'] ?? false);
-          $definition->setShared($options['shared'] ?? false);
-          $definition->setPublic($options['public'] ?? false);
+          $definition->setLazy($options['lazy'] ?? FALSE);
+          $definition->setShared($options['shared'] ?? FALSE);
+          $definition->setPublic($options['public'] ?? FALSE);
           foreach ($tags as $tagName => $tagAttributes) {
             $definition->addTag($tagName, $tagAttributes);
           }
@@ -117,12 +117,12 @@ final class ServiceRegistrator {
    */
   private static function isServiceClass(string $class, ?string $classOrInterface): bool {
     if (!class_exists($class)) {
-      return false;
+      return FALSE;
     }
 
     $reflClass = new \ReflectionClass($class);
 
-    return (null === $classOrInterface || $reflClass->isSubclassOf($classOrInterface))
+    return (NULL === $classOrInterface || $reflClass->isSubclassOf($classOrInterface))
       && !$reflClass->isAbstract();
   }
 

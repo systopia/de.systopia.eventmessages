@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language;
 
@@ -25,54 +25,50 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\EventMessages\Language\LanguageMatcher
  */
-final class LanguageMatcherTest extends TestCase
-{
+final class LanguageMatcherTest extends TestCase {
 
-    /**
-     * @var EventMessagesLanguageProvider&\PHPUnit\Framework\MockObject\MockObject)|(object&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private MockObject $languageProviderMock;
-    private LanguageMatcher $languageMatcher;
+  /**
+   * @var EventMessagesLanguageProvider&\PHPUnit\Framework\MockObject\MockObject)|(object&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $languageProviderMock;
+  private LanguageMatcher $languageMatcher;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->languageProviderMock = $this->createMock(EventMessagesLanguageProvider::class);
-        $this->languageMatcher = new LanguageMatcher($this->languageProviderMock);
-    }
+  protected function setUp(): void {
+    parent::setUp();
+    $this->languageProviderMock = $this->createMock(EventMessagesLanguageProvider::class);
+    $this->languageMatcher = new LanguageMatcher($this->languageProviderMock);
+  }
 
-    public function testMatchLanguageCode(): void
-    {
-        $providerNames = ['name1', 'name2'];
-        $event = [
-            'id' => 2,
-            'event_messages_settings.language_provider_names' => $providerNames,
-        ];
-        $this->languageProviderMock->method('getLanguages')
-            ->with($providerNames, 2, 3)
-            ->willReturn(['en']);
+  public function testMatchLanguageCode(): void {
+    $providerNames = ['name1', 'name2'];
+    $event = [
+      'id' => 2,
+      'event_messages_settings.language_provider_names' => $providerNames,
+    ];
+    $this->languageProviderMock->method('getLanguages')
+      ->with($providerNames, 2, 3)
+      ->willReturn(['en']);
 
-        static::assertFalse($this->languageMatcher->match(['en_US'], $event, 3));
-        static::assertTrue($this->languageMatcher->match(['en'], $event, 3));
-        static::assertFalse($this->languageMatcher->match(['de_DE'], $event, 3));
-        static::assertFalse($this->languageMatcher->match(['de'], $event, 3));
-    }
+    static::assertFalse($this->languageMatcher->match(['en_US'], $event, 3));
+    static::assertTrue($this->languageMatcher->match(['en'], $event, 3));
+    static::assertFalse($this->languageMatcher->match(['de_DE'], $event, 3));
+    static::assertFalse($this->languageMatcher->match(['de'], $event, 3));
+  }
 
-    public function testMatchLocale(): void
-    {
-        $providerNames = ['name1', 'name2'];
-        $event = [
-                'id' => 2,
-                'event_messages_settings.language_provider_names' => $providerNames,
-        ];
-        $this->languageProviderMock->method('getLanguages')
-                ->with($providerNames, 2, 3)
-                ->willReturn(['en_US']);
+  public function testMatchLocale(): void {
+    $providerNames = ['name1', 'name2'];
+    $event = [
+      'id' => 2,
+      'event_messages_settings.language_provider_names' => $providerNames,
+    ];
+    $this->languageProviderMock->method('getLanguages')
+      ->with($providerNames, 2, 3)
+      ->willReturn(['en_US']);
 
-        static::assertTrue($this->languageMatcher->match(['en'], $event, 3));
-        static::assertTrue($this->languageMatcher->match(['en_US'], $event, 3));
-        static::assertFalse($this->languageMatcher->match(['de_DE'], $event, 3));
-        static::assertFalse($this->languageMatcher->match(['de'], $event, 3));
-    }
+    static::assertTrue($this->languageMatcher->match(['en'], $event, 3));
+    static::assertTrue($this->languageMatcher->match(['en_US'], $event, 3));
+    static::assertFalse($this->languageMatcher->match(['de_DE'], $event, 3));
+    static::assertFalse($this->languageMatcher->match(['de'], $event, 3));
+  }
 
 }

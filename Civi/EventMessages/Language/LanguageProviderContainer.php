@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Language;
 
@@ -30,45 +30,43 @@ use Psr\Container\ContainerInterface;
  *
  * @codeCoverageIgnore
  */
-class LanguageProviderContainer
-{
-    /**
-     * @var ContainerInterface
-     *    Contains language providers with their names as key.
-     */
-    private ContainerInterface $container;
+class LanguageProviderContainer {
+  /**
+   * @var \Psr\Container\ContainerInterface
+   *    Contains language providers with their names as key.
+   */
+  private ContainerInterface $container;
 
-    /**
-     * @phpstan-var metadataT
-     *    Language provider names mapped to their metadata.
-     */
-    private array $metadata;
+  /**
+   * @phpstan-var metadataT
+   *    Language provider names mapped to their metadata.
+   */
+  private array $metadata;
 
-    /**
-     * @phpstan-param metadataT $metadata
-     *    Language provider names mapped to their metadata.
-     */
-    public function __construct(ContainerInterface $container, array $metadata)
-    {
-        $this->container = $container;
-        $this->metadata = $metadata;
-    }
+  /**
+   * @phpstan-param metadataT $metadata
+   *    Language provider names mapped to their metadata.
+   */
+  public function __construct(ContainerInterface $container, array $metadata) {
+    $this->container = $container;
+    $this->metadata = $metadata;
+  }
 
-    public function get(string $providerName): LanguageProviderInterface {
-        // @phpstan-ignore-next-line
-        return $this->container->get($providerName);
-    }
+  public function get(string $providerName): LanguageProviderInterface {
+    // @phpstan-ignore-next-line
+    return $this->container->get($providerName);
+  }
 
-    public function has(string $providerName): bool {
-        return $this->container->has($providerName);
-    }
+  public function has(string $providerName): bool {
+    return $this->container->has($providerName);
+  }
 
-    /**
-     * @phpstan-return metadataT
-     *    Language provider names mapped to their metadata.
-     */
-    public function getMetadata(): array
-    {
-        return $this->metadata;
-    }
+  /**
+   * @phpstan-return metadataT
+   *    Language provider names mapped to their metadata.
+   */
+  public function getMetadata(): array {
+    return $this->metadata;
+  }
+
 }
