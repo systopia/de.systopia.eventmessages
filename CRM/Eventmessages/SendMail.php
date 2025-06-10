@@ -33,7 +33,7 @@ class CRM_Eventmessages_SendMail {
       // load some stuff via SQL
       $event = self::getEventData($context['event_id']);
       $data_query = self::buildDataQuery($context);
-      $data  = CRM_Core_DAO::executeQuery($data_query);
+      $data = CRM_Core_DAO::executeQuery($data_query);
       $template_id = empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'];
       if ($data->fetch()) {
         // load participant
@@ -43,44 +43,23 @@ class CRM_Eventmessages_SendMail {
 
         // and send the template via email
         $email_data = [
-          'id'        => (int) $template_id,
-          'toName'    => $data->contact_name,
-          'toEmail'   => $data->contact_email,
-          'from'      => CRM_Utils_Array::value('event_messages_settings__event_messages_sender', $event, ''),
-          'replyTo'   => CRM_Utils_Array::value('event_messages_settings__event_messages_reply_to', $event, ''),
-          'cc'        => CRM_Utils_Array::value('event_messages_settings__event_messages_cc', $event, ''),
-          'bcc'       => CRM_Utils_Array::value('event_messages_settings__event_messages_bcc', $event, ''),
+          'id' => (int) $template_id,
+          'toName' => $data->contact_name,
+          'toEmail' => $data->contact_email,
+          'from' => CRM_Utils_Array::value('event_messages_settings__event_messages_sender', $event, ''),
+          'replyTo' => CRM_Utils_Array::value('event_messages_settings__event_messages_reply_to', $event, ''),
+          'cc' => CRM_Utils_Array::value('event_messages_settings__event_messages_cc', $event, ''),
+          'bcc' => CRM_Utils_Array::value('event_messages_settings__event_messages_bcc', $event, ''),
           'contactId' => (int) $data->contact_id,
           'tplParams' => $message_tokens->getTokens(),
         ];
 
         // add attachments
         if (class_exists('Civi\Mailattachment\Form\Attachments')) {
-          $attachment_types = \Civi\Mailattachment\Form\Attachments::attachmentTypes();
-          $attachments = $context['attachments'] ?? $context['rule']['attachments'];
-          foreach ($attachments as $attachment_id => $attachment_values) {
-            $attachment_type = $attachment_types[$attachment_values['type']];
-            /** @var \Civi\Mailattachment\AttachmentType\AttachmentTypeInterface $controller */
-            $controller = $attachment_type['controller'];
-            if (
-            !($attachment = $controller::buildAttachment(
-            [
-              'entity_type' => 'participant',
-              'entity_id' => $data->participant_id,
-              'entity_ids' => $context['participant_ids'],
-            ],
-            $attachment_values)
-            )
-            ) {
-              // no attachment -> cannot send
-              throw new Exception(
-              E::ts("Attachment '%1' could not be generated or found.", [
-                1 => $attachment_id,
-              ])
-              );
-            }
-            $email_data['attachments'][] = $attachment;
-          }
+          $email_data['attachments'] = array_merge(
+            $email_data['attachments'] ?? [],
+            self::buildAttachments($data, $context)
+          );
         }
 
         // resolve/beautify sender (use name instead of value of the option_value)
@@ -104,7 +83,6 @@ class CRM_Eventmessages_SendMail {
           Civi::log()->debug("EventMessages: Sending email to '{$data->contact_email}' from '{$email_data['from']}'");
           civicrm_api3('MessageTemplate', 'send', $email_data);
         }
-
       }
       else {
         Civi::log()->warning(
@@ -113,17 +91,48 @@ class CRM_Eventmessages_SendMail {
       }
     }
     catch (Exception $exception) {
-      Civi::log()->warning(E::ts(
-        'Could not send e-mail to participant %1, error was: %2',
-        [
-          1 => $context['participant_id'],
-          2 => $exception->getMessage(),
-        ]
-        ));
+      Civi::log()->warning(
+        E::ts(
+          'Could not send e-mail to participant %1, error was: %2',
+          [
+            1 => $context['participant_id'],
+            2 => $exception->getMessage(),
+          ]
+        )
+      );
       if (!$silent) {
         throw $exception;
       }
     }
+  }
+
+  public static function buildAttachments(\CRM_Core_DAO $data, array $context) {
+    $renderedAttachments = [];
+    $attachment_types = \Civi\Mailattachment\Form\Attachments::attachmentTypes();
+    $attachments = $context['attachments'] ?? $context['rule']['attachments'];
+    foreach ($attachments as $attachment_id => $attachment_values) {
+      $attachment_type = $attachment_types[$attachment_values['type']];
+      /** @var \Civi\Mailattachment\AttachmentType\AttachmentTypeInterface $controller */
+      $controller = $attachment_type['controller'];
+      if (
+        !($attachment = $controller::buildAttachment(
+          [
+            'entity_type' => 'participant',
+            'entity_id' => $data->participant_id,
+            'entity_ids' => $context['participant_ids'],
+          ],
+          $attachment_values
+        )
+        )
+      ) {
+        // no attachment -> cannot send
+        throw new \RuntimeException(
+          E::ts("Attachment '%1' could not be generated or found.", [1 => $attachment_id])
+        );
+      }
+      $renderedAttachments[] = $attachment;
+    }
+    return $renderedAttachments;
   }
 
   /**
@@ -153,6 +162,7 @@ class CRM_Eventmessages_SendMail {
    * @param object $mailer
    *      the currently used mailer, to be manipulated
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh, Generic.Metrics.NestingLevel.TooHigh
   public static function suppressSystemMails(&$mailer, $driver, $params) {
     $mailer = new class($mailer, $driver, $params) {
 
@@ -293,6 +303,8 @@ class CRM_Eventmessages_SendMail {
 
     };
   }
+
+  // phpcs:enable
 
   /**
    * Check whether CiviCRM's native event notifications should be suppressed
