@@ -18,6 +18,7 @@
 declare(strict_types=1);
 
 use Civi\Api4\Event;
+use Civi\Api4\MessageTemplate;
 use Civi\Core\Transaction\Manager as CiviTransactionManager;
 use Civi\EventMessages\AbstractEventmessagesHeadlessTestCase;
 use Civi\EventMessages\Fixtures\ContactFixture;
@@ -64,9 +65,17 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
             ->execute()
             ->single();
 
-        EventMessageRuleFixture::addFixture($event['id'], [
+        $messageTemplateId = MessageTemplate::create(FALSE)
+          ->setValues([
+            'msg_subject' => 'Test Subject',
+            'msg_html' => '<p>Test</p>',
+            'msg_text' => 'Test',
+          ])->execute()->single()['id'];
+
+        $rule = EventMessageRuleFixture::addFixture($event['id'], [
             'to_status' => [1], // Registered
             'languages' => ['de_DE', 'en'],
+            'template_id' => $messageTemplateId
         ]);
 
         $contact = ContactFixture::addIndividual(['preferred_language' => 'de_DE']);
