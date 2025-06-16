@@ -16,6 +16,7 @@
 declare(strict_types = 1);
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use Civi\Token\TokenProcessor;
 
 /**
  * Basic Logic for generating the actual letter
@@ -65,20 +66,21 @@ class CRM_Eventmessages_GenerateLetter {
         CRM_Contact_Form_Task_PDFLetterCommon::formatMessage($html);
 
         // Replace contact tokens.
-        [$contact] = CRM_Utils_Token::getTokenDetails([$data->contact_id]);
-        $html = CRM_Utils_Token::replaceContactTokens(
-        $html,
-        $contact[$data->contact_id],
-        TRUE,
-        $message_tokens->getTokens()
-        );
+        $tokenProcessor = new TokenProcessor(\Civi::dispatcher(), [
+          'smarty' => TRUE,
+          'class' => __CLASS__,
+          'schema' => ['contactId'],
+        ]);
+        $tokenProcessor->addRow(['contactId' => $data->contact_id]);
+        $tokenProcessor->addMessage('templateContent', $html, 'text/html');
+        $tokenProcessor->evaluate();
+        $row = $tokenProcessor->getRow(0);
+        $html = $row->render('templateContent');
 
         // Pass tokens as Smarty variables.
         /** @var CRM_Core_Smarty $smarty */
         $smarty = CRM_Core_Smarty::singleton();
-        foreach ($message_tokens->getTokens() as $key => $value) {
-          $smarty->assign($key, $value);
-        }
+        $smarty->assign($message_tokens->getTokens());
         $html = $smarty->fetch("string:$html");
 
         // Convert to PDF and output the result.
