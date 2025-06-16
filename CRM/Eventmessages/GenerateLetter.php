@@ -69,9 +69,13 @@ class CRM_Eventmessages_GenerateLetter {
         $tokenProcessor = new TokenProcessor(\Civi::dispatcher(), [
           'smarty' => TRUE,
           'class' => __CLASS__,
-          'schema' => ['contactId'],
+          'schema' => ['contactId', 'participantId', 'eventId'],
         ]);
-        $tokenProcessor->addRow(['contactId' => $data->contact_id]);
+        $tokenProcessor->addRow([
+          'contactId' => $data->contact_id,
+          'participantId' => $data->participant_id,
+          'eventId' => $context['event_id'],
+        ]);
         $tokenProcessor->addMessage('templateContent', $html, 'text/html');
         $tokenProcessor->evaluate();
         $row = $tokenProcessor->getRow(0);
