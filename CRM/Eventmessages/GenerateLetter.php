@@ -63,7 +63,7 @@ class CRM_Eventmessages_GenerateLetter {
         $pdf_format_id = $msg_tpl['pdf_format_id'];
 
         // Prepare message template.
-        CRM_Contact_Form_Task_PDFLetterCommon::formatMessage($html);
+        self::formatMessage($html);
 
         // Replace contact tokens.
         $tokenProcessor = new TokenProcessor(\Civi::dispatcher(), [
@@ -180,6 +180,55 @@ class CRM_Eventmessages_GenerateLetter {
             ORDER BY
               address.is_primary DESC
             ";
+  }
+
+  /**
+   * Copied from \CRM_Contact_Form_Task_PDFTrait::formatMessage() as the original
+   * \CRM_Core_Form_Task_PDFLetterCommon::formatMessage() is deprecated.
+   *
+   * @see \CRM_Contact_Form_Task_PDFTrait::formatMessage()
+   * @see \CRM_Core_Form_Task_PDFLetterCommon::formatMessage()
+   *
+   * TODO: Make use of the trait instead of copying code.
+   */
+  public static function formatMessage(string &$message): void {
+    $newLineOperators = [
+      'p' => [
+        'oper' => '<p>',
+        'pattern' => '/<(\s+)?p(\s+)?>/m',
+      ],
+      'br' => [
+        'oper' => '<br />',
+        'pattern' => '/<(\s+)?br(\s+)?\/>/m',
+      ],
+    ];
+
+    $htmlMsg = preg_split($newLineOperators['p']['pattern'], $message);
+    foreach ($htmlMsg as $k => & $m) {
+      $messages = preg_split($newLineOperators['br']['pattern'], $m);
+      foreach ($messages as $key => & $msg) {
+        $msg = trim($msg);
+        $matches = [];
+        if (preg_match('/^(&nbsp;)+/', $msg, $matches)) {
+          $spaceLen = strlen($matches[0]) / 6;
+          $trimMsg = ltrim($msg, '&nbsp; ');
+          $charLen = strlen($trimMsg);
+          $totalLen = $charLen + $spaceLen;
+          if ($totalLen > 100) {
+            $spacesCount = 10;
+            if ($spaceLen > 50) {
+              $spacesCount = 20;
+            }
+            if ($charLen > 100) {
+              $spacesCount = 1;
+            }
+            $msg = str_repeat('&nbsp;', $spacesCount) . $trimMsg;
+          }
+        }
+      }
+      $m = implode($newLineOperators['br']['oper'], $messages);
+    }
+    $message = implode($newLineOperators['p']['oper'], $htmlMsg);
   }
 
 }
