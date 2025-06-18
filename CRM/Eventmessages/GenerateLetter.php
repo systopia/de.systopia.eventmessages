@@ -16,6 +16,7 @@
 declare(strict_types = 1);
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use Civi\Token\TokenProcessor;
 
 /**
  * Basic Logic for generating the actual letter
@@ -62,23 +63,28 @@ class CRM_Eventmessages_GenerateLetter {
         $pdf_format_id = $msg_tpl['pdf_format_id'];
 
         // Prepare message template.
-        CRM_Contact_Form_Task_PDFLetterCommon::formatMessage($html);
+        self::formatMessage($html);
 
         // Replace contact tokens.
-        [$contact] = CRM_Utils_Token::getTokenDetails([$data->contact_id]);
-        $html = CRM_Utils_Token::replaceContactTokens(
-        $html,
-        $contact[$data->contact_id],
-        TRUE,
-        $message_tokens->getTokens()
-        );
+        $tokenProcessor = new TokenProcessor(\Civi::dispatcher(), [
+          'smarty' => TRUE,
+          'class' => __CLASS__,
+          'schema' => ['contactId', 'participantId', 'eventId'],
+        ]);
+        $tokenProcessor->addRow([
+          'contactId' => $data->contact_id,
+          'participantId' => $data->participant_id,
+          'eventId' => $context['event_id'],
+        ]);
+        $tokenProcessor->addMessage('templateContent', $html, 'text/html');
+        $tokenProcessor->evaluate();
+        $row = $tokenProcessor->getRow(0);
+        $html = $row->render('templateContent');
 
         // Pass tokens as Smarty variables.
         /** @var CRM_Core_Smarty $smarty */
         $smarty = CRM_Core_Smarty::singleton();
-        foreach ($message_tokens->getTokens() as $key => $value) {
-          $smarty->assign($key, $value);
-        }
+        $smarty->assign($message_tokens->getTokens());
         $html = $smarty->fetch("string:$html");
 
         // Convert to PDF and output the result.
@@ -174,6 +180,55 @@ class CRM_Eventmessages_GenerateLetter {
             ORDER BY
               address.is_primary DESC
             ";
+  }
+
+  /**
+   * Copied from \CRM_Contact_Form_Task_PDFTrait::formatMessage() as the original
+   * \CRM_Core_Form_Task_PDFLetterCommon::formatMessage() is deprecated.
+   *
+   * @see \CRM_Contact_Form_Task_PDFTrait::formatMessage()
+   * @see \CRM_Core_Form_Task_PDFLetterCommon::formatMessage()
+   *
+   * TODO: Make use of the trait instead of copying code.
+   */
+  public static function formatMessage(string &$message): void {
+    $newLineOperators = [
+      'p' => [
+        'oper' => '<p>',
+        'pattern' => '/<(\s+)?p(\s+)?>/m',
+      ],
+      'br' => [
+        'oper' => '<br />',
+        'pattern' => '/<(\s+)?br(\s+)?\/>/m',
+      ],
+    ];
+
+    $htmlMsg = preg_split($newLineOperators['p']['pattern'], $message);
+    foreach ($htmlMsg as $k => & $m) {
+      $messages = preg_split($newLineOperators['br']['pattern'], $m);
+      foreach ($messages as $key => & $msg) {
+        $msg = trim($msg);
+        $matches = [];
+        if (preg_match('/^(&nbsp;)+/', $msg, $matches)) {
+          $spaceLen = strlen($matches[0]) / 6;
+          $trimMsg = ltrim($msg, '&nbsp; ');
+          $charLen = strlen($trimMsg);
+          $totalLen = $charLen + $spaceLen;
+          if ($totalLen > 100) {
+            $spacesCount = 10;
+            if ($spaceLen > 50) {
+              $spacesCount = 20;
+            }
+            if ($charLen > 100) {
+              $spacesCount = 1;
+            }
+            $msg = str_repeat('&nbsp;', $spacesCount) . $trimMsg;
+          }
+        }
+      }
+      $m = implode($newLineOperators['br']['oper'], $messages);
+    }
+    $message = implode($newLineOperators['p']['oper'], $htmlMsg);
   }
 
 }
