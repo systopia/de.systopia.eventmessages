@@ -318,7 +318,12 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
         ->addWhere('is_active', '=', TRUE)
         ->execute()
         ->indexBy('id')
-        ->column('display_name');
+        ->getArrayCopy();
+      // Include "email" column as the option value label did.
+      $from_email_addresses = array_map(
+        fn($address) => sprintf('"%s" <%s>', $address['display_name'], $address['email']),
+        $from_email_addresses
+      );
     }
     else {
       $from_email_addresses = OptionValue::get(FALSE)
