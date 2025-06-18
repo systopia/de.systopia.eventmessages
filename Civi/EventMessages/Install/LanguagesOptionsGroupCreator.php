@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Install;
 
@@ -26,79 +26,81 @@ use CRM_Eventmessages_ExtensionUtil as E;
 /**
  * Creates a languages options group based on CiviCRM's languages option group.
  */
-final class LanguagesOptionsGroupCreator
-{
-    public function createLanguagesOptionGroup(): void {
-        $transaction = \CRM_Core_Transaction::create();
+final class LanguagesOptionsGroupCreator {
 
-        $countryLessLanguageOptions = [];
-        $optionGroup = OptionGroup::create(false)
-            ->setValues([
-                'name' => 'event_messages_languages',
-                'title' => E::ts('Event Message Languages'),
-                'data_type' => 'String',
-                'is_reserved' => false,
-            ])
-            ->execute()
-            ->single();
+  public function createLanguagesOptionGroup(): void {
+    $transaction = \CRM_Core_Transaction::create();
 
-        $civiLanguageOptions = OptionValue::get(false)
-            ->setSelect(['value', 'name', 'label', 'weight', 'is_active'])
-            ->addWhere('option_group_id:name', '=', 'languages')
-            ->addOrderBy('weight')
-            ->execute();
+    $countryLessLanguageOptions = [];
+    $optionGroup = OptionGroup::create(FALSE)
+      ->setValues([
+        'name' => 'event_messages_languages',
+        'title' => E::ts('Event Message Languages'),
+        'data_type' => 'String',
+        'is_reserved' => FALSE,
+      ])
+      ->execute()
+      ->single();
 
-        /** @phpstan-var array{id: int, value: string, name: string, label: string, weight: int, is_active: bool} $languageOption */
-        foreach ($civiLanguageOptions as $languageOption) {
-            unset($languageOption['id']);
-            $languageOption['option_group_id'] = $optionGroup['id'];
-            // In CiviCRM's language group 'name' contains the language and locale
-            // code, e.g. en_US, 'value' contains only the language code, e.g. 'en'.
-            // Normally both values are unique for each group.
-            $languageOption['value'] = $languageOption['name'];
-            [$langCode, $countryCode] = explode('_', $languageOption['value']) + [NULL, NULL];
-            $matches = [];
-            if (0 === preg_match('/(.*) \([^)]+\)$/', $languageOption['label'], $matches)) {
-                $languageLabel = $languageOption['label'];
-                $languageOption['label'] .= ' (' . $countryCode . ')';
-            } else {
-                $languageLabel = $matches[1];
-            }
+    $civiLanguageOptions = OptionValue::get(FALSE)
+      ->setSelect(['value', 'name', 'label', 'weight', 'is_active'])
+      ->addWhere('option_group_id:name', '=', 'languages')
+      ->addOrderBy('weight')
+      ->execute();
 
-            $countryLessLanguageOptions[$langCode] ??= [
-                'option_group_id' => $optionGroup['id'],
-                'value' => $langCode,
-                'name' => $langCode,
-                'label' => $languageLabel,
-                'weight' => $languageOption['weight'],
-                'is_active' => $languageOption['is_active'],
-            ];
+    /** @phpstan-var array{id: int, value: string, name: string, label: string, weight: int, is_active: bool} $languageOption */
+    foreach ($civiLanguageOptions as $languageOption) {
+      unset($languageOption['id']);
+      $languageOption['option_group_id'] = $optionGroup['id'];
+      // In CiviCRM's language group 'name' contains the language and locale
+      // code, e.g. en_US, 'value' contains only the language code, e.g. 'en'.
+      // Normally both values are unique for each group.
+      $languageOption['value'] = $languageOption['name'];
+      [$langCode, $countryCode] = explode('_', $languageOption['value']) + [NULL, NULL];
+      $matches = [];
+      if (0 === preg_match('/(.*) \([^)]+\)$/', $languageOption['label'], $matches)) {
+        $languageLabel = $languageOption['label'];
+        $languageOption['label'] .= ' (' . $countryCode . ')';
+      }
+      else {
+        $languageLabel = $matches[1];
+      }
 
-            if ($languageOption['is_active']) {
-                $countryLessLanguageOptions[$langCode]['is_active'] = true;
-                // Disable the localized language if it is the only instance of the language.
-                $languageOption['is_active'] = OptionValue::get(false)
-                    ->selectRowCount()
-                    ->addWhere('option_group_id:name', '=', 'languages')
-                    ->addWhere('value', '=', $langCode)
-                    ->execute()
-                    ->countMatched() > 1;
-            }
+      $countryLessLanguageOptions[$langCode] ??= [
+        'option_group_id' => $optionGroup['id'],
+        'value' => $langCode,
+        'name' => $langCode,
+        'label' => $languageLabel,
+        'weight' => $languageOption['weight'],
+        'is_active' => $languageOption['is_active'],
+      ];
 
-            // There might be languages not following the format <language code>_<country code>.
-            if (NULL !== $countryCode) {
-                OptionValue::create(false)
-                    ->setValues($languageOption)
-                    ->execute();
-            }
-        }
+      if ($languageOption['is_active']) {
+        $countryLessLanguageOptions[$langCode]['is_active'] = TRUE;
+        // Disable the localized language if it is the only instance of the language.
+        $languageOption['is_active'] = OptionValue::get(FALSE)
+          ->selectRowCount()
+          ->addWhere('option_group_id:name', '=', 'languages')
+          ->addWhere('value', '=', $langCode)
+          ->execute()
+          ->countMatched() > 1;
+      }
 
-        foreach ($countryLessLanguageOptions as $languageOption) {
-            OptionValue::create(false)
-                ->setValues($languageOption)
-                ->execute();
-        }
-
-        $transaction->commit();
+      // There might be languages not following the format <language code>_<country code>.
+      if (NULL !== $countryCode) {
+        OptionValue::create(FALSE)
+          ->setValues($languageOption)
+          ->execute();
+      }
     }
+
+    foreach ($countryLessLanguageOptions as $languageOption) {
+      OptionValue::create(FALSE)
+        ->setValues($languageOption)
+        ->execute();
+    }
+
+    $transaction->commit();
+  }
+
 }

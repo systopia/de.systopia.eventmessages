@@ -15,14 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\EventMessages\Fixtures;
 
 use Civi\Api4\Event;
 
-final class EventFixture
-{
+final class EventFixture {
 
   /**
    * @param array<string, scalar|array<scalar>> $values
@@ -32,30 +31,29 @@ final class EventFixture
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addFixture(array $values = []): array
-  {
-      static $i = 0;
-      ++$i;
+  public static function addFixture(array $values = []): array {
+    static $i = 0;
+    ++$i;
 
-      return Event::create(false)
-          ->setValues($values + [
-              'title' => 'EventMessagesTest' . $i,
-              'event_type_id:name' => 'Conference',
-              'start_date' => '2023-08-24',
-              'is_online_registration' => false,
-              'is_monetary' => false,
-              'is_map' => false,
-              'is_email_confirm' => false,
-              'is_pay_later' => false,
-              'is_partial_payment' => false,
-              'is_multiple_registrations' => false,
-              'allow_same_participant_emails' => false,
-              'has_waitlist' => false,
-              'requires_approval' => false,
-              'allow_selfcancelxfer' => false,
-              'is_template' => false,
-              'is_billing_required' => false,
-          ])->execute()->first();
+    return Event::create(FALSE)
+      ->setValues($values + [
+        'title' => 'EventMessagesTest' . $i,
+        'event_type_id:name' => 'Conference',
+        'start_date' => '2023-08-24',
+        'is_online_registration' => FALSE,
+        'is_monetary' => FALSE,
+        'is_map' => FALSE,
+        'is_email_confirm' => FALSE,
+        'is_pay_later' => FALSE,
+        'is_partial_payment' => FALSE,
+        'is_multiple_registrations' => FALSE,
+        'allow_same_participant_emails' => FALSE,
+        'has_waitlist' => FALSE,
+        'requires_approval' => FALSE,
+        'allow_selfcancelxfer' => FALSE,
+        'is_template' => FALSE,
+        'is_billing_required' => FALSE,
+      ])->execute()->first();
   }
 
 }
