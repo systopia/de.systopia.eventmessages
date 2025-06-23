@@ -18,6 +18,7 @@ declare(strict_types = 1);
 use Civi\Api4\Event;
 use Civi\Api4\OptionValue;
 use Civi\EventMessages\Language\LanguageProviderContainer;
+use Civi\Api4\SiteEmailAddress;
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -311,8 +312,8 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
   protected function getSenderOptions() {
     $dropdown_list = [];
     // TODO: Remove check when minimum core version requirement is >= 6.0.0.
-    if (class_exists('\Civi\Api4\SiteEmailAddress')) {
-      $from_email_addresses = \Civi\Api4\SiteEmailAddress::get(FALSE)
+    if (class_exists(SiteEmailAddress::class)) {
+      $from_email_addresses = SiteEmailAddress::get(FALSE)
         ->addSelect('display_name', 'id')
         ->addWhere('domain_id', '=', 'current_domain')
         ->addWhere('is_active', '=', TRUE)

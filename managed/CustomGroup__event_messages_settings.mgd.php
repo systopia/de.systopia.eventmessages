@@ -1,6 +1,7 @@
 <?php
 
 use CRM_Eventmessages_ExtensionUtil as E;
+use Civi\Api4\SiteEmailAddress;
 
 return [
   [
@@ -16,7 +17,6 @@ return [
         'extends' => 'Event',
         'style' => 'Tab',
         'collapse_display' => TRUE,
-        'weight' => 38,
         'collapse_adv_display' => TRUE,
         'is_reserved' => TRUE,
       ],
@@ -138,7 +138,7 @@ return [
     ],
   ],
   // TODO: Remove check when minimum core version requirement is >= 6.0.0.
-  (class_exists('\Civi\Api4\SiteEmailAddress')
+  (class_exists(SiteEmailAddress::class)
     ? [
       'name' => 'CustomGroup_event_messages_settings_CustomField_event_messages_sender',
       'entity' => 'CustomField',
