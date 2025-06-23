@@ -84,7 +84,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
     // add a dummy item to display the 'upcoming' message
     $queue->createItem(new CRM_Eventmessages_SendMailJob(
         [],
-        $values['template_id'],
+        (int) $values['template_id'],
         E::ts('Sending Emails %1 - %2', [
     // keep in mind that this is showing when the _next_ task is running
           1 => 1,

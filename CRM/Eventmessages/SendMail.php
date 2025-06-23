@@ -51,6 +51,11 @@ class CRM_Eventmessages_SendMail {
           'cc' => CRM_Utils_Array::value('event_messages_settings__event_messages_cc', $event, ''),
           'bcc' => CRM_Utils_Array::value('event_messages_settings__event_messages_bcc', $event, ''),
           'contactId' => (int) $data->contact_id,
+          'tokenContext' => [
+            'contactId' => (int) $data->contact_id,
+            'participantId' => (int) $data->participant_id,
+            'eventId' => $context['event_id'],
+          ],
           'tplParams' => $message_tokens->getTokens(),
         ];
 
