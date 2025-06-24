@@ -31,6 +31,7 @@ return [
       'values' => [
         'name' => 'event_messages_settings',
         'title' => E::ts('Event Messages Settings'),
+        'table_name' => 'civicrm_value_event_messages_settings',
         'extends' => 'Event',
         'style' => 'Tab',
         'collapse_display' => TRUE,
