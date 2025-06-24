@@ -18,6 +18,7 @@ declare(strict_types = 1);
 use Civi\Api4\Event;
 use Civi\Api4\OptionValue;
 use Civi\EventMessages\Language\LanguageProviderContainer;
+use Civi\Api4\SiteEmailAddress;
 use CRM_Eventmessages_ExtensionUtil as E;
 
 /**
@@ -310,7 +311,30 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
    */
   protected function getSenderOptions() {
     $dropdown_list = [];
-    $from_email_addresses = CRM_Core_OptionGroup::values('from_email_address');
+    // TODO: Remove check when minimum core version requirement is >= 6.0.0.
+    if (class_exists(SiteEmailAddress::class)) {
+      $from_email_addresses = SiteEmailAddress::get(FALSE)
+        ->addSelect('display_name', 'id')
+        ->addWhere('domain_id', '=', 'current_domain')
+        ->addWhere('is_active', '=', TRUE)
+        ->execute()
+        ->indexBy('id')
+        ->getArrayCopy();
+      // Include "email" column as the option value label did.
+      $from_email_addresses = array_map(
+        fn($address) => sprintf('"%s" <%s>', $address['display_name'], $address['email']),
+        $from_email_addresses
+      );
+    }
+    else {
+      $from_email_addresses = OptionValue::get(FALSE)
+        ->addSelect('value', 'label')
+        ->addWhere('option_group_id:name', '=', 'from_email_address')
+        ->addWhere('is_active', '=', TRUE)
+        ->execute()
+        ->indexBy('value')
+        ->column('label');
+    }
     foreach ($from_email_addresses as $key => $from_email_address) {
       $dropdown_list[$key] = htmlentities($from_email_address);
     }
