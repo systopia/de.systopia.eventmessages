@@ -72,13 +72,13 @@ class CRM_Eventmessages_SendMail {
         // TODO: Remove check when minimum core version requirement is >= 6.0.0.
         if (class_exists(SiteEmailAddress::class)) {
           $from_addresses = SiteEmailAddress::get(FALSE)
-            ->addSelect('display_name', 'id')
+            ->addSelect('display_name', 'id', 'email')
             ->addWhere('domain_id', '=', 'current_domain')
             ->addWhere('is_active', '=', TRUE)
             ->addOrderBy('id')
             ->execute()
             ->indexBy('id')
-            ->column('display_name');
+            ->column('email');
         }
         else {
           $from_addresses = \Civi\Api4\OptionValue::get(FALSE)
