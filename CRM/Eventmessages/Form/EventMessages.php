@@ -314,7 +314,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     // TODO: Remove check when minimum core version requirement is >= 6.0.0.
     if (class_exists(SiteEmailAddress::class)) {
       $from_email_addresses = SiteEmailAddress::get(FALSE)
-        ->addSelect('display_name', 'id')
+        ->addSelect('display_name', 'id', 'email')
         ->addWhere('domain_id', '=', 'current_domain')
         ->addWhere('is_active', '=', TRUE)
         ->execute()

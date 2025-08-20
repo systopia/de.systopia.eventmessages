@@ -71,17 +71,22 @@ class CRM_Eventmessages_SendMail {
         // resolve/beautify sender (use name instead of value of the option_value)
         // TODO: Remove check when minimum core version requirement is >= 6.0.0.
         if (class_exists(SiteEmailAddress::class)) {
-          $from_addresses = SiteEmailAddress::get(FALSE)
-            ->addSelect('display_name', 'id')
+          $from_email_addresses = SiteEmailAddress::get(FALSE)
+            ->addSelect('display_name', 'id', 'email')
             ->addWhere('domain_id', '=', 'current_domain')
             ->addWhere('is_active', '=', TRUE)
             ->addOrderBy('id')
             ->execute()
             ->indexBy('id')
-            ->column('display_name');
+            ->getArrayCopy();
+          // Include "email" column as the option value label did.
+          $from_email_addresses = array_map(
+            fn($address) => sprintf('"%s" <%s>', $address['display_name'], $address['email']),
+            $from_email_addresses
+          );
         }
         else {
-          $from_addresses = \Civi\Api4\OptionValue::get(FALSE)
+          $from_email_addresses = \Civi\Api4\OptionValue::get(FALSE)
             ->addSelect('value', 'label')
             ->addWhere('option_group_id:name', '=', 'from_email_address')
             ->addWhere('is_active', '=', TRUE)
@@ -90,11 +95,11 @@ class CRM_Eventmessages_SendMail {
             ->indexBy('value')
             ->column('label');
         }
-        if (isset($from_addresses[$email_data['from']])) {
-          $email_data['from'] = $from_addresses[$email_data['from']];
+        if (isset($from_email_addresses[$email_data['from']])) {
+          $email_data['from'] = $from_email_addresses[$email_data['from']];
         }
         else {
-          $email_data['from'] = reset($from_addresses);
+          $email_data['from'] = reset($from_email_addresses);
         }
 
         // send the mail
