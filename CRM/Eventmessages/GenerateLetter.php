@@ -15,7 +15,6 @@
 
 declare(strict_types = 1);
 
-use CRM_Eventmessages_ExtensionUtil as E;
 use Civi\Token\TokenProcessor;
 
 /**
@@ -26,88 +25,86 @@ class CRM_Eventmessages_GenerateLetter {
   /**
    * Generates the actual letter.
    *
-   * @param array $context
+   * @param array<string, mixed> $context
    *   Some context information, see processStatusChange().
    *
-   * @return string
-   *   The gnerated PDF file contents.
+   * @return string|null
+   *   The generated PDF file contents, or NULL on error.
    */
-  public static function generateLetterFor($context) {
+  public static function generateLetterFor(array $context): ?string {
     try {
+      // @phpstan-ignore argument.type
       $event = self::getEventData($context['event_id']);
       $data_query = self::buildDataQuery($context);
+      /** @var \CRM_Core_DAO $data */
       $data = CRM_Core_DAO::executeQuery($data_query);
+      // @phpstan-ignore offsetAccess.nonOffsetAccessible
       $template_id = empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'];
       if ($data->fetch()) {
         $message_tokens = CRM_Eventmessages_Logic::generateTokenEvent($data->participant_id, $data->contact_id, $event);
         $message_tokens->setTemplateId($template_id);
         Civi::dispatcher()->dispatch('civi.eventmessages.tokens', $message_tokens);
 
-        // and generate the letter from the template
-        $letter_data = [
-          'id' => $template_id,
-          'toName' => $data->contact_name,
-          'contactId' => $data->contact_id,
-          'tplParams' => $message_tokens->getTokens(),
-        ];
-
         // generate the letter
         Civi::log()->debug("EventMessages: Generating eventmessages letter for '{$data->contact_name}'");
         // Load message template.
+        /** @var array<string, string> $msg_tpl */
         $msg_tpl = civicrm_api3(
-        'MessageTemplate',
-        'getsingle',
-        ['id' => $letter_data['id']]
+          'MessageTemplate',
+          'getsingle',
+          ['id' => $template_id]
         );
         $html = $msg_tpl['msg_html'];
-        $pdf_format_id = $msg_tpl['pdf_format_id'];
+        $pdf_format_id = isset($msg_tpl['pdf_format_id']) ? (int) $msg_tpl['pdf_format_id'] : NULL;
 
         // Prepare message template.
         self::formatMessage($html);
 
-        // Replace contact tokens.
+        $smartyTokenFlattener = new CRM_Eventmessages_Util_SmartyTokenFlattener($html);
+        $smartyTokenFlattener->flattenTokens($message_tokens->getSmartyTokens(), 'smarty');
+
+        // Replace contact tokens and convert Smarty variables to tokens using
+        // 'smartyTokenAlias' (see \Civi\Token\TokenCompatSubscriber).
         $tokenProcessor = new TokenProcessor(\Civi::dispatcher(), [
           'smarty' => TRUE,
           'class' => __CLASS__,
           'schema' => ['contactId', 'participantId', 'eventId'],
+          'smartyTokenAlias' => $smartyTokenFlattener->getAliases(),
         ]);
-        $tokenProcessor->addRow([
+        $row = $tokenProcessor->addRow([
           'contactId' => $data->contact_id,
           'participantId' => $data->participant_id,
           'eventId' => $context['event_id'],
         ]);
-        $tokenProcessor->addMessage('templateContent', $html, 'text/html');
+        // Register values for Smarty variables.
+        $row->tokens($smartyTokenFlattener->getTokens());
+        $tokenProcessor->addMessage('templateContent', $smartyTokenFlattener->getTemplate(), 'text/html');
         $tokenProcessor->evaluate();
         $row = $tokenProcessor->getRow(0);
         $html = $row->render('templateContent');
 
-        // Pass tokens as Smarty variables.
-        /** @var CRM_Core_Smarty $smarty */
-        $smarty = CRM_Core_Smarty::singleton();
-        $smarty->assign($message_tokens->getTokens());
-        $html = $smarty->fetch("string:$html");
-
         // Convert to PDF and output the result.
-        $pdf = CRM_Utils_PDF_Utils::html2pdf(
-        [$html],
-        'letter.pdf',
-        TRUE,
-        $pdf_format_id
+        return CRM_Utils_PDF_Utils::html2pdf(
+          [$html],
+          'letter.pdf',
+          TRUE,
+          $pdf_format_id
         );
-        return $pdf;
       }
       else {
         Civi::log()->warning(
-        "Couldn't generate letter for participant [{$context['participant_id']}], something is wrong with the data set."
-          );
+          "Couldn't generate letter for participant [" . $context['participant_id']
+          . '], something is wrong with the data set.'
+        );
       }
     }
     catch (Exception $ex) {
       Civi::log()->warning(
-        "Couldn't generate letter for participant [{$context['participant_id']}], error was: " . $ex->getMessage(
-        )
-        );
+        "Couldn't generate letter for participant [{$context['participant_id']}], error was: " . $ex->getMessage()
+      );
     }
+
+    return NULL;
   }
 
   /**
@@ -117,10 +114,12 @@ class CRM_Eventmessages_GenerateLetter {
    * @param int $event_id
    *   Event ID
    *
-   * @return array
+   * @return array<string, mixed>
    *   Event data
+   *
+   * @throws \CRM_Core_Exception
    */
-  protected static function getEventData($event_id) {
+  protected static function getEventData(int $event_id): array {
     static $event_cache = [];
     if (!isset($event_cache[$event_id])) {
       $event = civicrm_api3(
@@ -138,13 +137,13 @@ class CRM_Eventmessages_GenerateLetter {
    * Build an SQL query to fetch the right data set,
    *  including contact_name, contact_id
    *
-   * @param array $context
+   * @param array<string, mixed> $context
    *      some context information, see processStatusChange
    *
    * @return string
    *   sql query to gather the data required for generating a letter
    */
-  protected static function buildDataQuery($context) {
+  protected static function buildDataQuery(array $context): string {
     $participant_id = (int) $context['participant_id'];
     return "
             SELECT
@@ -204,12 +203,14 @@ class CRM_Eventmessages_GenerateLetter {
     ];
 
     $htmlMsg = preg_split($newLineOperators['p']['pattern'], $message);
-    foreach ($htmlMsg as $k => & $m) {
+    assert(FALSE !== $htmlMsg);
+    foreach ($htmlMsg as &$m) {
       $messages = preg_split($newLineOperators['br']['pattern'], $m);
-      foreach ($messages as $key => & $msg) {
+      assert(FALSE !== $messages);
+      foreach ($messages as &$msg) {
         $msg = trim($msg);
         $matches = [];
-        if (preg_match('/^(&nbsp;)+/', $msg, $matches)) {
+        if (preg_match('/^(&nbsp;)+/', $msg, $matches) === 1) {
           $spaceLen = strlen($matches[0]) / 6;
           $trimMsg = ltrim($msg, '&nbsp; ');
           $charLen = strlen($trimMsg);
