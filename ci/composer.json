@@ -12,5 +12,8 @@
     "require": {
         "civicrm/civicrm-core": ">=5.68",
         "civicrm/civicrm-packages": ">=5.68"
+    },
+    "conflict": {
+      "pear/pear-core-minimal": "<1.10.10"
     }
 }
