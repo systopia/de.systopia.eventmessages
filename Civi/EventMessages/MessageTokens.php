@@ -56,6 +56,20 @@ class MessageTokens extends Event {
   }
 
   /**
+   * @return array<string, mixed>
+   */
+  public function getSmartyTokens(): array {
+    $this->initTemplateTokens();
+
+    $tokens = [];
+    foreach (array_keys($this->template_tokens) as $name) {
+      $tokens[$name] = $this->tokens[$name] ?? NULL;
+    }
+
+    return $tokens;
+  }
+
+  /**
    * Specify the template's data, so the contained
    *   tokens can be extracted
    *
@@ -94,7 +108,7 @@ class MessageTokens extends Event {
   }
 
   /**
-   * Check if the given token is required
+   * Check if the given Smarty token is required
    *
    * @param string $name
    *   token name
@@ -108,16 +122,7 @@ class MessageTokens extends Event {
       return TRUE;
     }
 
-    // extract template tokens on the fly
-    if (!isset($this->template_tokens)) {
-      // we have template_data but have not derived the tokens - let's do that
-      $this->template_tokens = [];
-      if (preg_match_all('/[$](\w+)/', $this->template_data, $matches)) {
-        foreach ($matches[1] as $token) {
-          $this->template_tokens[$token] = TRUE;
-        }
-      }
-    }
+    $this->initTemplateTokens();
 
     // finally, return if the token is used
     return isset($this->template_tokens[$name]);
@@ -162,6 +167,19 @@ class MessageTokens extends Event {
       // todo: more stuff?
     }
     return $tokens;
+  }
+
+  private function initTemplateTokens(): void {
+    // extract template tokens on the fly
+    if (!isset($this->template_tokens)) {
+      // we have template_data but have not derived the tokens - let's do that
+      $this->template_tokens = [];
+      if (preg_match_all('/[$](\w+)/', $this->template_data, $matches)) {
+        foreach ($matches[1] as $token) {
+          $this->template_tokens[$token] = TRUE;
+        }
+      }
+    }
   }
 
 }
