@@ -6,6 +6,10 @@ includes:
 
 parameters:
 	scanDirectories:
-		- {VENDOR_DIR}/civicrm/civicrm-core/CRM/
+		- {VENDOR_DIR}/civicrm/civicrm-core/api
+		- {VENDOR_DIR}/civicrm/civicrm-core/CRM
+		- {VENDOR_DIR}/civicrm/civicrm-core/ext/civi_event/Civi
+	scanFiles:
+		- {VENDOR_DIR}/civicrm/civicrm-packages/DB/DataObject.php
 	bootstrapFiles:
 		- {VENDOR_DIR}/autoload.php

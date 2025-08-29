@@ -10,6 +10,11 @@
         "sort-packages": true
     },
     "require": {
-        "civicrm/civicrm-core": ">=5.68"
+        "civicrm/civicrm-core": ">=5.68",
+        "civicrm/civicrm-packages": ">=5.68"
+    },
+    "conflict": {
+      "pear/console_getopt": "<1.4.3",
+      "pear/pear-core-minimal": "<1.10.10"
     }
 }
