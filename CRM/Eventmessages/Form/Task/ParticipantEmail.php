@@ -115,16 +115,16 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
       $current_batch[] = $participant_query->participant_id;
       if (count($current_batch) >= self::RUNNER_BATCH_SIZE) {
         $queue->createItem(
-        new CRM_Eventmessages_SendMailJob(
-        $current_batch,
-        $values['template_id'],
-        E::ts('Sending Emails %1 - %2', [
-        // keep in mind that this is showing when the _next_ task is running
-          1 => $next_offset,
-          2 => $next_offset + self::RUNNER_BATCH_SIZE,
-        ]),
-        $values['attachments'] ?? []
-        )
+          new CRM_Eventmessages_SendMailJob(
+          $current_batch,
+          (int) $values['template_id'],
+          // keep in mind that this is showing when the _next_ task is running
+          E::ts('Sending Emails %1 - %2', [
+            1 => $next_offset,
+            2 => $next_offset + self::RUNNER_BATCH_SIZE,
+          ]),
+          $values['attachments'] ?? []
+          )
         );
         $next_offset += self::RUNNER_BATCH_SIZE;
         $current_batch = [];
