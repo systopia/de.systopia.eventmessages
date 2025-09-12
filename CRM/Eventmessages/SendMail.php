@@ -412,7 +412,7 @@ class CRM_Eventmessages_SendMail {
       // copy all custom_xx parameters into the participant
       foreach ($submission_sources as $submission_source) {
         foreach ($submission_source as $key => $value) {
-          if (preg_match('/^custom_[0-9]+$/', $key)) {
+          if (preg_match('/^custom_[0-9]+$/', (string) $key)) {
             $participant[$key] = $value;
           }
         }
