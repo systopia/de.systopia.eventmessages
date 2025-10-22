@@ -261,13 +261,13 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     $rules = [];
     foreach (range(1, self::MAX_RULE_COUNT) as $i) {
       $rule = [
-        'id'        => CRM_Utils_Array::value("id_{$i}", $values, NULL),
+        'id'        => $values["id_{$i}"] ?? NULL,
         'is_active' => (int) CRM_Utils_Array::value("is_active_{$i}", $values, FALSE),
         'from'      => CRM_Utils_Array::value("from_{$i}", $values, []),
         'to'        => CRM_Utils_Array::value("to_{$i}", $values, []),
         'languages' => CRM_Utils_Array::value("languages_{$i}", $values, []),
         'roles'     => CRM_Utils_Array::value("roles_{$i}", $values, []),
-        'template'  => CRM_Utils_Array::value("template_{$i}", $values, NULL),
+        'template'  => $values["template_{$i}"] ?? NULL,
         'weight'    => (10 + count($rules) * 10),
       ];
       if (class_exists('\Civi\Mailattachment\Form\Attachments')) {
