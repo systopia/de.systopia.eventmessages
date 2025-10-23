@@ -242,7 +242,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
         'id'     => $this->_id,
       ]);
     }
-    catch (CiviCRM_API3_Exception $ex) {
+    catch (CRM_Core_Exception $ex) {
       // that's weird...
       Civi::log()->warning("Event.get [{$this->_id}]: retreiving is_template failed: " . $ex->getMessage());
     }
