@@ -360,7 +360,7 @@ class CRM_Eventmessages_SendMail {
     }
 
     // get the current setting
-    $disable_default = (boolean) self::getEventMailsSettingsForParticipant(
+    $disable_default = (bool) self::getEventMailsSettingsForParticipant(
       'disable_default', $participant_id, $event_id
     );
 
@@ -385,7 +385,7 @@ class CRM_Eventmessages_SendMail {
    * @see https://github.com/systopia/de.systopia.eventmessages/issues/31
    */
   public static function applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, &$participant) {
-    $custom_data_workaround = (boolean) self::getEventMailsSettingsForParticipant(
+    $custom_data_workaround = (bool) self::getEventMailsSettingsForParticipant(
       'custom_data_workaround', $participant_id, $participant['event_id']
     );
     if ($custom_data_workaround) {
@@ -475,9 +475,9 @@ class CRM_Eventmessages_SendMail {
           SQL
         );
         $settings->fetch();
-        $cached_participant_results['disable_default'][$participant_id] = (boolean) $settings->disable_default ?? FALSE;
+        $cached_participant_results['disable_default'][$participant_id] = (bool) $settings->disable_default ?? FALSE;
         $cached_participant_results['custom_data_workaround'][$participant_id]
-          = (boolean) $settings->custom_data_workaround ?? FALSE;
+          = (bool) $settings->custom_data_workaround ?? FALSE;
       }
       return $cached_participant_results[$setting_name][$participant_id];
     }
