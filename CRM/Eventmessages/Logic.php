@@ -506,7 +506,7 @@ class CRM_Eventmessages_Logic {
    */
   public static function generateTokenEvent($participant_id, $contact_id = NULL, $event_data = NULL) {
     $participant = civicrm_api3('Participant', 'getsingle', ['id' => $participant_id]);
-    CRM_Eventmessages_SendMail::applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, $participant);
+    CRM_Eventmessages_SendMail::applyCustomFieldSubmissionWorkaroundForParticipant($participant_id, $participant);
     CRM_Eventmessages_CustomData::labelCustomFields($participant, 1, '__');
     // a small extension for the tokens
     $participant['participant_roles'] = is_array($participant['participant_role']) ?

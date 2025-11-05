@@ -384,7 +384,7 @@ class CRM_Eventmessages_SendMail {
    *
    * @see https://github.com/systopia/de.systopia.eventmessages/issues/31
    */
-  public static function applyCustonFieldSubmissionWorkaroundForParticipant($participant_id, &$participant) {
+  public static function applyCustomFieldSubmissionWorkaroundForParticipant($participant_id, &$participant) {
     $custom_data_workaround = (bool) self::getEventMailsSettingsForParticipant(
       'custom_data_workaround', $participant_id, $participant['event_id']
     );
@@ -412,7 +412,7 @@ class CRM_Eventmessages_SendMail {
       // copy all custom_xx parameters into the participant
       foreach ($submission_sources as $submission_source) {
         foreach ($submission_source as $key => $value) {
-          if (preg_match('/^custom_[0-9]+$/', $key)) {
+          if (preg_match('/^custom_[0-9]+$/', (string) $key)) {
             $participant[$key] = $value;
           }
         }
