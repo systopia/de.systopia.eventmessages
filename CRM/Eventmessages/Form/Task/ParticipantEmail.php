@@ -74,6 +74,9 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
     if (class_exists('Civi\Mailattachment\Form\Attachments')) {
       $values['attachments'] = \Civi\Mailattachment\Form\Attachments::processAttachments($this);
     }
+    else {
+      $values['attachments'] = [];
+    }
 
     // init a queue
     $queue = CRM_Queue_Service::singleton()->create([
@@ -123,7 +126,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
             1 => $next_offset,
             2 => $next_offset + self::RUNNER_BATCH_SIZE,
           ]),
-          $values['attachments'] ?? []
+          $values['attachments']
           )
         );
         $next_offset += self::RUNNER_BATCH_SIZE;
