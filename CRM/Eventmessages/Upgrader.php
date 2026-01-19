@@ -127,4 +127,36 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * Add custom activity type "Event Message sent".
+   */
+  public function upgrade_0007(): bool {
+    $this->ctx->log->info('EventMessages: ensure activity type "event_message_sent" exists');
+
+    $name = 'event_message_sent';
+    $label = 'Event Message sent';
+
+    $existing = \Civi\Api4\OptionValue::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('option_group_id:name', '=', 'activity_type')
+      ->addWhere('name', '=', $name)
+      ->setLimit(1)
+      ->execute()
+      ->first();
+
+    if (!empty($existing['id'])) {
+      return TRUE;
+    }
+
+    \Civi\Api4\OptionValue::create(FALSE)
+      ->addValue('option_group_id:name', 'activity_type')
+      ->addValue('name', $name)
+      ->addValue('label', $label)
+      ->addValue('is_active', TRUE)
+      ->addValue('is_reserved', FALSE)
+      ->execute();
+
+    return TRUE;
+  }
+
 }
