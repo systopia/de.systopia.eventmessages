@@ -567,7 +567,7 @@ class CRM_Eventmessages_SendMail {
       if ($sourceContactId === NULL) {
         try {
           $domainQuery = \Civi\Api4\Domain::get()
-            ->setCurrentDomain(true)
+            ->setCurrentDomain(TRUE)
             ->addSelect('contact_id')
             ->execute()
             ->single();
@@ -575,7 +575,7 @@ class CRM_Eventmessages_SendMail {
         }
         catch (\Exception $e) {
           $msg = $e->getMessage();
-          \Civi::log()->warning("EventMessages: Failed to verify the given domain contact: ".$msg);
+          \Civi::log()->warning('EventMessages: Failed to verify the given domain contact: ' . $msg);
           return;
         }
       }
@@ -585,7 +585,6 @@ class CRM_Eventmessages_SendMail {
       \Civi\Api4\Activity::create(FALSE)
         ->addValue('activity_type_id:name', 'event_message_sent')
         ->addValue('subject', $subject)
-        //->addValue('activity_date_time', date('Y-m-d H:i:s'))
         ->addValue('status_id:name', 'Completed')
         ->addValue('priority_id:name', 'Normal')
         ->addValue('source_contact_id', $sourceContactId)
@@ -682,4 +681,5 @@ class CRM_Eventmessages_SendMail {
       return '';
     }
   }
+
 }
