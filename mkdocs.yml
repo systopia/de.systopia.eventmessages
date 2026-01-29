@@ -1,7 +1,7 @@
 site_name: Custom Event Communication
-site_description: A guide for the Custom Event Communication extension.
+site_description: Provides a more flexible way of sending emails to event participant.
 site_author: SYSTOPIA
-site_url: https://github.com/systopia/de.systopia.eventmessages
+repo_url: https://github.com/systopia/de.systopia.eventmessages
 
 theme:
   name: material
@@ -17,7 +17,7 @@ markdown_extensions:
   - def_list
   - codehilite
   - toc:
-      permalink: True
+      permalink: true
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.tilde

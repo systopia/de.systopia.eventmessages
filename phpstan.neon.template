@@ -9,6 +9,7 @@ parameters:
 		- {VENDOR_DIR}/civicrm/civicrm-core/api
 		- {VENDOR_DIR}/civicrm/civicrm-core/CRM
 		- {VENDOR_DIR}/civicrm/civicrm-core/ext/civi_event/Civi
+		- {VENDOR_DIR}/civicrm/civicrm-packages/HTML
 	scanFiles:
 		- {VENDOR_DIR}/civicrm/civicrm-packages/DB/DataObject.php
 	bootstrapFiles:
