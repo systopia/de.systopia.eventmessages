@@ -50,6 +50,8 @@ jobs:
         composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
         composer config --no-plugins allow-plugins.composer/installers true
         composer config --no-plugins allow-plugins.cweagans/composer-patches true
+        git clone --depth=1 https://github.com/systopia/de.systopia.mailattachment.git ../de.systopia.mailattachment
+        git clone --depth=1 https://github.com/systopia/de.systopia.remoteevent.git ../de.systopia.remoteevent
         # Run with --no-scripts so ComposerHelper doesn't prevent installation
         # of civicrm packages.
         composer update --no-scripts --no-progress --prefer-dist --${{ matrix.prefer }} --optimize-autoloader --ignore-platform-reqs
