@@ -223,10 +223,12 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
   public function validate() {
     parent::validate();
     // TODO: validation rules?
-    return (0 == count($this->_errors));
+    return (0 === count($this->_errors));
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function postProcess() {
+  // phpcs:enable
     $values = $this->exportValues();
 
     // store the settings
@@ -253,7 +255,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
         'event_messages_settings',
         $field_name
       );
-      $event_update[$field_key] = CRM_Utils_Array::value($field_name, $values, '');
+      $event_update[$field_key] = $values[$field_name] ?? '';
     }
     civicrm_api3('Event', 'create', $event_update);
 
@@ -262,11 +264,11 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     foreach (range(1, self::MAX_RULE_COUNT) as $i) {
       $rule = [
         'id'        => $values["id_{$i}"] ?? NULL,
-        'is_active' => (int) CRM_Utils_Array::value("is_active_{$i}", $values, FALSE),
-        'from'      => CRM_Utils_Array::value("from_{$i}", $values, []),
-        'to'        => CRM_Utils_Array::value("to_{$i}", $values, []),
-        'languages' => CRM_Utils_Array::value("languages_{$i}", $values, []),
-        'roles'     => CRM_Utils_Array::value("roles_{$i}", $values, []),
+        'is_active' => (int) $values["is_active_{$i}"] ?? FALSE,
+        'from'      => $values["from_{$i}"] ?? [],
+        'to'        => $values["to_{$i}"] ?? [],
+        'languages' => $values["languages_{$i}"] ?? [],
+        'roles'     => $values["roles_{$i}"] ?? [],
         'template'  => $values["template_{$i}"] ?? NULL,
         'weight'    => (10 + count($rules) * 10),
       ];
@@ -445,7 +447,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     uksort(
         $language_provider_options,
         fn(string $a, string $b) =>
-            array_search($a, $language_provider_names) - array_search($b, $language_provider_names)
+            array_search($a, $language_provider_names, TRUE) - array_search($b, $language_provider_names, TRUE)
     );
   }
 
@@ -494,7 +496,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
   private function buildLanguageProviderOptionsHelp(): string {
     // HTML tags are stripped when used as argument in {help}.
     /** @var \Civi\EventMessages\Language\LanguageProviderContainer $language_provider_container */
-    $language_provider_container = \civi::service(LanguageProviderContainer::class);
+    $language_provider_container = \Civi::service(LanguageProviderContainer::class);
     $help = [];
     foreach ($language_provider_container->getMetadata() as $metadata) {
       $help[] = sprintf('• %s: %s', $metadata['label'], $metadata['description']);

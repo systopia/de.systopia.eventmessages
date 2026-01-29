@@ -29,7 +29,9 @@ class CRM_Eventmessages_SendMail {
    * @param array $context
    *      some context information, see processStatusChange
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public static function sendMessageTo($context, $silent = TRUE) {
+  // phpcs:enable
     try {
       // load some stuff via SQL
       $event = self::getEventData($context['event_id']);
@@ -47,10 +49,10 @@ class CRM_Eventmessages_SendMail {
           'id' => (int) $template_id,
           'toName' => $data->contact_name,
           'toEmail' => $data->contact_email,
-          'from' => CRM_Utils_Array::value('event_messages_settings__event_messages_sender', $event, ''),
-          'replyTo' => CRM_Utils_Array::value('event_messages_settings__event_messages_reply_to', $event, ''),
-          'cc' => CRM_Utils_Array::value('event_messages_settings__event_messages_cc', $event, ''),
-          'bcc' => CRM_Utils_Array::value('event_messages_settings__event_messages_bcc', $event, ''),
+          'from' => $event['event_messages_settings__event_messages_sender'] ?? '',
+          'replyTo' => $event['event_messages_settings__event_messages_reply_to'] ?? '',
+          'cc' => $event['event_messages_settings__event_messages_cc'] ?? '',
+          'bcc' => $event['event_messages_settings__event_messages_bcc'] ?? '',
           'contactId' => (int) $data->contact_id,
           'tokenContext' => [
             'contactId' => (int) $data->contact_id,
@@ -660,6 +662,7 @@ class CRM_Eventmessages_SendMail {
     }
 
     try {
+      // TODO: Replace call to deprecated method.
       $rendered = (string) CRM_Utils_Token::replaceContactTokens(
         $subjectTpl,
         $contactId,

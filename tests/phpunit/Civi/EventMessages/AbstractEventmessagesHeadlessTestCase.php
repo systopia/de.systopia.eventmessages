@@ -48,9 +48,7 @@ abstract class AbstractEventmessagesHeadlessTestCase extends TestCase implements
     $this->container = new CiviTestContainer(Container::singleton());
     Container::useContainer($this->container);
 
-    // @phpstan-ignore-next-line
     \CRM_Core_Config::singleton()->userFrameworkBaseURL = 'http://localhost/';
-    // @phpstan-ignore-next-line
     \CRM_Core_Config::singleton()->cleanURL = 1;
   }
 

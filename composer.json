@@ -61,5 +61,8 @@
             "@phpstan",
             "@phpunit"
         ]
+    },
+    "conflict": {
+        "pear/mail_mime": "<1.10.2"
     }
 }
