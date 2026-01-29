@@ -541,14 +541,6 @@ class CRM_Eventmessages_SendMail {
 
   /**
    * Create "Event Message sent" activity on the recipient contact.
-   *
-   * @param int $contactId
-   * @param int $participantId
-   * @param int $eventId
-   * @param int $templateId
-   * @param array $emailData
-   *
-   * @return void
    */
   protected static function createRecipientActivity(
     int $contactId,

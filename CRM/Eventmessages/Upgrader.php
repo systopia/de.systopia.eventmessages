@@ -141,7 +141,7 @@ class CRM_Eventmessages_Upgrader extends CRM_Extension_Upgrader_Base {
         'is_active' => TRUE,
         'is_reserved' => FALSE,
       ])
-      ->setMatch(['option_group_id' => 'name'])
+      ->setMatch(['option_group_id', 'name'])
       ->execute();
 
     return TRUE;
