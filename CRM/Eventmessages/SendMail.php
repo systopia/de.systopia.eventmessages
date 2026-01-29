@@ -114,7 +114,7 @@ class CRM_Eventmessages_SendMail {
           Civi::log()->debug("EventMessages: Sending email to '{$data->contact_email}' from '{$email_data['from']}'");
           civicrm_api3('MessageTemplate', 'send', $email_data);
 
-          # create an activity for the recipient
+          // create an activity for the recipient
           self::createRecipientActivity(
             contactId: (int) $data->contact_id,
             participantId: (int) $data->participant_id,
@@ -261,8 +261,8 @@ class CRM_Eventmessages_SendMail {
             }
 
             // 4. check for emails coming through event self-service
-            if ($call['class'] == 'CRM_Event_Form_SelfSvcUpdate'
-              && ($call['function'] == 'cancelParticipant' || $call['function'] == 'transferParticipant')) {
+            if ($call['class'] === 'CRM_Event_Form_SelfSvcUpdate'
+              && ($call['function'] === 'cancelParticipant' || $call['function'] === 'transferParticipant')) {
               // extract participant_id
               // This is extremely hacky, if anyone finds a better way to extract the participant_id,
               // please let us know!
@@ -543,15 +543,10 @@ class CRM_Eventmessages_SendMail {
    * Create "Event Message sent" activity on the recipient contact.
    *
    * @param int $contactId
-   *    id of the contact
    * @param int $participantId
-   *    id of the participant
    * @param int $eventId
-   *    id of the event
    * @param int $templateId
-   *    id of the template
    * @param array $emailData
-   *    email data of the main email submission process
    *
    * @return void
    */
@@ -565,29 +560,34 @@ class CRM_Eventmessages_SendMail {
     try {
       Civi::log()->debug("EventMessages: Creating activity entry for '{$contactId}'");
 
-      # The logged-in user will be the "source user" for the activities
-      $sourceContactId = (int) (\CRM_Core_Session::singleton()->getLoggedInContactID() ?? 0);
+      // The logged-in user will be the "source user" for the activities
+      $sourceContactId = \CRM_Core_Session::singleton()->getLoggedInContactID();
 
-      # In case there is no logged-in user (CLI, Cron) take teh Domain Contact
-      if ($sourceContactId <= 0) {
-        $domainId = (int) \CRM_Core_Config::domainID();
-        $sourceContactId = (int) \CRM_Core_DAO::singleValueQuery(
-          'SELECT contact_id FROM civicrm_domain WHERE id = %1',
-          [1 => [$domainId, 'Integer']]
-        );
+      // In case there is no logged-in user (CLI, Cron) take the Domain Contact
+      if ($sourceContactId === NULL) {
+        try {
+          $domainQuery = \Civi\Api4\Domain::get()
+            ->setCurrentDomain(true)
+            ->addSelect('contact_id')
+            ->execute()
+            ->single();
+          $sourceContactId = (int) $domainQuery['contact_id'];
+        }
+        catch (\Exception $e) {
+          $msg = $e->getMessage();
+          \Civi::log()->warning("EventMessages: Failed to verify the given domain contact: ".$msg);
+          return;
+        }
       }
 
-      $activityTypeId = self::returnEventMessageActivityTypeId();
-      $statusId = self::returnOptionValueId('activity_status', 'Completed');
-      $priorityId = self::returnOptionValueId('priority', 'Normal');
       $subject = self::renderMessageSubjectSafely($templateId, $emailData);
 
       \Civi\Api4\Activity::create(FALSE)
-        ->addValue('activity_type_id', $activityTypeId)
+        ->addValue('activity_type_id:name', 'event_message_sent')
         ->addValue('subject', $subject)
-        ->addValue('activity_date_time', date('Y-m-d H:i:s'))
-        ->addValue('status_id', $statusId)
-        ->addValue('priority_id', $priorityId)
+        //->addValue('activity_date_time', date('Y-m-d H:i:s'))
+        ->addValue('status_id:name', 'Completed')
+        ->addValue('priority_id:name', 'Normal')
         ->addValue('source_contact_id', $sourceContactId)
         ->addValue('target_contact_id', [$contactId])
         ->addValue('details', "Event ID: {$eventId}\nParticipant ID: {$participantId}\nTemplate ID: {$templateId}")
@@ -605,9 +605,7 @@ class CRM_Eventmessages_SendMail {
    * Best-effort. Never throws. Always returns a non-empty fallback.
    *
    * @param int $templateId
-   *    id of the template
    * @param array $emailData
-   *    email data of the main email submission process
    * @return string
    *   the intended emails subject
    */
@@ -634,10 +632,11 @@ class CRM_Eventmessages_SendMail {
    */
   protected static function loadMessageTemplateSubjectAndTitle(int $templateId): ?array {
     try {
-      return civicrm_api3('MessageTemplate', 'getsingle', [
-        'id' => $templateId,
-        'return' => ['subject', 'msg_title'],
-      ]);
+      return \Civi\Api4\MessageTemplate::get()
+        ->addWhere('id', '=', $templateId)
+        ->addSelect('subject', 'msg_title')
+        ->execute()
+        ->single();
     }
     catch (\Exception $e) {
       return NULL;
@@ -683,57 +682,4 @@ class CRM_Eventmessages_SendMail {
       return '';
     }
   }
-
-  /**
-   * Get an option value ID by option group + name (cached).
-   *
-   * @param string $optionGroupName
-   *    name of the option group
-   * @param string $optionValueName
-   *    name of the option value
-   * @return int
-   *   id of the option value field
-   */
-  protected static function returnOptionValueId(string $optionGroupName, string $optionValueName): int {
-    static $cache = [];
-    $key = "{$optionGroupName}::{$optionValueName}";
-    if (!isset($cache[$key])) {
-      $row = \Civi\Api4\OptionValue::get(FALSE)
-        ->addSelect('value')
-        ->addWhere('option_group_id:name', '=', $optionGroupName)
-        ->addWhere('name', '=', $optionValueName)
-        ->addWhere('is_active', '=', TRUE)
-        ->setLimit(1)
-        ->execute()
-        ->first();
-      $cache[$key] = (int) ($row['value'] ?? 0);
-    }
-    return $cache[$key];
-  }
-
-  /**
-   * Return the activity type id.
-   *
-   * @return int
-   *   id of the EventMessage activity
-   */
-  protected static function returnEventMessageActivityTypeId(): int {
-    static $cached = NULL;
-    if ($cached !== NULL) {
-      return (int) $cached;
-    }
-
-    $existing = \Civi\Api4\OptionValue::get(FALSE)
-      ->addSelect('value')
-      ->addWhere('option_group_id:name', '=', 'activity_type')
-      ->addWhere('name', '=', 'event_message_sent')
-      ->addWhere('is_active', '=', TRUE)
-      ->setLimit(1)
-      ->execute()
-      ->first();
-
-    $cached = (int) ($existing['value'] ?? 0);
-    return (int) $cached;
-  }
-
 }

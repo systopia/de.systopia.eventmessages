@@ -8,4 +8,3 @@
 /tools/*/vendor/
 /tools/*/composer.lock
 /vendor/
-/.idea
