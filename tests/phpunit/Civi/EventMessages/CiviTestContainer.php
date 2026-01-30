@@ -51,6 +51,7 @@ final class CiviTestContainer implements ContainerInterface {
    * @inheritDoc
    */
   public function set($id, $service): void {
+    // @phpstan-ignore assign.propertyType
     $this->services[$id] = $service;
   }
 
@@ -64,7 +65,8 @@ final class CiviTestContainer implements ContainerInterface {
   /**
    * @inheritDoc
    */
-  public function getParameter($name) {
+  public function getParameter($name): array|bool|string|int|float|\UnitEnum|null {
+    // @phpstan-ignore return.type
     return $this->container->getParameter($name);
   }
 

@@ -3,15 +3,22 @@ includes:
 
 parameters:
 	scanDirectories:
-		- ci/vendor/civicrm/civicrm-core/api
-		- ci/vendor/civicrm/civicrm-core/CRM
-		- ci/vendor/civicrm/civicrm-core/ext/civi_event/Civi
+		- vendor/civicrm/civicrm-core/api
+		- vendor/civicrm/civicrm-core/CRM
+		- vendor/civicrm/civicrm-core/ext/civi_event/Civi
+		- vendor/civicrm/civicrm-packages/HTML
+		- vendor/pear/pear-core-minimal
 	scanFiles:
-		- ci/vendor/civicrm/civicrm-packages/DB/DataObject.php
+		- vendor/civicrm/civicrm-packages/DB/DataObject.php
 	bootstrapFiles:
-		- ci/vendor/autoload.php
-	# Because we test with different versions in CI we have unmatched errors
+		- vendor/autoload.php
+	# Because we test with different versions in CI we may have unmatched errors.
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
 		# Errors we get when using "prefer-lowest"
+
+		# Required with symfony/event-dispatcher <4.4.27
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'
+
+		# Cause unclear
+		- '#Call to static method mktemp\(\) on an unknown class System.#'

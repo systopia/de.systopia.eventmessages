@@ -29,7 +29,9 @@ class CRM_Eventmessages_SendMail {
    * @param array $context
    *      some context information, see processStatusChange
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public static function sendMessageTo($context, $silent = TRUE) {
+  // phpcs:enable
     try {
       // load some stuff via SQL
       $event = self::getEventData($context['event_id']);
@@ -47,10 +49,10 @@ class CRM_Eventmessages_SendMail {
           'id' => (int) $template_id,
           'toName' => $data->contact_name,
           'toEmail' => $data->contact_email,
-          'from' => CRM_Utils_Array::value('event_messages_settings__event_messages_sender', $event, ''),
-          'replyTo' => CRM_Utils_Array::value('event_messages_settings__event_messages_reply_to', $event, ''),
-          'cc' => CRM_Utils_Array::value('event_messages_settings__event_messages_cc', $event, ''),
-          'bcc' => CRM_Utils_Array::value('event_messages_settings__event_messages_bcc', $event, ''),
+          'from' => $event['event_messages_settings__event_messages_sender'] ?? '',
+          'replyTo' => $event['event_messages_settings__event_messages_reply_to'] ?? '',
+          'cc' => $event['event_messages_settings__event_messages_cc'] ?? '',
+          'bcc' => $event['event_messages_settings__event_messages_bcc'] ?? '',
           'contactId' => (int) $data->contact_id,
           'tokenContext' => [
             'contactId' => (int) $data->contact_id,
@@ -113,12 +115,21 @@ class CRM_Eventmessages_SendMail {
         else {
           Civi::log()->debug("EventMessages: Sending email to '{$data->contact_email}' from '{$email_data['from']}'");
           civicrm_api3('MessageTemplate', 'send', $email_data);
+
+          // create an activity for the recipient
+          self::createRecipientActivity(
+            contactId: (int) $data->contact_id,
+            participantId: (int) $data->participant_id,
+            eventId: (int) $context['event_id'],
+            templateId: (int) $template_id,
+            emailData: $email_data
+                  );
         }
       }
       else {
         Civi::log()->warning(
           "Couldn't send message to participant [{$context['participant_id']}], something is wrong with the data set."
-        );
+              );
       }
     }
     catch (Exception $exception) {
@@ -130,7 +141,7 @@ class CRM_Eventmessages_SendMail {
             2 => $exception->getMessage(),
           ]
         )
-      );
+          );
       if (!$silent) {
         throw $exception;
       }
@@ -252,8 +263,8 @@ class CRM_Eventmessages_SendMail {
             }
 
             // 4. check for emails coming through event self-service
-            if ($call['class'] == 'CRM_Event_Form_SelfSvcUpdate'
-            && ($call['function'] == 'cancelParticipant' || $call['function'] == 'transferParticipant')) {
+            if ($call['class'] === 'CRM_Event_Form_SelfSvcUpdate'
+              && ($call['function'] === 'cancelParticipant' || $call['function'] === 'transferParticipant')) {
               // extract participant_id
               // This is extremely hacky, if anyone finds a better way to extract the participant_id,
               // please let us know!
@@ -273,7 +284,7 @@ class CRM_Eventmessages_SendMail {
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 Civi::log()->debug(
                   "EventMessages: couldn't extract participant ID from CRM_Event_Form_SelfSvcUpdate::cancelParticipant/transferParticipant"
-                );
+                              );
                 // phpcs:enable
               }
               // no suppression, continue to send
@@ -528,6 +539,142 @@ class CRM_Eventmessages_SendMail {
     $mailing_backend = Civi::settings()->get('mailing_backend') ?? [];
     $outbound = $mailing_backend['outBound_option'] ?? -1;
     return ($outbound == CRM_Mailing_Config::OUTBOUND_OPTION_DISABLED);
+  }
+
+  /**
+   * Create "Event Message sent" activity on the recipient contact.
+   */
+  protected static function createRecipientActivity(
+    int $contactId,
+    int $participantId,
+    int $eventId,
+    int $templateId,
+    array $emailData
+  ): void {
+    try {
+      Civi::log()->debug("EventMessages: Creating activity entry for '{$contactId}'");
+
+      // The logged-in user will be the "source user" for the activities
+      $sourceContactId = \CRM_Core_Session::singleton()->getLoggedInContactID();
+
+      // In case there is no logged-in user (CLI, Cron) take the Domain Contact
+      if ($sourceContactId === NULL) {
+        try {
+          $domainQuery = \Civi\Api4\Domain::get()
+            ->setCurrentDomain(TRUE)
+            ->addSelect('contact_id')
+            ->execute()
+            ->single();
+          $sourceContactId = (int) $domainQuery['contact_id'];
+        }
+        catch (\Exception $e) {
+          $msg = $e->getMessage();
+          \Civi::log()->warning('EventMessages: Failed to verify the given domain contact: ' . $msg);
+          return;
+        }
+      }
+
+      $subject = self::renderMessageSubjectSafely($templateId, $emailData);
+
+      \Civi\Api4\Activity::create(FALSE)
+        ->addValue('activity_type_id:name', 'event_message_sent')
+        ->addValue('subject', $subject)
+        ->addValue('status_id:name', 'Completed')
+        ->addValue('priority_id:name', 'Normal')
+        ->addValue('source_contact_id', $sourceContactId)
+        ->addValue('target_contact_id', [$contactId])
+        ->addValue('details', "Event ID: {$eventId}\nParticipant ID: {$participantId}\nTemplate ID: {$templateId}")
+        ->execute();
+
+    }
+    catch (\Exception $e) {
+      $msg = $e->getMessage();
+      \Civi::log()->warning("EventMessages: Failed to create recipient activity for contact {$contactId}: " . $msg);
+    }
+  }
+
+  /**
+   * Render the subject of the message template with contact + token context.
+   * Best-effort. Never throws. Always returns a non-empty fallback.
+   *
+   * @param int $templateId
+   * @param array $emailData
+   * @return string
+   *   the intended emails subject
+   */
+  protected static function renderMessageSubjectSafely(int $templateId, array $emailData): string {
+    $tpl = self::loadMessageTemplateSubjectAndTitle($templateId);
+    if ($tpl === NULL) {
+      return "EventMessages: failed loading Template #{$templateId}";
+    }
+
+    $subjectTpl = (string) ($tpl['subject'] ?? '');
+    if ($subjectTpl === '') {
+      return self::fallbackSubjectFromTemplate($templateId, (string) ($tpl['msg_title'] ?? ''));
+    }
+
+    $rendered = self::tryRenderSubjectWithTokens($subjectTpl, $emailData);
+    return $rendered !== '' ? $rendered : $subjectTpl;
+  }
+
+  /**
+   * Load template subject + title.
+   *
+   * @param int $templateId
+   * @return array|null
+   */
+  protected static function loadMessageTemplateSubjectAndTitle(int $templateId): ?array {
+    try {
+      return \Civi\Api4\MessageTemplate::get()
+        ->addWhere('id', '=', $templateId)
+        ->addSelect('subject', 'msg_title')
+        ->execute()
+        ->single();
+    }
+    catch (\Exception $e) {
+      return NULL;
+    }
+  }
+
+  /**
+   * Build a fallback subject when the template has no explicit subject.
+   *
+   * @param int $templateId
+   * @param string $title
+   * @return string
+   */
+  protected static function fallbackSubjectFromTemplate(int $templateId, string $title): string {
+    $title = trim($title);
+    return $title !== '' ? $title : "Event Message (Template #{$templateId})";
+  }
+
+  /**
+   * Try to render the subject template using tokens (best-effort).
+   *
+   * @param string $subjectTpl
+   * @param array $emailData
+   * @return string
+   */
+  protected static function tryRenderSubjectWithTokens(string $subjectTpl, array $emailData): string {
+    $contactId = (int) ($emailData['contactId'] ?? 0);
+    if ($contactId <= 0) {
+      return '';
+    }
+
+    try {
+      // TODO: Replace call to deprecated method.
+      $rendered = (string) CRM_Utils_Token::replaceContactTokens(
+        $subjectTpl,
+        $contactId,
+        (array) ($emailData['tplParams'] ?? []),
+        TRUE,
+        (array) ($emailData['tokenContext'] ?? [])
+      );
+      return trim($rendered);
+    }
+    catch (\Throwable $e) {
+      return '';
+    }
   }
 
 }
