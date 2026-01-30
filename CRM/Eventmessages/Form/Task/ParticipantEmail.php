@@ -38,12 +38,12 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
     $this->assign('no_email_count', $no_email_count);
 
     $this->add(
-        'select',
-        'template_id',
-        E::ts('Message Template'),
-        $this->getMessageTemplates(),
-        TRUE,
-        ['class' => 'crm-select2 huge']
+      'select',
+      'template_id',
+      E::ts('Message Template'),
+      $this->getMessageTemplates(),
+      TRUE,
+      ['class' => 'crm-select2 huge']
     );
 
     if (class_exists('Civi\Mailattachment\Form\Attachments')) {
@@ -52,12 +52,9 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
 
     // Set default values.
     $defaults = [
-      'template_id'  => Civi::settings()->get('eventmessages_participant_send_template_id'),
+      'template_id' => Civi::settings()->get('eventmessages_participant_send_template_id'),
     ];
-    if (class_exists('Civi\Mailattachment\Form\Attachments')) {
-      // TODO: Set default values for attachments?
-      ;
-    }
+
     $this->setDefaults($defaults);
 
     CRM_Core_Form::addDefaultButtons(E::ts('Send %1 Emails', [1 => $participant_count - $no_email_count]));
@@ -86,13 +83,13 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
     ]);
     // add a dummy item to display the 'upcoming' message
     $queue->createItem(new CRM_Eventmessages_SendMailJob(
-        [],
-        (int) $values['template_id'],
-        E::ts('Sending Emails %1 - %2', [
-    // keep in mind that this is showing when the _next_ task is running
-          1 => 1,
-          2 => min(self::RUNNER_BATCH_SIZE, $participant_count),
-        ])
+      [],
+      (int) $values['template_id'],
+      E::ts('Sending Emails %1 - %2', [
+        // keep in mind that this is showing when the _next_ task is running
+        1 => 1,
+        2 => min(self::RUNNER_BATCH_SIZE, $participant_count),
+      ])
     ));
 
     // run query to get all participants
@@ -119,14 +116,14 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
       if (count($current_batch) >= self::RUNNER_BATCH_SIZE) {
         $queue->createItem(
           new CRM_Eventmessages_SendMailJob(
-          $current_batch,
-          (int) $values['template_id'],
-          // keep in mind that this is showing when the _next_ task is running
-          E::ts('Sending Emails %1 - %2', [
-            1 => $next_offset,
-            2 => $next_offset + self::RUNNER_BATCH_SIZE,
-          ]),
-          $values['attachments']
+            $current_batch,
+            (int) $values['template_id'],
+            // keep in mind that this is showing when the _next_ task is running
+            E::ts('Sending Emails %1 - %2', [
+              1 => $next_offset,
+              2 => $next_offset + self::RUNNER_BATCH_SIZE,
+            ]),
+            $values['attachments']
           )
         );
         $next_offset += self::RUNNER_BATCH_SIZE;
@@ -136,20 +133,32 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
 
     // add final runner
     $queue->createItem(
-        new CRM_Eventmessages_SendMailJob(
-            $current_batch,
-            (int) $values['template_id'],
-            E::ts('Finishing'),
-            $values['attachments']
-        )
+      new CRM_Eventmessages_SendMailJob(
+        $current_batch,
+        (int) $values['template_id'],
+        E::ts('Finishing'),
+        $values['attachments']
+      )
     );
+
+    $context = \CRM_Utils_String::unstupifyUrl(CRM_Core_Session::singleton()->readUserContext());
+    $query = parse_url($context, PHP_URL_QUERY);
+    if (!is_string($query)) {
+      $query = '';
+    }
+    $params = [];
+    parse_str($query, $params);
+    /** @phpstan-var array<string, string> $params */
+    $qfKey = $params['qfKey'] ?? '';
 
     // start a runner on the queue
     $runner = new CRM_Queue_Runner([
-      'title'     => E::ts('Sending %1 Event Emails', [1 => $participant_count]),
-      'queue'     => $queue,
+      'title' => E::ts('Sending %1 Event Emails', [1 => $participant_count]),
+      'queue' => $queue,
       'errorMode' => CRM_Queue_Runner::ERROR_ABORT,
-      'onEndUrl'  => CRM_Core_Session::singleton()->readUserContext(),
+      'onEndUrl' => Civi::url('civicrm/event/search?force=1')->addQuery([
+        'qfKey' => $qfKey,
+      ]),
     ]);
     $runner->runAllViaWeb();
   }
@@ -162,14 +171,14 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
   private function getMessageTemplates(): array {
     $list = [];
     $query = civicrm_api3(
-        'MessageTemplate',
-        'get',
-        [
-          'is_active' => 1,
-          'workflow_id' => ['IS NULL' => 1],
-          'option.limit' => 0,
-          'return' => 'id,msg_title',
-        ]
+      'MessageTemplate',
+      'get',
+      [
+        'is_active' => 1,
+        'workflow_id' => ['IS NULL' => 1],
+        'option.limit' => 0,
+        'return' => 'id,msg_title',
+      ]
     );
 
     foreach ($query['values'] as $status) {
