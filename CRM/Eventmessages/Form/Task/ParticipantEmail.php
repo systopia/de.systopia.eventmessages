@@ -55,7 +55,6 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
       'template_id' => Civi::settings()->get('eventmessages_participant_send_template_id'),
     ];
 
-    //
     $this->setDefaults($defaults);
 
     CRM_Core_Form::addDefaultButtons(E::ts('Send %1 Emails', [1 => $participant_count - $no_email_count]));
@@ -144,9 +143,13 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
 
     $context = \CRM_Utils_String::unstupifyUrl(CRM_Core_Session::singleton()->readUserContext());
     $query = parse_url($context, PHP_URL_QUERY);
+    if (!is_string($query)) {
+      $query = '';
+    }
     $params = [];
     parse_str($query, $params);
-    $qfKey = $params['qfKey'] ?? NULL;
+    /** @phpstan-var array<string, string> $params */
+    $qfKey = $params['qfKey'] ?? '';
 
     // start a runner on the queue
     $runner = new CRM_Queue_Runner([

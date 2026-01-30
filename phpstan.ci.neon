@@ -17,6 +17,9 @@ parameters:
 	ignoreErrors:
 		# Errors we get when using "prefer-lowest"
 
+		# Required with symfony/dependency-injection <4.4.27
+		- '#^Method Civi\\EventMessages\\CiviTestContainer\:\:getParameter\(\) should return array\|bool\|float\|int\|string\|UnitEnum\|null but returns mixed\.$#'
+
 		# Required with symfony/event-dispatcher <4.4.27
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'
 
