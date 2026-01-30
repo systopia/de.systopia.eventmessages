@@ -64,5 +64,10 @@
     },
     "conflict": {
         "pear/mail_mime": "<1.10.2"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.6.x-dev"
+        }
     }
 }
