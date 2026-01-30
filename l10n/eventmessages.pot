@@ -122,11 +122,11 @@ msgstr ""
 msgid "Reply To"
 msgstr ""
 
-#: CRM/Eventmessages/Form/EventMessages.php templates/CRM/Eventmessages/Form/EventMessages.tpl
+#: CRM/Eventmessages/Form/EventMessages.php managed/CustomGroup__event_messages_settings.mgd.php templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "CC"
 msgstr ""
 
-#: CRM/Eventmessages/Form/EventMessages.php templates/CRM/Eventmessages/Form/EventMessages.tpl
+#: CRM/Eventmessages/Form/EventMessages.php managed/CustomGroup__event_messages_settings.mgd.php templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "BCC"
 msgstr ""
 
@@ -134,11 +134,11 @@ msgstr ""
 msgid "Execute All Matching Rules?"
 msgstr ""
 
-#: CRM/Eventmessages/Form/EventMessages.php
+#: CRM/Eventmessages/Form/EventMessages.php managed/CustomGroup__event_messages_settings.mgd.php
 msgid "Language Providers"
 msgstr ""
 
-#: CRM/Eventmessages/Form/EventMessages.php templates/CRM/Eventmessages/Form/EventMessages.tpl
+#: CRM/Eventmessages/Form/EventMessages.php managed/CustomGroup__event_messages_settings.mgd.php templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Custom Data Workaround"
 msgstr ""
 
@@ -218,16 +218,12 @@ msgstr ""
 msgid "EventMessages: List of (potential) E-Mail Tokens"
 msgstr ""
 
-#: CRM/Eventmessages/SendMail.php
-msgid "Attachment '%1' could not be generated or found."
-msgstr ""
-
 #: CRM/Eventmessages/SendMail.php CRM/Eventmessages/SendMailJob.php
 msgid "Could not send e-mail to participant %1, error was: %2"
 msgstr ""
 
-#: Civi/EventMessages/AttachmentProvider/ICal.php
-msgid "event.ics"
+#: CRM/Eventmessages/SendMail.php
+msgid "Attachment '%1' could not be generated or found."
 msgstr ""
 
 #: Civi/EventMessages/AttachmentProvider.php
@@ -236,6 +232,10 @@ msgstr ""
 
 #: Civi/EventMessages/AttachmentProvider.php
 msgid "Message Template as PDF"
+msgstr ""
+
+#: Civi/EventMessages/AttachmentProvider/ICal.php
+msgid "event.ics"
 msgstr ""
 
 #: Civi/EventMessages/Install/LanguagesOptionsGroupCreator.php
@@ -328,6 +328,26 @@ msgstr ""
 
 #: eventmessages.php
 msgid "Generate Letters (via EventMessages)"
+msgstr ""
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Event Messages Settings"
+msgstr ""
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Reply-To"
+msgstr ""
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Sender"
+msgstr ""
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Execute All Rules"
+msgstr ""
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Disable Default Messages"
 msgstr ""
 
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
