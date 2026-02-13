@@ -1,0 +1,1718 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Download\:\:buildQuickForm\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Download\:\:postProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Parameter \#1 \$url of static method CRM_Utils_System\:\:redirect\(\) expects string\|null, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Parameter \#3 \$buffer of static method CRM_Utils_System\:\:download\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Property CRM_Eventmessages_Form_Download\:\:\$return_url \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Property CRM_Eventmessages_Form_Download\:\:\$tmp_folder \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: CRM/Eventmessages/Form/Download.php
+
+		-
+			message: '#^Binary operation "\-" between int\|string\|false and int\|string\|false results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Cannot access offset ''display_name'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Cannot access offset ''email'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Cannot access offset ''values'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:addToTabs\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:addToTabs\(\) has parameter \$tabs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:buildQuickForm\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:getLanguagesList\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:getMessageTemplateList\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:getParticipantStatusList\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:getRolesList\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:getSenderOptions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:postProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:preProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/Form/EventMessages.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$participant_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Call to an undefined method object\:\:fetch\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Cannot access offset ''values'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Dynamic call to static method CRM_Core_Session\:\:getLoggedInContactID\(\)\.$#'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantEmail\:\:buildQuickForm\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantEmail\:\:getMessageTemplates\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantEmail\:\:getNoEmailCount\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantEmail\:\:postProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantEmail.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$participant_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Call to an undefined method object\:\:fetch\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Cannot access offset ''values'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 3
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Dynamic call to static method CRM_Core_Session\:\:getLoggedInContactID\(\)\.$#'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantLetter\:\:buildQuickForm\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantLetter\:\:getMessageTemplates\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantLetter\:\:getNoAddressCount\(\) should return int but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Form_Task_ParticipantLetter\:\:postProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Form/Task/ParticipantLetter.php
+
+		-
+			message: '#^Binary operation "\." between ''Couldn\\''t generate…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: CRM/Eventmessages/GenerateLetter.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: CRM/Eventmessages/GenerateLetter.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: CRM/Eventmessages/GenerateLetter.php
+
+		-
+			message: '#^Parameter \#1 \$dispatcher of class Civi\\Token\\TokenProcessor constructor expects Civi\\Core\\CiviEventDispatcher, Civi\\Core\\CiviEventDispatcherInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/GenerateLetter.php
+
+		-
+			message: '#^Part \$context\[''participant_id''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: CRM/Eventmessages/GenerateLetter.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Cannot access offset ''event_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Cannot access offset ''status_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Method CRM_Eventmessages_GenerateLetterJob\:\:__construct\(\) has parameter \$participant_ids with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Method CRM_Eventmessages_GenerateLetterJob\:\:doRun\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/GenerateLetterJob.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$attachments\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$from_status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$languages\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$roles\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$rule_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$template_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$to_status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Call to an undefined method object\:\:fetch\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Cannot access offset ''checksum'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Cannot access offset ''id'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Cannot access offset ''values'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Cannot access offset non\-falsy\-string on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 22
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:copyRules\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:copySettings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:generateTokenEvent\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:generateTokenEvent\(\) has parameter \$event_data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:getActiveRules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:getAllRules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:getParticipantRoles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:participantMatchesLanguageAndRole\(\) has parameter \$event with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:participantMatchesLanguageAndRole\(\) has parameter \$rule with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:processStatusChange\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:recordPreEdit\(\) has parameter \$participant_data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:stripEventMessageData\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:syncRules\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Logic\:\:syncRules\(\) has parameter \$rules with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Only booleans are allowed in &&, int given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Only booleans are allowed in &&, int given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 2
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Parameter \#1 \$string of function substr expects string, int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Parameter \#2 \$event of method Civi\\EventMessages\\Language\\LanguageMatcher\:\:match\(\) expects array\{id\: int, ''event_messages_settings\.language_provider_names''\: array\<string\>\|null\}, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Parameter \#2 \$participant of static method CRM_Eventmessages_SendMail\:\:applyCustomFieldSubmissionWorkaroundForParticipant\(\) expects array, array\|int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/Logic.php
+
+		-
+			message: '#^Method CRM_Eventmessages_Page_TokenList\:\:run\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/Page/TokenList.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$contact_email\.$#'
+			identifier: property.notFound
+			count: 3
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$contact_id\.$#'
+			identifier: property.notFound
+			count: 4
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$contact_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$custom_data_workaround\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$disable_default\.$#'
+			identifier: property.notFound
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$participant_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Call to an undefined method Civi\\Api4\\Action\\Domain\\Get\:\:setCurrentDomain\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Call to an undefined method object\:\:fetch\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Call to deprecated method replaceContactTokens\(\) of class CRM_Utils_Token\.$#'
+			identifier: staticMethod.deprecated
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Cannot access offset ''display_name'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Cannot access offset ''email'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Cannot access offset ''entryURL'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Cannot access offset ''outBound_option'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Cannot access offset ''value'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Dead catch \- Throwable is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Dynamic call to static method CRM_Core_Session\:\:getLoggedInContactID\(\)\.$#'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^In method "CRM_Eventmessages_SendMail\:\:applyCustomFieldSubmissionWorkaroundForParticipant", you should not use the \$_REQUEST superglobal\. You should instead rely on your framework that provides you with a "request" object \(for instance a PSR\-7 RequestInterface or a Symfony Request\)\. More info\: http\://bit\.ly/nosuperglobals$#'
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^In method "CRM_Eventmessages_SendMail\:\:applyCustomFieldSubmissionWorkaroundForParticipant", you should not use the \$_SESSION superglobal\. You should instead rely on your framework that provides you with a "request" object \(for instance a PSR\-7 RequestInterface or a Symfony Request\)\. More info\: http\://bit\.ly/nosuperglobals$#'
+			count: 5
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^In method "CRM_Eventmessages_SendMail\:\:createRecipientActivity", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^In method "CRM_Eventmessages_SendMail\:\:loadMessageTemplateSubjectAndTitle", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^In method "CRM_Eventmessages_SendMail\:\:tryRenderSubjectWithTokens", caught "Throwable" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 9
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:applyCustomFieldSubmissionWorkaroundForParticipant\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:applyCustomFieldSubmissionWorkaroundForParticipant\(\) has parameter \$participant with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:buildAttachments\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:buildAttachments\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:buildDataQuery\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:createRecipientActivity\(\) has parameter \$emailData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:getEventData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:loadMessageTemplateSubjectAndTitle\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:renderMessageSubjectSafely\(\) has parameter \$emailData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:sendMessageTo\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:sendMessageTo\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:sendMessageTo\(\) has parameter \$silent with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:suppressSystemMails\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:suppressSystemMails\(\) has parameter \$driver with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:suppressSystemMails\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMail\:\:tryRenderSubjectWithTokens\(\) has parameter \$emailData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:__construct\(\) has parameter \$driver with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:__construct\(\) has parameter \$mailer with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:__construct\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:logDroppedMail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:logDroppedMail\(\) has parameter \$body with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:logDroppedMail\(\) has parameter \$headers with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:logDroppedMail\(\) has parameter \$recipients with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:send\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:send\(\) has parameter \$body with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:send\(\) has parameter \$headers with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Method class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:send\(\) has parameter \$recipients with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''args'' might not exist on array\{function\: ''cancelParticipant''\|''transferParticipant'', line\?\: int, file\?\: string, class\: ''CRM_Event_Form…'', type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''args'' might not exist on array\{function\: ''sendMail'', line\?\: int, file\?\: string, class\: ''CRM_Event_BAO_Event'', type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''args'' might not exist on array\{function\: ''sendTransitionParti…'', line\?\: int, file\?\: string, class\: ''CRM_Event_BAO…'', type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''args'' might not exist on array\{function\: string, line\?\: int, file\?\: string, class\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''attachments'' on array\{id\: int, toName\: mixed, toEmail\: mixed, from\: mixed, replyTo\: mixed, cc\: mixed, bcc\: mixed, contactId\: int, \.\.\.\} on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''function'' on array\{function\: string, line\?\: int, file\?\: string, class\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''line'' might not exist on array\{function\: string, line\?\: int, file\?\: string, class\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Offset ''object'' might not exist on array\{function\: ''submit'', line\?\: int, file\?\: string, class\: ''CRM_Event_Form…'', type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int given\.$#'
+			identifier: if.condNotBoolean
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int\|false given\.$#'
+			identifier: if.condNotBoolean
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^PHPDoc tag @var with type Civi\\Mailattachment\\AttachmentType\\AttachmentTypeInterface is not subtype of type string\.$#'
+			identifier: varTag.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#1 \$context of static method Civi\\Mailattachment\\AttachmentType\\AttachmentTypeInterface\:\:buildAttachment\(\) expects array\{entity_type\: string, entity_id\: string, entity_ids\: list\<int\>\|null, entity\: array\<string, mixed\>\|null, extra\: array\<string, mixed\>\|null\}, array\{entity_type\: ''participant'', entity_id\: mixed, entity_ids\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#1 \$data of static method CRM_Eventmessages_SendMail\:\:buildAttachments\(\) expects CRM_Core_DAO, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#1 \$participant_id of static method CRM_Eventmessages_SendMail\:\:suppressSystemEventMailsForParticipant\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#1 \$participant_id of static method CRM_Eventmessages_SendMail\:\:suppressSystemEventMailsForParticipant\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#2 \$contact of static method CRM_Utils_Token\:\:replaceContactTokens\(\) expects array, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#3 \$html of static method CRM_Utils_Token\:\:replaceContactTokens\(\) expects bool, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#4 \$knownTokens of static method CRM_Utils_Token\:\:replaceContactTokens\(\) expects array\|null, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Parameter \#5 \$returnBlankToken of static method CRM_Utils_Token\:\:replaceContactTokens\(\) expects bool, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Part \$participant_id \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Property class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:\$driver has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Property class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:\$mailer has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Property class@anonymous/CRM/Eventmessages/SendMail\.php\:209\:\:\$params has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
+			message: '#^Cannot access offset ''event_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Cannot access offset ''status_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMailJob\:\:__construct\(\) has parameter \$attachments with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Method CRM_Eventmessages_SendMailJob\:\:__construct\(\) has parameter \$participant_ids with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Property CRM_Eventmessages_SendMailJob\:\:\$attachments type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Property CRM_Eventmessages_SendMailJob\:\:\$participant_ids type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Eventmessages/SendMailJob.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, string\|null given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: CRM/Eventmessages/Upgrader.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\AttachmentProvider\:\:getAttachmentTypes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\AttachmentProvider\:\:getAttachmentTypes\(\) has parameter \$event with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/ICal.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/ICal.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function file_put_contents expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/ICal.php
+
+		-
+			message: '#^Variable \$event_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: Civi/EventMessages/AttachmentProvider/ICal.php
+
+		-
+			message: '#^Cannot access offset ''values'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\AttachmentProvider\\MessageTemplatePDF\:\:getAttachmentFormTemplate\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\AttachmentProvider\\MessageTemplatePDF\:\:getAttachmentFormTemplate\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\AttachmentProvider\\MessageTemplatePDF\:\:getMessageTemplates\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Offset ''template_id'' does not exist on array\{path\: string, name\: string, extra\?\: mixed\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function file_put_contents expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Variable \$attachment on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Language\\EventMessagesLanguageProvider\:\:getLanguages\(\) has parameter \$providerNames with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/Language/EventMessagesLanguageProvider.php
+
+		-
+			message: '#^Generator expects value type string, mixed given\.$#'
+			identifier: generator.valueType
+			count: 1
+			path: Civi/EventMessages/Language/Provider/AbstractCustomFieldLanguageProvider.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Language\\Provider\\ContactLanguageProvider\:\:getWhere\(\) should return array\<int\|string, array\{string, array\<array\<mixed\>\>\}\> but returns array\{array\{''id'', ''\='', mixed\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: Civi/EventMessages/Language/Provider/ContactLanguageProvider.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Language\\Provider\\EventLanguageProvider\:\:getWhere\(\) should return array\<int\|string, array\{string, array\<array\<mixed\>\>\}\> but returns array\{array\{''id'', ''\='', int\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: Civi/EventMessages/Language/Provider/EventLanguageProvider.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Language\\Provider\\ParticipantLanguageProvider\:\:getWhere\(\) should return array\<int\|string, array\{string, array\<array\<mixed\>\>\}\> but returns array\{array\{''id'', ''\='', int\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: Civi/EventMessages/Language/Provider/ParticipantLanguageProvider.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Cannot access offset ''values'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokenList\:\:addDefaultTokens\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokenList\:\:addToken\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokenList\:\:getTokens\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int\|false given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Parameter \#1 \$field_id of static method CRM_Eventmessages_CustomData\:\:getFieldSpecs\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Property Civi\\EventMessages\\MessageTokenList\:\:\$token_list type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/MessageTokenList.php
+
+		-
+			message: '#^Cannot access offset ''msg_html'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Cannot access offset ''msg_subject'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Cannot access offset ''msg_text'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokens\:\:enhanceTokens\(\) has parameter \$tokens with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokens\:\:enhanceTokens\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokens\:\:getTokens\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokens\:\:setTemplateData\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokens\:\:setTemplateId\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\MessageTokens\:\:setToken\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int\<0, max\>\|false given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Property Civi\\EventMessages\\MessageTokens\:\:\$template_data \(string\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Property Civi\\EventMessages\\MessageTokens\:\:\$template_data \(string\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Property Civi\\EventMessages\\MessageTokens\:\:\$template_tokens \(array\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Property Civi\\EventMessages\\MessageTokens\:\:\$template_tokens \(array\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Property Civi\\EventMessages\\MessageTokens\:\:\$template_tokens type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Property Civi\\EventMessages\\MessageTokens\:\:\$tokens type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_alterMailer\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_alterMailer\(\) has parameter \$driver with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_alterMailer\(\) has parameter \$mailer with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_alterMailer\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_buildForm\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_buildForm\(\) has parameter \$form with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_buildForm\(\) has parameter \$formName with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_config\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_config\(\) has parameter \$config with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_copy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_copy\(\) has parameter \$object with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_copy\(\) has parameter \$objectName with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_enable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_install\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_post\(\) has parameter \$objectRef with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_postCommit\(\) has parameter \$objectRef with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_pre\(\) has parameter \$id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_pre\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_searchTasks\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_searchTasks\(\) has parameter \$objectType with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_searchTasks\(\) has parameter \$tasks with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_tabset\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_tabset\(\) has parameter \$context with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_tabset\(\) has parameter \$tabs with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Function eventmessages_civicrm_tabset\(\) has parameter \$tabsetName with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 5
+			path: eventmessages.php
+
+		-
+			message: '#^Offset ''args'' might not exist on array\{function\: ''copy'', line\?\: int, file\?\: string, class\: ''CRM_Event_BAO_Event'', type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Offset ''function'' on array\{function\: string, line\?\: int, file\?\: string, class\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Parameter \#1 \$event_id of static method CRM_Eventmessages_Form_EventMessages\:\:addToTabs\(\) expects int, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Parameter \#1 \$source_event_id of static method CRM_Eventmessages_Logic\:\:copyRules\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Parameter \#1 \$source_event_id of static method CRM_Eventmessages_Logic\:\:copySettings\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: eventmessages.php
+
+		-
+			message: '#^Parameter \#2 \$values of static method Civi\\EventMessages\\Fixtures\\EventMessageRuleFixture\:\:addFixture\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, array\<int, int\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/CRM/Eventmessages/LogicTest.php
+
+		-
+			message: '#^Parameter \#2 \$values of static method Civi\\EventMessages\\Fixtures\\EventMessageRuleFixture\:\:addFixture\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/CRM/Eventmessages/LogicTest.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:getParameter\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:getParameter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:hasParameter\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:initialized\(\) has parameter \$id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:set\(\) has parameter \$id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:set\(\) has parameter \$service with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:setParameter\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\CiviTestContainer\:\:setParameter\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addIndividual\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/ContactFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addOrganization\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/ContactFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\EmailFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/EmailFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\EventFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/EventFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\EventMessageRuleFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/EventMessageRuleFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\ParticipantFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/ParticipantFixture.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(LanguageProviderContainer&\\PHPUnit\\Framework\\MockObject\\MockObject\)\|\(object&\\PHPUnit\\Framework\\MockObject\\MockObject\)\: Unexpected token "\)", expected TOKEN_HORIZONTAL_WS at offset 80 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Language/EventMessagesLanguageProviderTest.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(EventMessagesLanguageProvider&\\PHPUnit\\Framework\\MockObject\\MockObject\)\|\(object&\\PHPUnit\\Framework\\MockObject\\MockObject\)\: Unexpected token "\)", expected TOKEN_HORIZONTAL_WS at offset 84 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Language/LanguageMatcherTest.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/ContactLanguageProviderTest.php
+
+		-
+			message: '#^Parameter \#1 \$values of static method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addIndividual\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, list\<string\>\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/ContactLanguageProviderTest.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/EventLanguageProviderTest.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/ParticipantLanguageProviderTest.php
+
+		-
+			message: '#^Parameter \#3 \$values of static method Civi\\EventMessages\\Fixtures\\ParticipantFixture\:\:addFixture\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, list\<string\>\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/ParticipantLanguageProviderTest.php

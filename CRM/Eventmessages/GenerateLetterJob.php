@@ -132,6 +132,7 @@ class CRM_Eventmessages_GenerateLetterJob {
         file_put_contents($filename, $pdf);
       }
       catch (Exception $exception) {
+        // @ignoreException
         // phpcs:disable Generic.Files.LineLength.TooLong
         Civi::log()->notice(
           "EventMessages.GenerateLetterJob: Error generating letter for participant [{$participant['id']}]: " . $exception->getMessage()

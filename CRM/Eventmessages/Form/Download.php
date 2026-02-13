@@ -70,7 +70,7 @@ class CRM_Eventmessages_Form_Download extends CRM_Core_Form {
     if (isset($vars['_qf_Download_submit'])) {
       // Verify folder (naming convention).
       if (!preg_match('#/eventmessages_pdf_generator_\w+$#', $this->tmp_folder)) {
-        throw new Exception('Illegal path.');
+        throw new \RuntimeException('Illegal path.');
       }
       try {
         $filename = $this->tmp_folder . DIRECTORY_SEPARATOR . 'eventmessages_letters.zip';
@@ -78,6 +78,7 @@ class CRM_Eventmessages_Form_Download extends CRM_Core_Form {
         CRM_Utils_System::download(basename($filename), 'application/zip', $data);
       }
       catch (Exception $ex) {
+        // @ignoreException
         CRM_Core_Session::setStatus(
         E::ts('Error downloading PDF files: %1', [1 => $ex->getMessage()]),
         E::ts('Download Error'),
@@ -89,14 +90,14 @@ class CRM_Eventmessages_Form_Download extends CRM_Core_Form {
     elseif (isset($vars['_qf_Download_done'])) {
       // Delete temporary folder and iths content.
       foreach (scandir($this->tmp_folder) as $file) {
-        if ($file != '.' && $file != '..') {
+        if ('.' !== $file && '..' !== $file) {
           unlink($this->tmp_folder . DIRECTORY_SEPARATOR . $file);
         }
       }
       rmdir($this->tmp_folder);
 
       // Redirect to search result.
-      CRM_Utils_System::redirect(base64_decode($this->return_url));
+      CRM_Utils_System::redirect(base64_decode($this->return_url, TRUE));
     }
     parent::postProcess();
   }

@@ -89,7 +89,7 @@ class CRM_Eventmessages_SendMailJob {
                   2 => '<pre>' . $exception->getMessage() . '</pre>',
                 ]
             );
-          throw new Exception($formatted_message);
+          throw new \RuntimeException($formatted_message, $exception->getCode(), $exception);
         }
       }
     }
