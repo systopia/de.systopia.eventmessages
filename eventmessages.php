@@ -17,6 +17,7 @@ declare(strict_types = 1);
 
 // phpcs:disable PSR1.Files.SideEffects
 require_once 'eventmessages.civix.php';
+
 // phpcs:enable
 
 use CRM_Eventmessages_ExtensionUtil as E;
@@ -37,12 +38,12 @@ function eventmessages_civicrm_config(&$config) {
 
   // REMOTEEVENT.GET filters
   Civi::dispatcher()->addListener(
-        'civi.remoteevent.get.result',
-        ['CRM_Eventmessages_Logic', 'stripEventMessageData']
-    );
+    'civi.remoteevent.get.result',
+    ['CRM_Eventmessages_Logic', 'stripEventMessageData']
+  );
 
   if (interface_exists('\Civi\Mailattachment\AttachmentType\AttachmentTypeInterface')
-         && class_exists('\Civi\EventMessages\AttachmentProvider')) {
+    && class_exists('\Civi\EventMessages\AttachmentProvider')) {
     \Civi::dispatcher()->addSubscriber(new \Civi\EventMessages\AttachmentProvider());
   }
 }
@@ -144,8 +145,8 @@ function eventmessages_civicrm_buildForm($formName, &$form) {
   // Inject some UI modifications into selected forms
   if ($form instanceof CRM_Event_Form_Participant) {
     $disabled_field = CRM_Eventmessages_CustomData::getCustomFieldKey(
-        'event_messages_settings',
-        'event_messages_disable_default'
+      'event_messages_settings',
+      'event_messages_disable_default'
     );
     CRM_Core_Resources::singleton()->addVars('eventmessages', ['suppression_field' => $disabled_field]);
     CRM_Core_Resources::singleton()->addScriptUrl(E::url('js/event_form_new_participant_mods.js'));
@@ -194,4 +195,43 @@ function eventmessages_civicrm_copy($objectName, &$object) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_civicrm_searchKitTasks().
+ */
+function eventmessages_civicrm_searchKitTasks(&$tasks) {
+
+  $tasks['Participant']['eventmessages_send_email'] = [
+    'title' => ts('Send Emails (via EventMessages)'),
+    'permissions' => ['access CiviCRM'],
+    'module' => 'eventmessagesSearchTasks',
+    'uiDialog' => ['templateUrl' => '~/eventmessagesSearchTasks/redirectEmail.html'],
+    'icon' => 'fa-envelope',
+  ];
+
+  $tasks['Participant']['eventmessages_generate_letters'] = [
+    'title' => E::ts('Generate Letters (via EventMessages)'),
+    'permissions' => ['access CiviCRM'],
+    'module' => 'eventmessagesSearchTasks',
+    'uiDialog' => ['templateUrl' => '~/eventmessagesSearchTasks/redirectLetter.html'],
+    'icon' => 'fa-envelope',
+  ];
+
+}
+
+/**
+ * Implements hook_civicrm_angularModules().
+ */
+function eventmessages_civicrm_angularModules(&$angularModules) {
+  $angularModules['eventmessagesSearchTasks'] = [
+    'ext' => 'de.systopia.eventmessages',
+    'js' => [
+      'ang/eventmessagesSearchTasks.js',
+    ],
+    'partials' => [
+      'ang/eventmessagesSearchTasks',
+    ],
+    'requires' => ['crmUi', 'crmUtil'],
+  ];
 }

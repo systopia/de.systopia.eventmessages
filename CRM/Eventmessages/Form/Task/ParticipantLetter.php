@@ -34,46 +34,46 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
     $this->assign('no_address_count', $no_address_count);
 
     CRM_Utils_System::setTitle(
-        E::ts(
-            'Generate Letter for %1 Participants (%2 with primary postal address)',
-            [
-              1 => $participant_count,
-              2 => $participant_count - $no_address_count,
-            ]
-        )
+      E::ts(
+        'Generate Letter for %1 Participants (%2 with primary postal address)',
+        [
+          1 => $participant_count,
+          2 => $participant_count - $no_address_count,
+        ]
+      )
     );
 
     $this->add(
-        'select',
-        'template_id',
-        E::ts('Message Template'),
-        $this->getMessageTemplates(),
-        TRUE,
-        ['class' => 'crm-select2 huge']
+      'select',
+      'template_id',
+      E::ts('Message Template'),
+      $this->getMessageTemplates(),
+      TRUE,
+      ['class' => 'crm-select2 huge']
     );
 
     $this->add(
-        'checkbox',
-        'address_only',
-        E::ts('Exclude contacts without primary postal address')
+      'checkbox',
+      'address_only',
+      E::ts('Exclude contacts without primary postal address')
     );
 
     $this->setDefaults(
-        [
-          'template_id' => Civi::settings()->get(
-                'eventmessages_participant_send_template_id'
-          ),
-        ]
+      [
+        'template_id' => Civi::settings()->get(
+          'eventmessages_participant_send_template_id'
+        ),
+      ]
     );
 
     CRM_Core_Form::addDefaultButtons(
-        E::ts(
-            'Generate %1 (%2) Letters',
-            [
-              1 => $participant_count,
-              2 => $participant_count - $no_address_count,
-            ]
-        )
+      E::ts(
+        'Generate %1 (%2) Letters',
+        [
+          1 => $participant_count,
+          2 => $participant_count - $no_address_count,
+        ]
+      )
     );
   }
 
@@ -90,12 +90,12 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
 
     // Initialize a queue.
     $queue = CRM_Queue_Service::singleton()->create(
-        [
-          'type' => 'Sql',
-          'name' => 'eventmessages_letter_task_'
-          . CRM_Core_Session::singleton()->getLoggedInContactID(),
-          'reset' => TRUE,
-        ]
+      [
+        'type' => 'Sql',
+        'name' => 'eventmessages_letter_task_'
+        . CRM_Core_Session::singleton()->getLoggedInContactID(),
+        'reset' => TRUE,
+      ]
     );
 
     // Create a temporary folder to store the PDFs in.
@@ -105,13 +105,13 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
 
     // Add an initialisation queue item.
     $queue->createItem(
-        new CRM_Eventmessages_GenerateLetterJob(
-            'init',
-            [],
-            (int) $values['template_id'],
-            $temp_folder,
-            E::ts('Initialized')
-        )
+      new CRM_Eventmessages_GenerateLetterJob(
+        'init',
+        [],
+        (int) $values['template_id'],
+        $temp_folder,
+        E::ts('Initialized')
+      )
     );
 
     // Retrieve all participants.
@@ -148,17 +148,17 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
       $current_batch[] = $participant_query->participant_id;
       $queue->createItem(
         new CRM_Eventmessages_GenerateLetterJob(
-            'run',
-            $current_batch,
-            (int) $values['template_id'],
-            $temp_folder,
-            E::ts(
-                'Generated letters %1 of %2',
-                [
-                  1 => min($participant_count, $next_offset),
-                  2 => $participant_count,
-                ]
-            )
+          'run',
+          $current_batch,
+          (int) $values['template_id'],
+          $temp_folder,
+          E::ts(
+            'Generated letters %1 of %2',
+            [
+              1 => min($participant_count, $next_offset),
+              2 => $participant_count,
+            ]
+          )
         )
       );
       $next_offset += self::RUNNER_BATCH_SIZE;
@@ -167,31 +167,31 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
 
     // Add a final queue item for generating a zip archive.
     $queue->createItem(
-        new CRM_Eventmessages_GenerateLetterJob(
-            'finish',
-            [],
-            (int) $values['template_id'],
-            $temp_folder,
-            E::ts('Finished')
-        )
+      new CRM_Eventmessages_GenerateLetterJob(
+        'finish',
+        [],
+        (int) $values['template_id'],
+        $temp_folder,
+        E::ts('Finished')
+      )
     );
 
     // Start a runner on the queue.
     $return_link = base64_encode(CRM_Core_Session::singleton()->readUserContext());
     $download_link = CRM_Utils_System::url(
-        'civicrm/eventmessages/download',
-        "tmp_folder={$temp_folder}&return_url={$return_link}"
+      'civicrm/eventmessages/download',
+      "tmp_folder={$temp_folder}&return_url={$return_link}"
     );
     $runner = new CRM_Queue_Runner(
-        [
-          'title' => E::ts(
-                'Generating %1 Event Letters',
-                [1 => $participant_count]
-          ),
-          'queue' => $queue,
-          'errorMode' => CRM_Queue_Runner::ERROR_ABORT,
-          'onEndUrl' => $download_link,
-        ]
+      [
+        'title' => E::ts(
+          'Generating %1 Event Letters',
+          [1 => $participant_count]
+        ),
+        'queue' => $queue,
+        'errorMode' => CRM_Queue_Runner::ERROR_ABORT,
+        'onEndUrl' => $download_link,
+      ]
     );
     $runner->runAllViaWeb();
   }
@@ -205,14 +205,14 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
   private function getMessageTemplates(): array {
     $list = [];
     $query = civicrm_api3(
-        'MessageTemplate',
-        'get',
-        [
-          'is_active' => 1,
-          'workflow_id' => ['IS NULL' => 1],
-          'option.limit' => 0,
-          'return' => 'id,msg_title',
-        ]
+      'MessageTemplate',
+      'get',
+      [
+        'is_active' => 1,
+        'workflow_id' => ['IS NULL' => 1],
+        'option.limit' => 0,
+        'return' => 'id,msg_title',
+      ]
     );
 
     foreach ($query['values'] as $status) {
@@ -233,7 +233,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
   private function getNoAddressCount() {
     $participant_id_list = implode(',', $this->_participantIds);
     return CRM_Core_DAO::singleValueQuery(
-        "
+      "
             SELECT COUNT(DISTINCT(participant.id))
             FROM civicrm_participant participant
             LEFT JOIN civicrm_address address
@@ -242,6 +242,42 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
             WHERE participant.id IN ({$participant_id_list})
               AND address.id IS NULL"
     );
+  }
+
+  /**
+   * @throws CRM_Core_Exception
+   */
+  public function preProcess(): void
+  {
+    $ids = CRM_Utils_Request::retrieve('participant_ids', 'String', $this, FALSE);
+
+    // If invoked from our SearchKit task, we always get comma-separated IDs.
+    if ($ids !== NULL && $ids !== '') {
+
+      $participantIds = [];
+      foreach (explode(',', $ids) as $part) {
+        $id = (int) trim($part);
+        if ($id > 0) {
+          $participantIds[] = $id;
+        }
+      }
+
+      if (!$participantIds) {
+        throw new CRM_Core_Exception('No participant IDs provided.');
+      }
+
+      // Return to SearchKit after finishing (runner/download etc.)
+      $returnUrl = CRM_Utils_Request::retrieve('returnUrl', 'String', $this, FALSE);
+      if ($returnUrl) {
+        CRM_Core_Session::singleton()->pushUserContext($returnUrl);
+      }
+
+      $this->_participantIds = $participantIds;
+      return;
+    }
+
+    // Fallback: legacy invocation via event search controller (qfKey/session state)
+    parent::preProcess();
   }
 
 }
