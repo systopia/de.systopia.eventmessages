@@ -139,6 +139,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
             ORDER BY participant.event_id ASC
             ';
 
+    /** @var CRM_Core_DAO $participant_query */
     $participant_query = CRM_Core_DAO::executeQuery($participant_query);
 
     // Add queue items with sets of participants.
@@ -230,9 +231,9 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
    * @return int
    *   The number of participants without a primary postal address.
    */
-  private function getNoAddressCount() {
+  private function getNoAddressCount(): int {
     $participant_id_list = implode(',', $this->_participantIds);
-    return CRM_Core_DAO::singleValueQuery(
+    $result = CRM_Core_DAO::singleValueQuery(
       "
             SELECT COUNT(DISTINCT(participant.id))
             FROM civicrm_participant participant
@@ -242,13 +243,16 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
             WHERE participant.id IN ({$participant_id_list})
               AND address.id IS NULL"
     );
+    if ($result !== NULL) {
+      return (int) $result;
+    }
+    return 0;
   }
 
   /**
    * @throws CRM_Core_Exception
    */
-  public function preProcess(): void
-  {
+  public function preProcess(): void {
     $ids = CRM_Utils_Request::retrieve('participant_ids', 'String', $this, FALSE);
 
     // If invoked from our SearchKit task, we always get comma-separated IDs.
@@ -262,7 +266,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
         }
       }
 
-      if (!$participantIds) {
+      if ($participantIds === []) {
         throw new CRM_Core_Exception('No participant IDs provided.');
       }
 

@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 final class LanguageMatcherTest extends TestCase {
 
   /**
-   * @var EventMessagesLanguageProvider&\PHPUnit\Framework\MockObject\MockObject)|(object&\PHPUnit\Framework\MockObject\MockObject
+   * @var EventMessagesLanguageProvider&MockObject
    */
   private MockObject $languageProviderMock;
   private LanguageMatcher $languageMatcher;

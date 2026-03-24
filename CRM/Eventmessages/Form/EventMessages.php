@@ -226,9 +226,8 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     return (0 === count($this->_errors));
   }
 
-  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
   public function postProcess() {
-  // phpcs:enable
     $values = $this->exportValues();
 
     // store the settings
@@ -263,13 +262,13 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     $rules = [];
     foreach (range(1, self::MAX_RULE_COUNT) as $i) {
       $rule = [
-        'id'        => $values["id_{$i}"] ?? NULL,
-        'is_active' => (int) $values["is_active_{$i}"] ?? FALSE,
-        'from'      => $values["from_{$i}"] ?? [],
-        'to'        => $values["to_{$i}"] ?? [],
-        'languages' => $values["languages_{$i}"] ?? [],
-        'roles'     => $values["roles_{$i}"] ?? [],
-        'template'  => $values["template_{$i}"] ?? NULL,
+        'id'        => $values["id_$i"] ?? NULL,
+        'is_active' => $values["is_active_$i"] ?? '',
+        'from'      => $values["from_$i"] ?? [],
+        'to'        => $values["to_$i"] ?? [],
+        'languages' => $values["languages_$i"] ?? [],
+        'roles'     => $values["roles_$i"] ?? [],
+        'template'  => $values["template_$i"] ?? NULL,
         'weight'    => (10 + count($rules) * 10),
       ];
       if (class_exists('\Civi\Mailattachment\Form\Attachments')) {

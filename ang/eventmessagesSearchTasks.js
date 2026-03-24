@@ -9,7 +9,7 @@
       return [];
     }
 
-    var ids = $scope.model.ids;
+    const ids = $scope.model.ids;
     if (!Array.isArray(ids)) {
       return [];
     }
@@ -18,10 +18,10 @@
       return [];
     }
 
-    var result = [];
-    for (var i = 0; i < ids.length; i++) {
-      var value = ids[i];
-      var id = parseInt(value, 10);
+    const result = [];
+    for (let i = 0; i < ids.length; i++) {
+      const value = ids[i];
+      const id = parseInt(value, 10);
       if (!isNaN(id) && id > 0) {
         result.push(id);
       }
@@ -31,12 +31,12 @@
   }
 
   function redirectTo($scope, $window, path) {
-    var ids = getSelectedIds($scope);
+    const ids = getSelectedIds($scope);
     if (!ids.length) {
       return;
     }
 
-    var url = CRM.url(path, {
+    const url = CRM.url(path, {
       participant_ids: ids.join(','),
       returnUrl: $window.location.href
     });
@@ -44,7 +44,7 @@
     $window.location.href = url;
   }
 
-  var module = angular.module('eventmessagesSearchTasks', CRM.angRequires('eventmessagesSearchTasks'));
+  const module = angular.module('eventmessagesSearchTasks', CRM.angRequires('eventmessagesSearchTasks'));
 
   module.controller('EventmessagesRedirectEmailCtrl', function ($scope, $window, $timeout) {
     $timeout(function () {

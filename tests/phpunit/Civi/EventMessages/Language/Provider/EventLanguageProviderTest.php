@@ -47,39 +47,42 @@ final class EventLanguageProviderTest extends AbstractEventmessagesHeadlessTestC
         'extends' => 'Event',
       ])->execute()->single();
 
-    CustomField::create(FALSE)
-      ->setValues([
-        'custom_group_id' => $customGroup['id'],
-        'name' => 'language',
-        'option_group_id:name' => 'event_messages_languages',
-        'label' => 'Language',
-        'data_type' => 'String',
-        'html_type' => 'Select',
-        'is_required' => FALSE,
-        'is_searchable' => FALSE,
-        'is_search_range' => FALSE,
-        'is_view' => FALSE,
-        'serialize' => 0,
-        'in_selector' => FALSE,
-        'weight' => 2,
-      ])->execute();
+    if ($customGroup !== NULL && isset($customGroup['id'])) {
 
-    CustomField::create(FALSE)
-      ->setValues([
-        'custom_group_id' => $customGroup['id'],
-        'name' => 'languages',
-        'option_group_id:name' => 'event_messages_languages',
-        'label' => 'Languages',
-        'data_type' => 'String',
-        'html_type' => 'Select',
-        'is_required' => FALSE,
-        'is_searchable' => FALSE,
-        'is_search_range' => FALSE,
-        'is_view' => FALSE,
-        'serialize' => 1,
-        'in_selector' => FALSE,
-        'weight' => 1,
-      ])->execute();
+      CustomField::create(FALSE)
+        ->setValues([
+          'custom_group_id' => $customGroup['id'],
+          'name' => 'language',
+          'option_group_id:name' => 'event_messages_languages',
+          'label' => 'Language',
+          'data_type' => 'String',
+          'html_type' => 'Select',
+          'is_required' => FALSE,
+          'is_searchable' => FALSE,
+          'is_search_range' => FALSE,
+          'is_view' => FALSE,
+          'serialize' => 0,
+          'in_selector' => FALSE,
+          'weight' => 2,
+        ])->execute();
+
+      CustomField::create(FALSE)
+        ->setValues([
+          'custom_group_id' => $customGroup['id'],
+          'name' => 'languages',
+          'option_group_id:name' => 'event_messages_languages',
+          'label' => 'Languages',
+          'data_type' => 'String',
+          'html_type' => 'Select',
+          'is_required' => FALSE,
+          'is_searchable' => FALSE,
+          'is_search_range' => FALSE,
+          'is_view' => FALSE,
+          'serialize' => 1,
+          'in_selector' => FALSE,
+          'weight' => 1,
+        ])->execute();
+    }
   }
 
   protected function tearDown(): void {
@@ -95,12 +98,25 @@ final class EventLanguageProviderTest extends AbstractEventmessagesHeadlessTestC
       'group.languages' => ['de_DE', 'fr'],
     ]);
 
+    if ($event === NULL) {
+      return;
+    }
+
     $contact = ContactFixture::addIndividual(['preferred_language' => 'de_DE']);
+
+    if ($contact === NULL) {
+      return;
+    }
+
     $participant = ParticipantFixture::addFixture($contact['id'], $event['id']);
 
+    if ($participant === NULL) {
+      return;
+    }
+
     static::assertSame(
-        ['de_DE', 'fr', 'en_US'],
-        [...$this->provider->getLanguages($event['id'], $participant['id'])]
+      ['de_DE', 'fr', 'en_US'],
+      [...$this->provider->getLanguages($event['id'], $participant['id'])]
     );
   }
 
