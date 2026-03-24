@@ -223,7 +223,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
   public function validate() {
     parent::validate();
     // TODO: validation rules?
-    return (0 == count($this->_errors));
+    return (0 === count($this->_errors));
   }
 
   // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
@@ -446,7 +446,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     uksort(
         $language_provider_options,
         fn(string $a, string $b) =>
-            array_search($a, $language_provider_names) - array_search($b, $language_provider_names)
+            array_search($a, $language_provider_names, TRUE) - array_search($b, $language_provider_names, TRUE)
     );
   }
 

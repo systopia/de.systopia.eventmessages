@@ -6,6 +6,7 @@ on:
       - '**.php'
       - tools/phpcs/composer.json
       - phpcs.xml.dist
+      - .github/workflows/phpcs.yml
 
 jobs:
   phpcs:
@@ -18,7 +19,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.3
+        php-version: 8.5
         coverage: none
         tools: cs2pr
       env:

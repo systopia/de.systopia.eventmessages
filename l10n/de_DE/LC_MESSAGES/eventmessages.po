@@ -146,11 +146,13 @@ msgid "Reply To"
 msgstr "Antwort an (reply-to)"
 
 #: CRM/Eventmessages/Form/EventMessages.php
+#: managed/CustomGroup__event_messages_settings.mgd.php
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "CC"
 msgstr "Kopie (CC)"
 
 #: CRM/Eventmessages/Form/EventMessages.php
+#: managed/CustomGroup__event_messages_settings.mgd.php
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "BCC"
 msgstr "Blindkopie (BCC)"
@@ -160,10 +162,12 @@ msgid "Execute All Matching Rules?"
 msgstr "Alle zutreffenden Regeln Ausführen?"
 
 #: CRM/Eventmessages/Form/EventMessages.php
+#: managed/CustomGroup__event_messages_settings.mgd.php
 msgid "Language Providers"
 msgstr "Sprachquellen"
 
 #: CRM/Eventmessages/Form/EventMessages.php
+#: managed/CustomGroup__event_messages_settings.mgd.php
 #: templates/CRM/Eventmessages/Form/EventMessages.tpl
 msgid "Custom Data Workaround"
 msgstr "Benutzerdefinierte Felder Workaround"
@@ -247,18 +251,14 @@ msgstr "Erstelle %1 Teilnehmer-Briefe"
 msgid "EventMessages: List of (potential) E-Mail Tokens"
 msgstr "EventMessages: Liste von möglichen E-Mail Tokens (Platzhalter)"
 
-#: CRM/Eventmessages/SendMail.php
-msgid "Attachment '%1' could not be generated or found."
-msgstr "Anhang '%1' konnte nicht erstellt oder gefunden werden."
-
 #: CRM/Eventmessages/SendMail.php CRM/Eventmessages/SendMailJob.php
 msgid "Could not send e-mail to participant %1, error was: %2"
 msgstr ""
 "E-Mail für Teilnehmer %1 konnte nicht gesendet werden, der Fehler war: %2"
 
-#: Civi/EventMessages/AttachmentProvider/ICal.php
-msgid "event.ics"
-msgstr ""
+#: CRM/Eventmessages/SendMail.php
+msgid "Attachment '%1' could not be generated or found."
+msgstr "Anhang '%1' konnte nicht erstellt oder gefunden werden."
 
 #: Civi/EventMessages/AttachmentProvider.php
 msgid "iCalendar file"
@@ -267,6 +267,10 @@ msgstr "iCalendar Datei"
 #: Civi/EventMessages/AttachmentProvider.php
 msgid "Message Template as PDF"
 msgstr "Nachrichtenvorlage als PDF Anhang"
+
+#: Civi/EventMessages/AttachmentProvider/ICal.php
+msgid "event.ics"
+msgstr ""
 
 #: Civi/EventMessages/Install/LanguagesOptionsGroupCreator.php
 msgid "Event Message Languages"
@@ -385,6 +389,26 @@ msgstr "E-Mails versenden (via Event-Messages)"
 #: eventmessages.php
 msgid "Generate Letters (via EventMessages)"
 msgstr "Briefe erstellen (via Event-Messages)"
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Event Messages Settings"
+msgstr "Einstellungen für Event Messages"
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Reply-To"
+msgstr "Antwort an (reply-to)"
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Sender"
+msgstr "Absender"
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Execute All Rules"
+msgstr "Alle zutreffenden Regeln Ausführen"
+
+#: managed/CustomGroup__event_messages_settings.mgd.php
+msgid "Disable Default Messages"
+msgstr "Standard E-Mails unterdrücken"
 
 #: templates/CRM/Eventmessages/Form/EventMessages.hlp
 msgid ""

@@ -25,7 +25,7 @@ final class CiviTestContainer implements ContainerInterface {
   private ContainerInterface $container;
 
   /**
-   * @var array<string, object>
+   * @var array<string, ?object>
    */
   private array $services = [];
 
@@ -64,7 +64,7 @@ final class CiviTestContainer implements ContainerInterface {
   /**
    * @inheritDoc
    */
-  public function getParameter($name) {
+  public function getParameter($name): array|bool|string|int|float|\UnitEnum|null {
     return $this->container->getParameter($name);
   }
 

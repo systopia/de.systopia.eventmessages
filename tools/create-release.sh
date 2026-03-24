@@ -28,7 +28,7 @@ readonly SCRIPT_NAME=$(basename "$0")
 
 usage() {
   cat <<EOD
-Usage: $SCRIPT_NAME [-h|--help] [--dry-run] [--no-composer] [version] [develStage] [nextVersion]
+Usage: $SCRIPT_NAME [-h|--help] [--dry-run] [--no-composer] [--no-pot-update] [version] [develStage] [nextVersion]
 
 Arguments:
   version  Version of the release (e.g. 1.2.3 or 1.2.3-alpha1)
@@ -36,12 +36,13 @@ Arguments:
   develStage  Development stage (dev, alpha, beta, stable).
     Default: Detected from version.
   nextVersion  Version after the release.
-    Default: version with "dev" as pre-release part.
+    Default: Increased version with "dev" as pre-release part.
 
 All values that are determined programmatically have to be confirmed.
 
 Options:
   --no-composer  Do not add composer dependencies.
+  --no-pot-update  Do not update .pot file.
   --dry-run  Do nothing, just print what would be done.
   -h|--help  Show this help.
 
@@ -49,8 +50,14 @@ Help:
   This script can be used when creating a new CiviCRM extension release. It will
   update the info.xml, add composer dependencies (if any), make a git commit and
   a git tag for the release. Then the info.xml is updated again using
-  nextVersion, composer dependencies are removed, and the changes are commited.
-  The changes have to be pushed manually.
+  nextVersion, composer dependencies are removed, branch alias in composer.json
+  gets updated if on main/master branch, and the changes are commited. The
+  changes have to be pushed manually.
+
+  Before this is done, the .pot file will be updated if existent. If it differs
+  from the currently commited one, no further changes will be made and you must
+  first update the translation and push the changes to the repository. This can
+  be disabled with the option --no-pot-update if necessary.
 
   The script has to be executed in the directory of the extension to release.
 EOD
@@ -242,9 +249,22 @@ validateMinPhpVersion() {
   fi
 }
 
+updatePot() {
+  local -r potFiles=(l10n/*.pot)
+  if [ ${#potFiles[@]} -ge 1 ] && [ -e "${potFiles[0]}" ] && [ -x tools/update-pot.sh ]; then
+    echo "Update .pot file"
+    tools/update-pot.sh
+    if ! git diff --no-patch --exit-code "${potFiles[*]}"; then
+      echo ".pot file has changed. Please update the translation and push changes to the repository." >&2
+      exit 1
+    fi
+  fi
+}
+
 main() {
   DRY_RUN=0
   local noComposer=0
+  local noPotUpdate=0
 
   while [ $# -gt 0 ]; do
     case $1 in
@@ -260,6 +280,11 @@ main() {
 
       --no-composer)
         noComposer=1
+        shift
+        ;;
+
+      --no-pot-update)
+        noPotUpdate=1
         shift
         ;;
 
@@ -325,6 +350,10 @@ main() {
     validateMinPhpVersion "$minPhpVersion"
   fi
 
+  if [ $noPotUpdate -eq 0 ]; then
+    updatePot
+  fi
+
   local -r releaseDate=$(date +%Y-%m-%d)
   run updateInfoXml "$version" "$develStage" "$releaseDate"
   run git add info.xml
@@ -355,7 +384,7 @@ main() {
     local -r branch=$(git branch --show-current)
     if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
       [[ "$nextVersion" =~ ^([0-9]+\.[0-9]+)\.[0-9]+ ]]
-      local -r alias=${BASH_REMATCH[1]}.x
+      local -r alias=${BASH_REMATCH[1]}.x-dev
       run composer config "extra.branch-alias.dev-$branch" "$alias"
       run git add composer.json
     fi
