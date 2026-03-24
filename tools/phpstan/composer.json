@@ -8,8 +8,7 @@
         "phpstan/phpstan-phpunit": "^2",
         "phpstan/phpstan-strict-rules": "^2",
         "phpstan/phpstan-webmozart-assert": "^2",
-        "voku/phpstan-rules": "^3.6",
-        "systopia/de.systopia.eventmessages": "dev-master"
+        "voku/phpstan-rules": "^3.6"
     },
     "config": {
         "allow-plugins": {

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Eventmessages;
 
 use Composer\Package\Link;
-use Composer\Repository\RepositoryManager;
 use Composer\Script\Event;
 
 final class ComposerHelper {
