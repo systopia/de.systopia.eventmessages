@@ -13,7 +13,8 @@
     },
     "config": {
         "allow-plugins": {
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "cweagans/composer-patches": true
         },
         "sort-packages": true
     }
