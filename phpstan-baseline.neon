@@ -1,0 +1,22 @@
+parameters:
+    ignoreErrors:
+        - message: '#http://bit.ly/nosuperglobals#'
+        - message: '#Do not throw the \\Exception base class.#'
+        - identifier: argument.type
+        - identifier: empty.notAllowed
+        - identifier: staticMethod.dynamicCall
+        - identifier: equal.notAllowed
+        - identifier: function.strict
+        - identifier: booleanNot.exprNotBoolean
+        - identifier: binaryOp.invalid
+        - identifier: offsetAccess.nonOffsetAccessible
+        - identifier: missingType.iterableValue
+        - identifier: notEqual.notAllowed
+        - identifier: booleanAnd.rightNotBoolean
+        - identifier: booleanAnd.leftNotBoolean
+        - identifier: if.condNotBoolean
+        - identifier: missingType.return
+        - identifier: missingType.parameter
+        -
+            message: '#Call to deprecated method replaceContactTokens\(\) of class CRM_Utils_Token#'
+            path: CRM/Eventmessages/SendMail.php

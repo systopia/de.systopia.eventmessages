@@ -26,16 +26,17 @@ final class EventFixture {
   /**
    * @param array<string, scalar|array<scalar>> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null|array<scalar>>&array{id: int}
+   * @return ?array
+   * @phpstan-return (array<string, scalar|null|array<scalar>>&array{id: int})|null
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addFixture(array $values = []): array {
+  public static function addFixture(array $values = []): ?array {
     static $i = 0;
     ++$i;
 
-    return Event::create(FALSE)
+    /** @var (array<string, scalar|null|array<scalar>> & array{id:int})|null $row */
+    $row = Event::create(FALSE)
       ->setValues($values + [
         'title' => 'EventMessagesTest' . $i,
         'event_type_id:name' => 'Conference',
@@ -53,7 +54,11 @@ final class EventFixture {
         'allow_selfcancelxfer' => FALSE,
         'is_template' => FALSE,
         'is_billing_required' => FALSE,
-      ])->execute()->first();
+      ])
+      ->execute()
+      ->first();
+
+    return $row;
   }
 
 }

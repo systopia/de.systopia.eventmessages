@@ -30,7 +30,8 @@ use CRM_Eventmessages_ExtensionUtil as E;
  */
 class MessageTokenList extends Event {
   /**
-   * @var array holds the final tokens (smarty variables) */
+   * @var array holds the final tokens (smarty variables)
+   */
   protected $token_list;
 
   public function __construct() {
@@ -76,8 +77,8 @@ class MessageTokenList extends Event {
     $disabled_tokens = explode("\n", $disabled_tokens_data);
 
     $entities = [
-      'Contact'     => 'contact',
-      'Event'       => 'event',
+      'Contact' => 'contact',
+      'Event' => 'event',
       'Participant' => 'participant',
     ];
     foreach ($entities as $entity => $prefix) {
@@ -90,6 +91,9 @@ class MessageTokenList extends Event {
         // handle custom fields
         if (preg_match('/^custom_([0-9]+)$/', $field['name'], $match)) {
           // this is a custom field
+          /**
+           * @var (array<string, mixed>&array{custom_group_id: int, name: string})
+           */
           $field_specs = \CRM_Eventmessages_CustomData::getFieldSpecs($match[1]);
           $group_name = \CRM_Eventmessages_CustomData::getGroupName($field_specs['custom_group_id']);
           $field['name'] = "{$group_name}__{$field_specs['name']}";

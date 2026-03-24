@@ -26,34 +26,48 @@ final class ContactFixture {
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
+   * @return ?array
+   * @phpstan-return (array<string, scalar|null>&array{id: int})|null
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addIndividual(array $values = []): array {
-    return Contact::create(FALSE)
-      ->setValues($values + [
-        'contact_type' => 'Individual',
-        'first_name' => 'Some',
-        'last_name' => 'Individual',
-      ])->execute()->first();
+  public static function addIndividual(array $values = []): ?array {
+    /** @var array{id:int}|null $row */
+    $row = Contact::create(FALSE)
+      ->setValues(
+        $values + [
+          'contact_type' => 'Individual',
+          'first_name' => 'Some',
+          'last_name' => 'Individual',
+        ]
+      )
+      ->execute()
+      ->first();
+
+    return $row;
   }
 
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
+   * @return ?array
+   * @phpstan-return (array<string, scalar|null>&array{id: int})|null
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addOrganization(array $values = []): array {
-    return Contact::create(FALSE)
-      ->setValues($values + [
-        'contact_type' => 'Organization',
-        'legal_name' => 'Test organization',
-      ])->execute()->first();
+  public static function addOrganization(array $values = []): ?array {
+    /** @var array{id:int}|null $row */
+    $row = Contact::create(FALSE)
+      ->setValues(
+        $values + [
+          'contact_type' => 'Organization',
+          'legal_name' => 'Test organization',
+        ]
+      )
+      ->execute()
+      ->first();
+
+    return $row;
   }
 
 }

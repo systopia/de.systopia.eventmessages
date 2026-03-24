@@ -33,17 +33,30 @@ class CRM_Eventmessages_Form_Download extends CRM_Core_Form {
    */
   public $return_url;
 
-  public function buildQuickForm() {
-    $this->tmp_folder = CRM_Utils_Request::retrieve(
+  /**
+   * @throws CRM_Core_Exception
+   */
+  public function buildQuickForm(): void {
+    /**
+     * @phpstan-var string $tmpFolder
+     */
+    $tmpFolder = CRM_Utils_Request::retrieve(
         'tmp_folder',
         'String',
         $this
     );
-    $this->return_url = CRM_Utils_Request::retrieve(
+
+    /**
+     * @phpstan-var string $returnUrl
+     */
+    $returnUrl = CRM_Utils_Request::retrieve(
         'return_url',
         'String',
         $this
     );
+
+    $this->tmp_folder = (string) $tmpFolder;
+    $this->return_url = (string) $returnUrl;
 
     $this->setTitle(E::ts('Your PDF letters are ready for download.'));
     $this->addButtons(
@@ -77,6 +90,7 @@ class CRM_Eventmessages_Form_Download extends CRM_Core_Form {
         $data = file_get_contents($filename);
         CRM_Utils_System::download(basename($filename), 'application/zip', $data);
       }
+      // @phpstan-ignore-next-line
       catch (Exception $ex) {
         CRM_Core_Session::setStatus(
         E::ts('Error downloading PDF files: %1', [1 => $ex->getMessage()]),

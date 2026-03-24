@@ -1,5 +1,3 @@
-/.phpcs.cache
-/.phpunit.result.cache
 /.phpstan/
 /ci/composer.lock
 /ci/vendor/
@@ -9,3 +7,5 @@
 /tools/*/composer.lock
 /vendor/
 /.idea
+*.cache
+/tests/phpunit/bootstrap.local.php

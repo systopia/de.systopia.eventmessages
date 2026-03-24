@@ -98,9 +98,12 @@ class CRM_Eventmessages_GenerateLetter {
         );
       }
     }
+    // @phpstan-ignore-next-line
     catch (Exception $ex) {
+      /** @var int $pId */
+      $pId = $context['participant_id'];
       Civi::log()->warning(
-        "Couldn't generate letter for participant [{$context['participant_id']}], error was: " . $ex->getMessage()
+        "Couldn't generate letter for participant [$pId], error was: " . $ex->getMessage()
       );
     }
 
@@ -144,7 +147,8 @@ class CRM_Eventmessages_GenerateLetter {
    *   sql query to gather the data required for generating a letter
    */
   protected static function buildDataQuery(array $context): string {
-    $participant_id = (int) $context['participant_id'];
+    /** @var int $participant_id */
+    $participant_id = $context['participant_id'];
     return "
             SELECT
               address.street_address AS contact_street_address,

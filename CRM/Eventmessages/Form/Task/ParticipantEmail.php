@@ -96,6 +96,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
 
     // run query to get all participants
     $participant_id_list = implode(',', $this->_participantIds);
+    /** @var CRM_Core_DAO $participant_query */
     $participant_query = CRM_Core_DAO::executeQuery(
       <<<SQL
       SELECT participant.id AS participant_id
@@ -185,8 +186,9 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
   /**
    * Get the number of participants that
    *   do not have a viable email address
+   * @throws CRM_Core_Exception
    */
-  private function getNoEmailCount() {
+  private function getNoEmailCount(): ?string {
     $participant_id_list = implode(',', $this->_participantIds);
     return CRM_Core_DAO::singleValueQuery(
       <<<SQL
@@ -205,11 +207,10 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
   /**
    * @throws CRM_Core_Exception
    */
-  public function preProcess(): void
-  {
+  public function preProcess(): void {
     $ids = CRM_Utils_Request::retrieve('participant_ids', 'String', $this, FALSE);
 
-    // If invoked from our SearchKit task, we always get comma-separated IDs.
+    // If invoked from our SearchKit task, we always get comma-separated ids.
     if ($ids !== NULL && $ids !== '') {
 
       $parts = explode(',', $ids);
@@ -222,7 +223,7 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
         }
       }
 
-      if (!$participantIds) {
+      if ($participantIds === []) {
         throw new CRM_Core_Exception('No participant IDs provided.');
       }
 

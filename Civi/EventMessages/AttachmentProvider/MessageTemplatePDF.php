@@ -101,7 +101,7 @@ class MessageTemplatePDF implements AttachmentTypeInterface {
       'cleanName' => self::getMessageTemplates()[$attachment_values['template_id']] . '.pdf',
     ];
 
-    return $attachment ?? NULL;
+    return $attachment;
   }
 
   /**

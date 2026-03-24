@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 final class EventMessagesLanguageProviderTest extends TestCase {
 
   /**
-   * @var LanguageProviderContainer&\PHPUnit\Framework\MockObject\MockObject)|(object&\PHPUnit\Framework\MockObject\MockObject
+   * @var LanguageProviderContainer&MockObject
    */
   private MockObject $providerContainerMock;
 

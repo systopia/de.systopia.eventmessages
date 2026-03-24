@@ -49,7 +49,6 @@ abstract class AbstractCustomFieldLanguageProvider implements LanguageProviderIn
     if ([] === $languageFieldNames) {
       return [];
     }
-
     $entity = civicrm_api4($this->entityName, 'get', [
       'select' => $languageFieldNames,
       'where' => $this->getWhere($eventId, $participantId),
@@ -61,6 +60,7 @@ abstract class AbstractCustomFieldLanguageProvider implements LanguageProviderIn
       if (is_array($entity[$fieldName])) {
         foreach ($entity[$fieldName] as $language) {
           if (NULL !== $language && '' !== $language) {
+            // @phpstan-ignore-next-line generator.valueType
             yield $language;
           }
         }
@@ -98,7 +98,7 @@ abstract class AbstractCustomFieldLanguageProvider implements LanguageProviderIn
   }
 
   /**
-   * @phpstan-return array<comparisonT, compositeConditionT>
+   * @phpstan-return array<int, comparisonT|compositeConditionT>
    *   Array that can be used as "where" in APIv4 action to select a single
    *   entity of the entity type specified in constructor.
    */

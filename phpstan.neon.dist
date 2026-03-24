@@ -1,3 +1,5 @@
+includes:
+	- phpstan-baseline.neon
 parameters:
 	paths:
 		- Civi
@@ -8,11 +10,14 @@ parameters:
 		analyse:
 			- CRM/Eventmessages/DAO/*
 			- tests/phpunit/bootstrap.php
+			- tests/phpunit/bootstrap.local.php (?)
 	scanFiles:
 		- eventmessages.civix.php
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework/TestCase.php
 	scanDirectories:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
+		- ../de.systopia.mailattachment/
+		- ../de.systopia.remoteevent/
 	bootstrapFiles:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
 		- phpstanBootstrap.php

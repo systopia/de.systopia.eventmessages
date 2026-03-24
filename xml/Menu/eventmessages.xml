@@ -23,16 +23,11 @@
     <page_callback>CRM_Eventmessages_Form_Task_ParticipantEmail</page_callback>
     <page_callback_type>form</page_callback_type>
     <access_arguments>access CiviCRM</access_arguments>
-    <is_public>0</is_public>
-    <is_visible>0</is_visible>
   </item>
   <item>
     <path>civicrm/eventmessages/participant/letter</path>
     <page_callback>CRM_Eventmessages_Form_Task_ParticipantLetter</page_callback>
     <page_callback_type>form</page_callback_type>
     <access_arguments>access CiviCRM</access_arguments>
-    <is_public>0</is_public>
-    <is_visible>0</is_visible>
-    <is_active>1</is_active>
   </item>
 </menu>

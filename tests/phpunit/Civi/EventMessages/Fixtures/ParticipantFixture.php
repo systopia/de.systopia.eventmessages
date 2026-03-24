@@ -26,18 +26,25 @@ final class ParticipantFixture {
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
+   * @return ?array
+   * @phpstan-return (array<string, scalar|null>&array{id: int})|null
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addFixture(int $contactId, int $eventId, array $values = []): array {
-    return Participant::create(FALSE)
-      ->setValues($values + [
-        'contact_id' => $contactId,
-        'event_id' => $eventId,
-        'status_id:name' => 'Registered',
-      ])->execute()->first();
+  public static function addFixture(int $contactId, int $eventId, array $values = []): ?array {
+    /** @var array{id:int}|null $row */
+    $row = Participant::create(FALSE)
+      ->setValues(
+        $values + [
+          'contact_id' => $contactId,
+          'event_id' => $eventId,
+          'status_id:name' => 'Registered',
+        ]
+      )
+      ->execute()
+      ->first();
+
+    return $row;
   }
 
 }

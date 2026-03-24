@@ -24,20 +24,28 @@ use Civi\Api4\EventMessageRule;
 final class EventMessageRuleFixture {
 
   /**
+   * @param int $eventId
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
-   *
+   * @phpstan-return (array<string, scalar|null>&array{id: int})|null
+   * @return ?array
    * @throws \CRM_Core_Exception
+   * @throws \Civi\API\Exception\UnauthorizedException
    */
-  public static function addFixture(int $eventId, array $values = []): array {
-    return EventMessageRule::create(FALSE)
-      ->setValues($values + [
-        'event_id' => $eventId,
-        'template_id' => 1,
-        'is_active' => TRUE,
-      ])->execute()->first();
+  public static function addFixture(int $eventId, array $values = []): ?array {
+    /** @var array{id:int}|null $row */
+    $row = EventMessageRule::create(FALSE)
+      ->setValues(
+        $values + [
+          'event_id' => $eventId,
+          'template_id' => 1,
+          'is_active' => TRUE,
+        ]
+      )
+      ->execute()
+      ->first();
+
+    return $row;
   }
 
 }
