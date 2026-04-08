@@ -71,14 +71,15 @@ final class CiviTestContainer implements ContainerInterface {
   /**
    * @inheritDoc
    */
-  public function hasParameter($name): bool {
+  public function hasParameter(string $name): bool {
     return $this->container->hasParameter($name);
   }
 
   /**
    * @inheritDoc
+   * @param array|bool|float|int|string|\UnitEnum|null $value
    */
-  public function setParameter($name, $value): void {
+  public function setParameter(string $name, $value): void {
     $this->container->setParameter($name, $value);
   }
 

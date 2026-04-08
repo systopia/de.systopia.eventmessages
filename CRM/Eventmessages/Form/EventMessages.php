@@ -263,7 +263,7 @@ class CRM_Eventmessages_Form_EventMessages extends CRM_Event_Form_ManageEvent {
     foreach (range(1, self::MAX_RULE_COUNT) as $i) {
       $rule = [
         'id'        => $values["id_$i"] ?? NULL,
-        'is_active' => $values["is_active_$i"] ?? '',
+        'is_active' => $values["is_active_$i"] ?? FALSE,
         'from'      => $values["from_$i"] ?? [],
         'to'        => $values["to_$i"] ?? [],
         'languages' => $values["languages_$i"] ?? [],

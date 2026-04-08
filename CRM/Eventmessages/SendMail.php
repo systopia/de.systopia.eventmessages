@@ -40,9 +40,7 @@ class CRM_Eventmessages_SendMail {
       // load some stuff via SQL
       $event = self::getEventData($context['event_id']);
       $data_query = self::buildDataQuery($context);
-      /**
-       * @var CRM_Core_DAO $data
-       */
+      /** @var CRM_Core_DAO $data */
       $data = CRM_Core_DAO::executeQuery($data_query);
       $template_id = empty($context['template_id']) ? $context['rule']['template'] : $context['template_id'];
       if ($data->fetch()) {
@@ -216,14 +214,12 @@ class CRM_Eventmessages_SendMail {
   public static function suppressSystemMails(&$mailer, $driver, $params) {
     $mailer = new class($mailer, $driver, $params) {
 
-      protected ?CRM_Utils_Mail $mailer = NULL;
-      protected ?string $driver = NULL;
-      protected ?array $params = NULL;
+      public function __construct(
+        protected $mailer,
+        protected $driver,
+        protected $params
+      ) {
 
-      public function __construct($mailer, $driver, $params) {
-        $this->mailer = $mailer;
-        $this->driver = $driver;
-        $this->params = $params;
       }
 
       /**
@@ -311,8 +307,9 @@ class CRM_Eventmessages_SendMail {
               && $call['function'] === 'sendTransitionParticipantMail'
               && isset($call['args'])) {
               // this is transition confirmation...hope it's ok to filter out all of them
-              /** @var string $participant_id */
-              $participant_id = $call['args'][0];
+              /** @var numeric-string $tempID */
+              $tempID = $call['args'][0];
+              $participant_id = (int) $tempID;
               if (CRM_Eventmessages_SendMail::suppressSystemEventMailsForParticipant($participant_id)) {
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 Civi::log()->debug(
@@ -343,7 +340,7 @@ class CRM_Eventmessages_SendMail {
 
         // we're done filtering -> send it already...
         if (isset($this->mailer)) {
-          $this->mailer->send($recipients, $headers);
+          $this->mailer->send($recipients, $headers, $body);
         }
       }
 
@@ -516,9 +513,9 @@ class CRM_Eventmessages_SendMail {
           SQL
         );
         $settings->fetch();
-        $cached_participant_results['disable_default'][$participant_id] = $settings->disable_default ?? FALSE;
+        $cached_participant_results['disable_default'][$participant_id] = (bool) ($settings->disable_default ?? FALSE);
         $cached_participant_results['custom_data_workaround'][$participant_id]
-          = $settings->custom_data_workaround ?? FALSE;
+          = (bool) ($settings->custom_data_workaround ?? FALSE);
       }
       return $cached_participant_results[$setting_name][$participant_id];
     }
@@ -573,19 +570,6 @@ class CRM_Eventmessages_SendMail {
 
   /**
    * Create "Event Message sent" activity on the recipient contact.
-   *
-   * @param int $contactId
-   *    id of the contact
-   * @param int $participantId
-   *    id of the participant
-   * @param int $eventId
-   *    id of the event
-   * @param int $templateId
-   *    id of the template
-   * @param array $emailData
-   *    email data of the main email submission process
-   *
-   * @return void
    */
   protected static function createRecipientActivity(
     int $contactId,
@@ -604,12 +588,13 @@ class CRM_Eventmessages_SendMail {
       if ($sourceContactId === NULL) {
         try {
           $domainQuery = \Civi\Api4\Domain::get()
-            ->setCurrentDomain(TRUE)
             ->addSelect('contact_id')
+            ->addWhere('id', '=', \CRM_Core_Config::domainID())
             ->execute()
             ->single();
           $sourceContactId = (int) $domainQuery['contact_id'];
         }
+        // @phpstan-ignore-next-line
         catch (\Exception $e) {
           $msg = $e->getMessage();
           \Civi::log()->warning('EventMessages: Failed to verify the given domain contact: ' . $msg);
@@ -626,7 +611,7 @@ class CRM_Eventmessages_SendMail {
         ->addValue('priority_id:name', 'Normal')
         ->addValue('source_contact_id', $sourceContactId)
         ->addValue('target_contact_id', [$contactId])
-        ->addValue('details', "Event ID: {$eventId}\nParticipant ID: {$participantId}\nTemplate ID: {$templateId}")
+        ->addValue('details', "Event ID: $eventId\nParticipant ID: $participantId\nTemplate ID: $templateId")
         ->execute();
 
     }
@@ -665,9 +650,9 @@ class CRM_Eventmessages_SendMail {
    * Load template subject + title.
    *
    * @param int $templateId
-   * @return array|null|int
+   * @return array|null
    */
-  protected static function loadMessageTemplateSubjectAndTitle(int $templateId): array|null|int {
+  protected static function loadMessageTemplateSubjectAndTitle(int $templateId): array|null {
     try {
       return \Civi\Api4\MessageTemplate::get()
         ->addWhere('id', '=', $templateId)
@@ -675,8 +660,8 @@ class CRM_Eventmessages_SendMail {
         ->execute()
         ->single();
     }
-    // @phpstan-ignore-next-line
     catch (\Exception $e) {
+      // @ignoreException
       return NULL;
     }
   }
@@ -717,8 +702,9 @@ class CRM_Eventmessages_SendMail {
       );
       return trim($rendered);
     }
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore catch.neverThrown
     catch (\Throwable $e) {
+      // @ignoreException
       return '';
     }
   }

@@ -58,15 +58,13 @@ final class LanguagesOptionsGroupCreator {
       $languageOption['value'] = $languageOption['name'];
       [$langCode, $countryCode] = explode('_', $languageOption['value']) + [NULL, NULL];
       $matches = [];
-      $languageLabel = '';
-      if (0 === preg_match('/(.*) \([^)]+\)$/', $languageOption['label'], $matches)) {
-        $languageLabel = $languageOption['label'];
-        $languageOption['label'] .= ' (' . $countryCode . ')';
+
+      if (1 === preg_match('/(.*) \([^)]+\)$/', $languageOption['label'], $matches)) {
+        $languageLabel = $matches[1];
       }
       else {
-        if (isset($matches[1])) {
-          $languageLabel = $matches[1];
-        }
+        $languageLabel = $languageOption['label'];
+        $languageOption['label'] .= ' (' . $countryCode . ')';
       }
 
       $countryLessLanguageOptions[$langCode] ??= [

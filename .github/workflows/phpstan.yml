@@ -37,6 +37,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
+        extensions: bcmath, gd
         coverage: none
       env:
         fail-fast: true
@@ -65,18 +66,20 @@ jobs:
         composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
         composer config --no-plugins allow-plugins.composer/installers true
         composer config --no-plugins allow-plugins.cweagans/composer-patches true
-
-        composer config --json "extra.installer-paths.$(dirname $PWD)/{\$name}" '["type:civicrm-ext"]'
+    
+        composer config --json "extra.installer-paths.$(dirname "$PWD")/{\$name}" '["type:civicrm-ext"]'
         composer require --ignore-platform-reqs --no-progress composer/installers
-
+    
         if [ -n "${{ inputs.civicrm-version }}" ]; then
-          composer require --no-update "civicrm/civicrm-core:${{ inputs.civicrm-version }}" \
-            "civicrm/civicrm-packages:${{ inputs.civicrm-version }}"
+          composer require --no-update \
+          "civicrm/civicrm-core:${{ inputs.civicrm-version }}" \
+          "civicrm/civicrm-packages:${{ inputs.civicrm-version }}"
         fi
-
-        # Run with --no-scripts so ComposerHelper doesn't prevent installation
-        # of civicrm packages.
-        composer update --no-scripts --no-progress --${{ matrix.prefer }} --optimize-autoloader --ignore-platform-reqs
+    
+        composer require --no-update systopia/de.systopia.mailattachment:dev-master --dev
+        git clone --depth=1 https://github.com/systopia/de.systopia.remoteevent.git ../de.systopia.remoteevent
+    
+        composer update --no-scripts --no-progress --${{ matrix.prefer }} --optimize-autoloader --ignore-platform-reqs --with-all-dependencies
         composer composer-phpunit -- update --no-progress --optimize-autoloader
         composer composer-phpstan -- update --no-progress --optimize-autoloader
 

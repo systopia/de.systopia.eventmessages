@@ -90,7 +90,7 @@ class CRM_Eventmessages_Form_Download extends CRM_Core_Form {
         $data = file_get_contents($filename);
         CRM_Utils_System::download(basename($filename), 'application/zip', $data);
       }
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore catch.neverThrown
       catch (Exception $ex) {
         // @ignoreException
         CRM_Core_Session::setStatus(

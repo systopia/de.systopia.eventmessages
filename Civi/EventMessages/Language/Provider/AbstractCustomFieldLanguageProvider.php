@@ -98,7 +98,7 @@ abstract class AbstractCustomFieldLanguageProvider implements LanguageProviderIn
   }
 
   /**
-   * @phpstan-return array<int, comparisonT|compositeConditionT>
+   * @phpstan-return list<comparisonT|compositeConditionT>
    *   Array that can be used as "where" in APIv4 action to select a single
    *   entity of the entity type specified in constructor.
    */

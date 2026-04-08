@@ -40,7 +40,20 @@ function _eventmessages_test_civicrm_container(ContainerBuilder $container): voi
 }
 
 function addExtensionToClassLoader(string $extension): void {
-  addExtensionDirToClassLoader(__DIR__ . '/../../../' . $extension);
+  $candidates = [
+    dirname((string) getenv('PWD')) . '/' . $extension,
+    __DIR__ . '/../../../' . $extension,
+  ];
+
+  foreach ($candidates as $candidate) {
+    $real = realpath($candidate);
+    if ($real !== FALSE && is_dir($real)) {
+      addExtensionDirToClassLoader($real);
+      return;
+    }
+  }
+
+  throw new RuntimeException("Extension path not found for: $extension");
 }
 
 function addExtensionDirToClassLoader(string $extensionDir): void {
