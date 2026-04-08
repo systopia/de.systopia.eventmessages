@@ -243,10 +243,7 @@ class CRM_Eventmessages_Form_Task_ParticipantLetter extends CRM_Event_Form_Task 
             WHERE participant.id IN ({$participant_id_list})
               AND address.id IS NULL"
     );
-    if ($result !== NULL) {
-      return (int) $result;
-    }
-    return 0;
+    return (int) $result;
   }
 
   /**

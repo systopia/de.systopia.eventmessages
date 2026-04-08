@@ -17,7 +17,6 @@ declare(strict_types = 1);
 
 // phpcs:disable PSR1.Files.SideEffects
 require_once 'eventmessages.civix.php';
-
 // phpcs:enable
 
 use CRM_Eventmessages_ExtensionUtil as E;
@@ -88,7 +87,7 @@ function eventmessages_civicrm_enable(): void {
 /**
  * Implements hook_civicrm_tabset().
  */
-function eventmessages_civicrm_tabset($tabsetName, &$tabs, $context): void {
+function eventmessages_civicrm_tabset(string $tabsetName, array &$tabs, array $context): void {
   // Add event configuration tabs
   if ($tabsetName === 'civicrm/event/manage') {
     if (!empty($context['event_id'])) {
@@ -133,7 +132,7 @@ function eventmessages_civicrm_postCommit(string $op, string $objectName, int $o
 /**
  * Implements hook_civicrm_alterMailer().
  */
-function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params): void {
+function eventmessages_civicrm_alterMailer(&$mailer, string $driver, array $params): void {
   // Replace the normal mailer with our custom mailer
   CRM_Eventmessages_SendMail::suppressSystemMails($mailer, $driver, $params);
 }
@@ -141,7 +140,7 @@ function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params): void {
 /**
  * Implements hook_civicrm_buildForm().
  */
-function eventmessages_civicrm_buildForm($formName, &$form): void {
+function eventmessages_civicrm_buildForm(string $formName, &$form): void {
   // Inject some UI modifications into selected forms
   if ($form instanceof CRM_Event_Form_Participant) {
     $disabled_field = CRM_Eventmessages_CustomData::getCustomFieldKey(
@@ -156,7 +155,7 @@ function eventmessages_civicrm_buildForm($formName, &$form): void {
 /**
  * Implements hook_civicrm_searchTasks().
  */
-function eventmessages_civicrm_searchTasks($objectType, &$tasks) {
+function eventmessages_civicrm_searchTasks(string $objectType, array &$tasks) {
   // add "Send E-Mail" task to participant list
   if ($objectType === 'event') {
     $tasks[] = [
@@ -176,7 +175,7 @@ function eventmessages_civicrm_searchTasks($objectType, &$tasks) {
 /**
  * Implements hook_civicrm_copy().
  */
-function eventmessages_civicrm_copy($objectName, &$object): void {
+function eventmessages_civicrm_copy(string $objectName, &$object): void {
   // Inject some UI modifications into selected forms
   if ($objectName === 'Event') {
     // we have the new event ID...
@@ -200,7 +199,7 @@ function eventmessages_civicrm_copy($objectName, &$object): void {
 /**
  * Implements hook_civicrm_searchKitTasks().
  */
-function eventmessages_civicrm_searchKitTasks(&$tasks): void {
+function eventmessages_civicrm_searchKitTasks(array &$tasks): void {
 
   $tasks['Participant']['eventmessages_send_email'] = [
     'title' => ts('Send Emails (via EventMessages)'),
@@ -223,7 +222,7 @@ function eventmessages_civicrm_searchKitTasks(&$tasks): void {
 /**
  * Implements hook_civicrm_angularModules().
  */
-function eventmessages_civicrm_angularModules(&$angularModules): void {
+function eventmessages_civicrm_angularModules(array &$angularModules): void {
   $angularModules['eventmessagesSearchTasks'] = [
     'ext' => 'de.systopia.eventmessages',
     'js' => [

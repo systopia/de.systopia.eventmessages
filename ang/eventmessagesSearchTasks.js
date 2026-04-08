@@ -1,4 +1,4 @@
-(function (angular, CRM) {
+(function (angular, CRM, ts) {
 
   function getSelectedIds($scope) {
     if (!$scope.model) {
@@ -47,15 +47,17 @@
   const module = angular.module('eventmessagesSearchTasks', CRM.angRequires('eventmessagesSearchTasks'));
 
   module.controller('EventmessagesRedirectEmailCtrl', function ($scope, $window, $timeout) {
+    $scope.ts = ts;
     $timeout(function () {
       redirectTo($scope, $window, 'civicrm/eventmessages/participant/email');
     }, 0);
   });
 
   module.controller('EventmessagesRedirectLetterCtrl', function ($scope, $window, $timeout) {
+    $scope.ts = ts;
     $timeout(function () {
       redirectTo($scope, $window, 'civicrm/eventmessages/participant/letter');
     }, 0);
   });
 
-})(angular, CRM);
+})(angular, CRM, CRM.ts('de.systopia.eventmessages'));

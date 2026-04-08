@@ -1,18 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
-			identifier: catch.neverThrown
-			count: 1
-			path: CRM/Eventmessages/Form/Download.php
-
-		-
-			message: '#^Method CRM_Eventmessages_Form_Download\:\:buildQuickForm\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: CRM/Eventmessages/Form/Download.php
-
-		-
 			message: '#^Method CRM_Eventmessages_Form_Download\:\:postProcess\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -33,18 +21,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$buffer of static method CRM_Utils_System\:\:download\(\) expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 1
-			path: CRM/Eventmessages/Form/Download.php
-
-		-
-			message: '#^Property CRM_Eventmessages_Form_Download\:\:\$return_url \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: CRM/Eventmessages/Form/Download.php
-
-		-
-			message: '#^Property CRM_Eventmessages_Form_Download\:\:\$tmp_folder \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: CRM/Eventmessages/Form/Download.php
 

@@ -92,7 +92,7 @@ class MessageTokenList extends Event {
         if (preg_match('/^custom_([0-9]+)$/', $field['name'], $match)) {
           // this is a custom field
           /**
-           * @var (array<string, mixed>&array{custom_group_id: int, name: string})
+           * @var array<string, mixed>&array{custom_group_id: int, name: string} $field_specs
            */
           $field_specs = \CRM_Eventmessages_CustomData::getFieldSpecs($match[1]);
           $group_name = \CRM_Eventmessages_CustomData::getGroupName($field_specs['custom_group_id']);

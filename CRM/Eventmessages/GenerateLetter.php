@@ -100,10 +100,10 @@ class CRM_Eventmessages_GenerateLetter {
     }
     catch (Exception $ex) {
       // @ignoreException
-      /** @var int $pId */
-      $pId = $context['participant_id'];
+      /** @var int $participantId */
+      $participantId = $context['participant_id'];
       Civi::log()->warning(
-        "Couldn't generate letter for participant [$pId], error was: " . $ex->getMessage()
+        "Couldn't generate letter for participant [$participantId], error was: " . $ex->getMessage()
       );
     }
 
