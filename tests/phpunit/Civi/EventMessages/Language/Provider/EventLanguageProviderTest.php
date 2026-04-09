@@ -97,22 +97,13 @@ final class EventLanguageProviderTest extends AbstractEventmessagesHeadlessTestC
       'group.language' => 'en_US',
       'group.languages' => ['de_DE', 'fr'],
     ]);
-
-    if ($event === NULL) {
-      return;
-    }
+    static::assertNotNull($event);
 
     $contact = ContactFixture::addIndividual(['preferred_language' => 'de_DE']);
-
-    if ($contact === NULL) {
-      return;
-    }
+    static::assertNotNull($contact);
 
     $participant = ParticipantFixture::addFixture($contact['id'], $event['id']);
-
-    if ($participant === NULL) {
-      return;
-    }
+    static::assertNotNull($participant);
 
     static::assertSame(
       ['de_DE', 'fr', 'en_US'],
