@@ -93,27 +93,18 @@ final class ContactLanguageProviderTest extends AbstractEventmessagesHeadlessTes
 
   public function test(): void {
     $event = EventFixture::addFixture();
-
-    if ($event === NULL) {
-      return;
-    }
+    static::assertNotNull($event);
 
     $contact = ContactFixture::addIndividual([
       'preferred_language' => 'af_ZA',
       'group.language' => 'en_US',
       'group.languages' => ['de_DE', 'fr'],
     ]);
-
-    if ($contact === NULL) {
-      return;
-    }
+    static::assertNotNull($contact);
 
     $participant = ParticipantFixture::addFixture($contact['id'], $event['id']);
 
-    if ($participant === NULL) {
-      return;
-    }
-
+    static::assertNotNull($participant);
     static::assertSame(
       ['de_DE', 'fr', 'en_US', 'af_ZA'],
       [...$this->provider->getLanguages($event['id'], $participant['id'])]
