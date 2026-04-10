@@ -26,19 +26,19 @@ final class EmailFixture {
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
+   * @return array{id: int, ...}
    *
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $contactId, array $values = []): array {
+    // @phpstan-ignore return.type
     return Email::create(FALSE)
       ->setValues($values + [
         'contact_id' => $contactId,
         'email' => 'test@example.org',
         'location_type_id:name' => 'Main',
         'is_primary' => TRUE,
-      ])->execute()->first();
+      ])->execute()->single();
   }
 
 }

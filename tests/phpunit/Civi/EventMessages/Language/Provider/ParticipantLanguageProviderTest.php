@@ -45,7 +45,7 @@ final class ParticipantLanguageProviderTest extends AbstractEventmessagesHeadles
         'title' => 'Participant Custom Test',
         'name' => 'group',
         'extends' => 'Participant',
-      ])->execute()->first();
+      ])->execute()->single();
 
     CustomField::create(FALSE)
       ->setValues([

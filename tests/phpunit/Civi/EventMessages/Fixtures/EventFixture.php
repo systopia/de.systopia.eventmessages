@@ -26,8 +26,7 @@ final class EventFixture {
   /**
    * @param array<string, scalar|array<scalar>> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null|array<scalar>>&array{id: int}
+   * @return array{id: int, ...}
    *
    * @throws \CRM_Core_Exception
    */
@@ -35,6 +34,7 @@ final class EventFixture {
     static $i = 0;
     ++$i;
 
+    // @phpstan-ignore return.type
     return Event::create(FALSE)
       ->setValues($values + [
         'title' => 'EventMessagesTest' . $i,
@@ -53,7 +53,7 @@ final class EventFixture {
         'allow_selfcancelxfer' => FALSE,
         'is_template' => FALSE,
         'is_billing_required' => FALSE,
-      ])->execute()->first();
+      ])->execute()->single();
   }
 
 }

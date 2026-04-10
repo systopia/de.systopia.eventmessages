@@ -45,7 +45,7 @@ final class EventLanguageProviderTest extends AbstractEventmessagesHeadlessTestC
         'title' => 'Event Custom Test',
         'name' => 'group',
         'extends' => 'Event',
-      ])->execute()->first();
+      ])->execute()->single();
 
     CustomField::create(FALSE)
       ->setValues([
