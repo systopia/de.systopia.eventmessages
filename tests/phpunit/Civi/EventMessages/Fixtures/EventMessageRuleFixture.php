@@ -26,18 +26,18 @@ final class EventMessageRuleFixture {
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
+   * @return array{id: int, ...}
    *
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $eventId, array $values = []): array {
+    // @phpstan-ignore return.type
     return EventMessageRule::create(FALSE)
       ->setValues($values + [
         'event_id' => $eventId,
         'template_id' => 1,
         'is_active' => TRUE,
-      ])->execute()->first();
+      ])->execute()->single();
   }
 
 }

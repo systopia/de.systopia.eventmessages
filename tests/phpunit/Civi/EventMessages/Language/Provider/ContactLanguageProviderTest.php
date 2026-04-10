@@ -45,7 +45,7 @@ final class ContactLanguageProviderTest extends AbstractEventmessagesHeadlessTes
         'title' => 'Contact Custom Test',
         'name' => 'group',
         'extends' => 'Contact',
-      ])->execute()->first();
+      ])->execute()->single();
 
     CustomField::create(FALSE)
       ->setValues([

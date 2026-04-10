@@ -980,6 +980,12 @@ parameters:
 			path: CRM/Eventmessages/SendMail.php
 
 		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<mixed, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Eventmessages/SendMail.php
+
+		-
 			message: '#^Parameter \#2 \$contact of static method CRM_Utils_Token\:\:replaceContactTokens\(\) expects array, int\<1, max\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1184,12 +1190,6 @@ parameters:
 			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
 
 		-
-			message: '#^Offset ''template_id'' does not exist on array\{path\: string, name\: string, extra\?\: mixed\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 3
-			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
-
-		-
 			message: '#^Parameter \#1 \$filename of function file_put_contents expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1200,6 +1200,12 @@ parameters:
 			identifier: nullCoalesce.variable
 			count: 1
 			path: Civi/EventMessages/AttachmentProvider/MessageTemplatePDF.php
+
+		-
+			message: '#^Offset 1 might not exist on array\{\}\|array\{non\-falsy\-string, string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: Civi/EventMessages/Install/LanguagesOptionsGroupCreator.php
 
 		-
 			message: '#^Method Civi\\EventMessages\\Language\\EventMessagesLanguageProvider\:\:getLanguages\(\) has parameter \$providerNames with no value type specified in iterable type array\.$#'
@@ -1348,6 +1354,12 @@ parameters:
 		-
 			message: '#^Only booleans are allowed in an if condition, int\<0, max\>\|false given\.$#'
 			identifier: if.condNotBoolean
+			count: 1
+			path: Civi/EventMessages/MessageTokens.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<mixed, mixed\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: Civi/EventMessages/MessageTokens.php
 
@@ -1640,42 +1652,6 @@ parameters:
 			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
 
 		-
-			message: '#^Method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addIndividual\(\) should return array\{id\: int\} but returns array\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/phpunit/Civi/EventMessages/Fixtures/ContactFixture.php
-
-		-
-			message: '#^Method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addOrganization\(\) should return array\{id\: int\} but returns array\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/phpunit/Civi/EventMessages/Fixtures/ContactFixture.php
-
-		-
-			message: '#^Method Civi\\EventMessages\\Fixtures\\EmailFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/phpunit/Civi/EventMessages/Fixtures/EmailFixture.php
-
-		-
-			message: '#^Method Civi\\EventMessages\\Fixtures\\EventFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/phpunit/Civi/EventMessages/Fixtures/EventFixture.php
-
-		-
-			message: '#^Method Civi\\EventMessages\\Fixtures\\EventMessageRuleFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/phpunit/Civi/EventMessages/Fixtures/EventMessageRuleFixture.php
-
-		-
-			message: '#^Method Civi\\EventMessages\\Fixtures\\ParticipantFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/phpunit/Civi/EventMessages/Fixtures/ParticipantFixture.php
-
-		-
 			message: '#^PHPDoc tag @var has invalid value \(LanguageProviderContainer&\\PHPUnit\\Framework\\MockObject\\MockObject\)\|\(object&\\PHPUnit\\Framework\\MockObject\\MockObject\)\: Unexpected token "\)", expected TOKEN_HORIZONTAL_WS at offset 80 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 1
@@ -1688,28 +1664,10 @@ parameters:
 			path: tests/phpunit/Civi/EventMessages/Language/LanguageMatcherTest.php
 
 		-
-			message: '#^Offset ''id'' might not exist on array\|null\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: tests/phpunit/Civi/EventMessages/Language/Provider/ContactLanguageProviderTest.php
-
-		-
 			message: '#^Parameter \#1 \$values of static method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addIndividual\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, list\<string\>\|string\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/phpunit/Civi/EventMessages/Language/Provider/ContactLanguageProviderTest.php
-
-		-
-			message: '#^Offset ''id'' might not exist on array\|null\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: tests/phpunit/Civi/EventMessages/Language/Provider/EventLanguageProviderTest.php
-
-		-
-			message: '#^Offset ''id'' might not exist on array\|null\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: tests/phpunit/Civi/EventMessages/Language/Provider/ParticipantLanguageProviderTest.php
 
 		-
 			message: '#^Parameter \#3 \$values of static method Civi\\EventMessages\\Fixtures\\ParticipantFixture\:\:addFixture\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, list\<string\>\|string\> given\.$#'

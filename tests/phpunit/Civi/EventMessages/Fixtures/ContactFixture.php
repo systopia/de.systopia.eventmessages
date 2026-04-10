@@ -26,34 +26,34 @@ final class ContactFixture {
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
+   * @return array{id: int, ...}
    *
    * @throws \CRM_Core_Exception
    */
   public static function addIndividual(array $values = []): array {
+    // @phpstan-ignore return.type
     return Contact::create(FALSE)
       ->setValues($values + [
         'contact_type' => 'Individual',
         'first_name' => 'Some',
         'last_name' => 'Individual',
-      ])->execute()->first();
+      ])->execute()->single();
   }
 
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
+   * @return array{id: int, ...}
    *
    * @throws \CRM_Core_Exception
    */
   public static function addOrganization(array $values = []): array {
+    // @phpstan-ignore return.type
     return Contact::create(FALSE)
       ->setValues($values + [
         'contact_type' => 'Organization',
         'legal_name' => 'Test organization',
-      ])->execute()->first();
+      ])->execute()->single();
   }
 
 }
