@@ -66,11 +66,6 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
       'event_messages_settings.language_provider_names' => $languageProverNames,
       'event_messages_settings.event_messages_execute_all_rules' => TRUE,
     ]);
-
-    if ($event === NULL) {
-      return;
-    }
-
     Event::get(FALSE)
       ->addSelect('custom.*')
       ->addWhere('id', '=', $event['id'])
@@ -92,11 +87,6 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
     ]);
 
     $contact = ContactFixture::addIndividual(['preferred_language' => 'de_DE']);
-
-    if ($contact === NULL) {
-      return;
-    }
-
     EmailFixture::addFixture($contact['id']);
 
     $this->languageMatcherMock->expects(static::once())->method('match')->with(
@@ -120,11 +110,6 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
     $event = EventFixture::addFixture([
       'event_messages_settings.language_provider_names' => ['contact'],
     ]);
-
-    if ($event === NULL) {
-      return;
-    }
-
     Event::get(FALSE)
       ->addSelect('custom.*')
       ->addWhere('id', '=', $event['id'])
@@ -134,11 +119,6 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
     EventMessageRuleFixture::addFixture($event['id'], ['to_status' => [2]]);
 
     $contact = ContactFixture::addIndividual(['preferred_language' => 'en_US']);
-
-    if ($contact === NULL) {
-      return;
-    }
-
     EmailFixture::addFixture($contact['id']);
 
     $this->languageMatcherMock->expects(static::never())->method('match');

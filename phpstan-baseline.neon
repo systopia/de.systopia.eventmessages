@@ -1259,10 +1259,64 @@ parameters:
 			path: tests/phpunit/Civi/EventMessages/CiviTestContainer.php
 
 		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addIndividual\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/ContactFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addOrganization\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/ContactFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\EmailFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/EmailFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\EventFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/EventFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\EventMessageRuleFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/EventMessageRuleFixture.php
+
+		-
+			message: '#^Method Civi\\EventMessages\\Fixtures\\ParticipantFixture\:\:addFixture\(\) should return array\{id\: int\} but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/Civi/EventMessages/Fixtures/ParticipantFixture.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/ContactLanguageProviderTest.php
+
+		-
 			message: '#^Parameter \#1 \$values of static method Civi\\EventMessages\\Fixtures\\ContactFixture\:\:addIndividual\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, list\<string\>\|string\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/phpunit/Civi/EventMessages/Language/Provider/ContactLanguageProviderTest.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/EventLanguageProviderTest.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/phpunit/Civi/EventMessages/Language/Provider/ParticipantLanguageProviderTest.php
 
 		-
 			message: '#^Parameter \#3 \$values of static method Civi\\EventMessages\\Fixtures\\ParticipantFixture\:\:addFixture\(\) expects array\<string, bool\|float\|int\|string\>, array\<string, list\<string\>\|string\> given\.$#'

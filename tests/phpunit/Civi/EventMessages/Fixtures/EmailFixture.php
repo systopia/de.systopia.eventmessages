@@ -24,28 +24,21 @@ use Civi\Api4\Email;
 final class EmailFixture {
 
   /**
-   * @param int $contactId
    * @param array<string, scalar> $values
    *
-   * @phpstan-return (array<string, scalar|null>&array{id: int})|null
-   * @return ?array
+   * @return array
+   * @phpstan-return array<string, scalar|null>&array{id: int}
+   *
    * @throws \CRM_Core_Exception
-   * @throws \Civi\API\Exception\UnauthorizedException
    */
-  public static function addFixture(int $contactId, array $values = []): ?array {
-    /** @var array{id:int}|null $row */
-    $row = Email::create(FALSE)
-      ->setValues(
-        $values + [
-          'contact_id' => $contactId,
-          'email' => 'test@example.org',
-          'location_type_id:name' => 'Main',
-          'is_primary' => TRUE,
-        ]
-      )
-      ->execute()
-      ->first();
-    return $row;
+  public static function addFixture(int $contactId, array $values = []): array {
+    return Email::create(FALSE)
+      ->setValues($values + [
+        'contact_id' => $contactId,
+        'email' => 'test@example.org',
+        'location_type_id:name' => 'Main',
+        'is_primary' => TRUE,
+      ])->execute()->first();
   }
 
 }

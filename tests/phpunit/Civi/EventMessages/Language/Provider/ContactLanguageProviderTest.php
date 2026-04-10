@@ -47,41 +47,39 @@ final class ContactLanguageProviderTest extends AbstractEventmessagesHeadlessTes
         'extends' => 'Contact',
       ])->execute()->first();
 
-    if ($customGroup !== NULL && isset($customGroup['id'])) {
-      CustomField::create(FALSE)
-        ->setValues([
-          'custom_group_id' => $customGroup['id'],
-          'name' => 'language',
-          'option_group_id:name' => 'event_messages_languages',
-          'label' => 'Language',
-          'data_type' => 'String',
-          'html_type' => 'Select',
-          'is_required' => FALSE,
-          'is_searchable' => FALSE,
-          'is_search_range' => FALSE,
-          'is_view' => FALSE,
-          'serialize' => 0,
-          'in_selector' => FALSE,
-          'weight' => 2,
-        ])->execute();
+    CustomField::create(FALSE)
+      ->setValues([
+        'custom_group_id' => $customGroup['id'],
+        'name' => 'language',
+        'option_group_id:name' => 'event_messages_languages',
+        'label' => 'Language',
+        'data_type' => 'String',
+        'html_type' => 'Select',
+        'is_required' => FALSE,
+        'is_searchable' => FALSE,
+        'is_search_range' => FALSE,
+        'is_view' => FALSE,
+        'serialize' => 0,
+        'in_selector' => FALSE,
+        'weight' => 2,
+      ])->execute();
 
-      CustomField::create(FALSE)
-        ->setValues([
-          'custom_group_id' => $customGroup['id'],
-          'name' => 'languages',
-          'option_group_id:name' => 'event_messages_languages',
-          'label' => 'Languages',
-          'data_type' => 'String',
-          'html_type' => 'Select',
-          'is_required' => FALSE,
-          'is_searchable' => FALSE,
-          'is_search_range' => FALSE,
-          'is_view' => FALSE,
-          'serialize' => 1,
-          'in_selector' => FALSE,
-          'weight' => 1,
-        ])->execute();
-    }
+    CustomField::create(FALSE)
+      ->setValues([
+        'custom_group_id' => $customGroup['id'],
+        'name' => 'languages',
+        'option_group_id:name' => 'event_messages_languages',
+        'label' => 'Languages',
+        'data_type' => 'String',
+        'html_type' => 'Select',
+        'is_required' => FALSE,
+        'is_searchable' => FALSE,
+        'is_search_range' => FALSE,
+        'is_view' => FALSE,
+        'serialize' => 1,
+        'in_selector' => FALSE,
+        'weight' => 1,
+      ])->execute();
   }
 
   protected function tearDown(): void {
@@ -93,18 +91,14 @@ final class ContactLanguageProviderTest extends AbstractEventmessagesHeadlessTes
 
   public function test(): void {
     $event = EventFixture::addFixture();
-    static::assertNotNull($event);
 
     $contact = ContactFixture::addIndividual([
       'preferred_language' => 'af_ZA',
       'group.language' => 'en_US',
       'group.languages' => ['de_DE', 'fr'],
     ]);
-    static::assertNotNull($contact);
-
     $participant = ParticipantFixture::addFixture($contact['id'], $event['id']);
 
-    static::assertNotNull($participant);
     static::assertSame(
       ['de_DE', 'fr', 'en_US', 'af_ZA'],
       [...$this->provider->getLanguages($event['id'], $participant['id'])]
