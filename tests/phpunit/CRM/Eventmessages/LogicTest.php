@@ -27,8 +27,6 @@ use Civi\EventMessages\Fixtures\EventFixture;
 use Civi\EventMessages\Fixtures\EventMessageRuleFixture;
 use Civi\EventMessages\Fixtures\ParticipantFixture;
 use Civi\EventMessages\Language\LanguageMatcher;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -42,13 +40,6 @@ final class CRM_Eventmessages_LogicTest extends AbstractEventmessagesHeadlessTes
    * @var \Civi\EventMessages\Language\LanguageMatcher&MockObject
    */
   private MockObject $languageMatcherMock;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->install('de.systopia.mailattachment')
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   protected function setUp(): void {
     parent::setUp();

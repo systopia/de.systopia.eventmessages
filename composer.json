@@ -23,6 +23,12 @@
         "civicrm/civicrm-core": ">=5.81",
         "civicrm/civicrm-packages": ">=5.81"
     },
+    "require-dev": {
+        "systopia/de.systopia.mailattachment": "^1.1"
+    },
+    "suggest": {
+        "systopia/de.systopia.mailattachment": "Attach files to emails"
+    },
     "autoload": {
         "classmap": ["ComposerHelper.php"]
     },

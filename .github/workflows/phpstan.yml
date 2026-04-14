@@ -75,8 +75,8 @@ jobs:
           "civicrm/civicrm-core:${{ inputs.civicrm-version }}" \
           "civicrm/civicrm-packages:${{ inputs.civicrm-version }}"
         fi
-    
-        composer require --no-update systopia/de.systopia.mailattachment:dev-master --dev
+
+        # Until systopia/de.systopia.remoteevent is officially released as composer package.
         git clone --depth=1 https://github.com/systopia/de.systopia.remoteevent.git ../de.systopia.remoteevent
     
         composer update --no-scripts --no-progress --${{ matrix.prefer }} --optimize-autoloader --ignore-platform-reqs --with-all-dependencies
