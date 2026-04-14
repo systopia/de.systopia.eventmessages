@@ -147,6 +147,7 @@ class CRM_Eventmessages_GenerateLetter {
    *   sql query to gather the data required for generating a letter
    */
   protected static function buildDataQuery(array $context): string {
+    // @phpstan-ignore cast.int
     $participant_id = (int) $context['participant_id'];
     return "
             SELECT

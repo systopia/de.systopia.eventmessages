@@ -55,12 +55,6 @@ parameters:
 			path: CRM/Eventmessages/Form/EventMessages.php
 
 		-
-			message: '#^Expression on left side of \?\? is not nullable\.$#'
-			identifier: nullCoalesce.expr
-			count: 1
-			path: CRM/Eventmessages/Form/EventMessages.php
-
-		-
 			message: '#^Method CRM_Eventmessages_Form_EventMessages\:\:addToTabs\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -713,12 +707,6 @@ parameters:
 			path: CRM/Eventmessages/SendMail.php
 
 		-
-			message: '#^Only booleans are allowed in &&, string given on the right side\.$#'
-			identifier: booleanAnd.rightNotBoolean
-			count: 1
-			path: CRM/Eventmessages/SendMail.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -1069,12 +1057,6 @@ parameters:
 		-
 			message: '#^Only booleans are allowed in an if condition, int\<0, max\>\|false given\.$#'
 			identifier: if.condNotBoolean
-			count: 1
-			path: Civi/EventMessages/MessageTokens.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, array\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: Civi/EventMessages/MessageTokens.php
 

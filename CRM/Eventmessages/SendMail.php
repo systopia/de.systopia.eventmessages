@@ -232,7 +232,7 @@ class CRM_Eventmessages_SendMail {
         // scan the call stack for "forbidden" calls
         foreach ($callstack as $stack_idx => $call) {
 
-          if (isset($call['class']) && isset($call['function'])) {
+          if (isset($call['class'])) {
             // 1. check for emails coming through CRM_Event_BAO_Event::sendMessageTo
             if ($call['class'] == 'CRM_Eventmessages_SendMail' && $call['function'] == 'sendMessageTo') {
               // these are ours, continue to send
@@ -588,6 +588,7 @@ class CRM_Eventmessages_SendMail {
       if ($sourceContactId === NULL) {
         try {
           $domainQuery = \Civi\Api4\Domain::get()
+            // @phpstan-ignore method.notFound
             ->setCurrentDomain(TRUE)
             ->addSelect('contact_id')
             ->execute()
@@ -702,6 +703,7 @@ class CRM_Eventmessages_SendMail {
       );
       return trim($rendered);
     }
+    // @phpstan-ignore catch.neverThrown
     catch (\Throwable $e) {
       // @ignoreException
       return '';
