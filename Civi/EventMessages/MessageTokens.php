@@ -54,8 +54,10 @@ class MessageTokens extends Event {
     $this->initTemplateTokens();
 
     $tokens = [];
-    foreach (array_keys($this->template_tokens) as $name) {
-      $tokens[$name] = $this->tokens[$name] ?? NULL;
+    if($this->template_tokens !== NULL) {
+      foreach (array_keys($this->template_tokens) as $name) {
+        $tokens[$name] = $this->tokens[$name] ?? null;
+      }
     }
 
     return $tokens;
