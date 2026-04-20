@@ -23,7 +23,7 @@ jobs:
   phpunit:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         php-versions: ['8.1', '8.4']
         prefer: ['prefer-stable', 'prefer-lowest']
@@ -68,25 +68,47 @@ jobs:
       env:
         COMPOSER_COMPILE: all
       run: |
+        if [ "${{ matrix.prefer }}" = "prefer-lowest" ]; then
+          # Actually test with lowest possible versions.
+          export COMPOSER_NO_SECURITY_BLOCKING=1
+        fi
+
         # Prevent this git error: The repository does not have the correct ownership and git refuses to use it
         git config --global --add safe.directory "$PWD"
+
         EXT_DIR=$PWD
         EXT_COMPOSER_NAME=$(composer show --self --name-only)
-        composer composer-phpunit -- update --no-progress --prefer-dist --optimize-autoloader
+        composer composer-phpunit -- update --no-progress --optimize-autoloader
         cd ..
         git clone https://github.com/civicrm/civicrm-standalone.git
         cd civicrm-standalone
+
         composer config --no-plugins allow-plugins.composer/installers true
         composer config --no-plugins allow-plugins.cweagans/composer-patches true
         composer config --json 'extra.installer-paths.ext/{$name}' '["type:civicrm-ext"]'
         composer config repositories.test path $EXT_DIR
+
         # Use civicrm-core and civicrm-packages defined in extension's composer.json.
         composer remove --no-update civicrm/civicrm-core civicrm/civicrm-packages
-        composer require composer/installers civicrm/cli-tools
+        composer require --no-progress composer/installers civicrm/cli-tools
         if [ -n "${{ inputs.civicrm-version }}" ]; then
           composer require --no-update "civicrm/civicrm-core:${{ inputs.civicrm-version }}" \
             "civicrm/civicrm-packages:${{ inputs.civicrm-version }}"
         fi
+
+        # Install dev dependencies from extension's composer.json.
+        jq -r '.["require-dev"] | to_entries[] | "\"\(.key):\(.value)\""' "$EXT_DIR/composer.json" | xargs -r composer require --dev --no-update
+
+        # Until systopia/de.systopia.remotetools is officially released as composer package.
+        git clone --depth=1 https://github.com/systopia/de.systopia.remotetools.git ../de.systopia.remotetools
+        composer config repositories.remotetools path $(dirname $PWD)/de.systopia.remotetools
+        composer require --no-update systopia/de.systopia.remotetools
+
+        # Until systopia/de.systopia.remoteevent is officially released as composer package.
+        git clone --depth=1 https://github.com/systopia/de.systopia.remoteevent.git ../de.systopia.remoteevent
+        composer config repositories.remoteevent path $(dirname $PWD)/de.systopia.remoteevent
+        composer require --no-update systopia/de.systopia.remoteevent
+
         # --with-all-dependencies is required because downgrades from packages
         # installed before might be necessary.
         # \PEAR_ErrorStack::singleton() is static since pear/pear-core v1.10.16
@@ -112,12 +134,6 @@ jobs:
         export CV_CONFIG="$HOME/.cv.json"
         cv vars:fill --quiet
         sed -i "s#\"TEST_DB_DSN\": \".*\"#\"TEST_DB_DSN\": \"$DATABASE_URL\"#g" "$CV_CONFIG"
-
-        cv ext:download "de.systopia.mailattachment@https://github.com/systopia/de.systopia.mailattachment/releases/download/1.0.0/de.systopia.mailattachment-1.0.0.zip"
-        cv ext:download "de.systopia.xcm@https://github.com/systopia/de.systopia.xcm/releases/download/1.14.1/de.systopia.xcm-1.14.1.zip"
-        cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/releases/download/1.4.0/de.systopia.identitytracker-1.4.0.zip"
-        cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/releases/download/1.1.0/de.systopia.remotetools-1.1.0.zip"
-        cv ext:download "de.systopia.remoteevent@https://github.com/systopia/de.systopia.remoteevent/releases/download/1.3.3/de.systopia.remoteevent-1.3.3.zip"
 
     - name: Run PHPUnit
       run: |

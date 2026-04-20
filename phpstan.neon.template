@@ -6,6 +6,7 @@ includes:
 
 parameters:
 	scanDirectories:
+		- {VENDOR_DIR}/civicrm/civicrm-core/CRM
 		- {VENDOR_DIR}/civicrm/civicrm-core/api
 		- {VENDOR_DIR}/civicrm/civicrm-core/CRM
 		- {VENDOR_DIR}/civicrm/civicrm-core/ext/civi_event/Civi
@@ -15,3 +16,12 @@ parameters:
 		- {VENDOR_DIR}/civicrm/civicrm-packages/DB/DataObject.php
 	bootstrapFiles:
 		- {VENDOR_DIR}/autoload.php
+
+# For installations without composer (e.g. as WordPress plugin),
+# replace the parameters section above with the following configuration:
+#
+#parameters:
+#	scanDirectories:
+#		- {CIVICRM_DIR}/CRM
+#	bootstrapFiles:
+#		- {CIVICRM_DIR}/vendor/autoload.php

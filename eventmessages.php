@@ -29,7 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_config/
  */
-function eventmessages_civicrm_config(&$config) {
+function eventmessages_civicrm_config(&$config): void {
   _eventmessages_civix_civicrm_config($config);
 
   // uncomment the next line to get stack traces of core mails still sent
@@ -37,12 +37,12 @@ function eventmessages_civicrm_config(&$config) {
 
   // REMOTEEVENT.GET filters
   Civi::dispatcher()->addListener(
-        'civi.remoteevent.get.result',
-        ['CRM_Eventmessages_Logic', 'stripEventMessageData']
-    );
+    'civi.remoteevent.get.result',
+    ['CRM_Eventmessages_Logic', 'stripEventMessageData']
+  );
 
   if (interface_exists('\Civi\Mailattachment\AttachmentType\AttachmentTypeInterface')
-         && class_exists('\Civi\EventMessages\AttachmentProvider')) {
+    && class_exists('\Civi\EventMessages\AttachmentProvider')) {
     \Civi::dispatcher()->addSubscriber(new \Civi\EventMessages\AttachmentProvider());
   }
 }
@@ -71,7 +71,7 @@ function eventmessages_civicrm_container(ContainerBuilder $container): void {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_install
  */
-function eventmessages_civicrm_install() {
+function eventmessages_civicrm_install(): void {
   _eventmessages_civix_civicrm_install();
 }
 
@@ -80,16 +80,16 @@ function eventmessages_civicrm_install() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_enable
  */
-function eventmessages_civicrm_enable() {
+function eventmessages_civicrm_enable(): void {
   _eventmessages_civix_civicrm_enable();
 }
 
 /**
  * Implements hook_civicrm_tabset().
  */
-function eventmessages_civicrm_tabset($tabsetName, &$tabs, $context) {
+function eventmessages_civicrm_tabset(string $tabsetName, array &$tabs, array $context): void {
   // Add event configuration tabs
-  if ($tabsetName == 'civicrm/event/manage') {
+  if ($tabsetName === 'civicrm/event/manage') {
     if (!empty($context['event_id'])) {
       CRM_Eventmessages_Form_EventMessages::addToTabs($context['event_id'], $tabs);
     }
@@ -132,7 +132,7 @@ function eventmessages_civicrm_postCommit(string $op, string $objectName, int $o
 /**
  * Implements hook_civicrm_alterMailer().
  */
-function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
+function eventmessages_civicrm_alterMailer(&$mailer, string $driver, array $params): void {
   // Replace the normal mailer with our custom mailer
   CRM_Eventmessages_SendMail::suppressSystemMails($mailer, $driver, $params);
 }
@@ -140,12 +140,12 @@ function eventmessages_civicrm_alterMailer(&$mailer, $driver, $params) {
 /**
  * Implements hook_civicrm_buildForm().
  */
-function eventmessages_civicrm_buildForm($formName, &$form) {
+function eventmessages_civicrm_buildForm(string $formName, &$form): void {
   // Inject some UI modifications into selected forms
   if ($form instanceof CRM_Event_Form_Participant) {
     $disabled_field = CRM_Eventmessages_CustomData::getCustomFieldKey(
-        'event_messages_settings',
-        'event_messages_disable_default'
+      'event_messages_settings',
+      'event_messages_disable_default'
     );
     CRM_Core_Resources::singleton()->addVars('eventmessages', ['suppression_field' => $disabled_field]);
     CRM_Core_Resources::singleton()->addScriptUrl(E::url('js/event_form_new_participant_mods.js'));
@@ -155,9 +155,9 @@ function eventmessages_civicrm_buildForm($formName, &$form) {
 /**
  * Implements hook_civicrm_searchTasks().
  */
-function eventmessages_civicrm_searchTasks($objectType, &$tasks) {
+function eventmessages_civicrm_searchTasks(string $objectType, array &$tasks) {
   // add "Send E-Mail" task to participant list
-  if ($objectType == 'event') {
+  if ($objectType === 'event') {
     $tasks[] = [
       'title' => E::ts('Send Emails (via EventMessages)'),
       'class' => 'CRM_Eventmessages_Form_Task_ParticipantEmail',
@@ -175,23 +175,62 @@ function eventmessages_civicrm_searchTasks($objectType, &$tasks) {
 /**
  * Implements hook_civicrm_copy().
  */
-function eventmessages_civicrm_copy($objectName, &$object) {
+function eventmessages_civicrm_copy(string $objectName, &$object): void {
   // Inject some UI modifications into selected forms
-  if ($objectName == 'Event') {
+  if ($objectName === 'Event') {
     // we have the new event ID...
     $new_event_id = $object->id;
 
     // ...unfortunately, we have to dig up the original event ID:
     $callstack = debug_backtrace();
     foreach ($callstack as $call) {
-      if (isset($call['class']) && isset($call['function'])) {
-        if ($call['class'] == 'CRM_Event_BAO_Event' && $call['function'] == 'copy') {
-          // this should be it:
-          $original_event_id = $call['args'][0];
-          CRM_Eventmessages_Logic::copyRules($original_event_id, $new_event_id);
-          CRM_Eventmessages_Logic::copySettings($original_event_id, $new_event_id);
-        }
+      if (($call['class'] ?? NULL) === 'CRM_Event_BAO_Event'
+        && $call['function'] === 'copy'
+        && isset($call['args'][0])) {
+        // this should be it:
+        $original_event_id = $call['args'][0];
+        CRM_Eventmessages_Logic::copyRules($original_event_id, $new_event_id);
+        CRM_Eventmessages_Logic::copySettings($original_event_id, $new_event_id);
       }
     }
   }
+}
+
+/**
+ * Implements hook_civicrm_searchKitTasks().
+ */
+function eventmessages_civicrm_searchKitTasks(array &$tasks): void {
+
+  $tasks['Participant']['eventmessages_send_email'] = [
+    'title' => ts('Send Emails (via EventMessages)'),
+    'permissions' => ['access CiviCRM'],
+    'module' => 'eventmessagesSearchTasks',
+    'uiDialog' => ['templateUrl' => '~/eventmessagesSearchTasks/redirectEmail.html'],
+    'icon' => 'fa-envelope',
+  ];
+
+  $tasks['Participant']['eventmessages_generate_letters'] = [
+    'title' => E::ts('Generate Letters (via EventMessages)'),
+    'permissions' => ['access CiviCRM'],
+    'module' => 'eventmessagesSearchTasks',
+    'uiDialog' => ['templateUrl' => '~/eventmessagesSearchTasks/redirectLetter.html'],
+    'icon' => 'fa-envelope',
+  ];
+
+}
+
+/**
+ * Implements hook_civicrm_angularModules().
+ */
+function eventmessages_civicrm_angularModules(array &$angularModules): void {
+  $angularModules['eventmessagesSearchTasks'] = [
+    'ext' => 'de.systopia.eventmessages',
+    'js' => [
+      'ang/eventmessagesSearchTasks.js',
+    ],
+    'partials' => [
+      'ang/eventmessagesSearchTasks',
+    ],
+    'requires' => ['crmUi', 'crmUtil'],
+  ];
 }

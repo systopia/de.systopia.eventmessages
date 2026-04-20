@@ -100,8 +100,8 @@ final class ContactLanguageProviderTest extends AbstractEventmessagesHeadlessTes
     $participant = ParticipantFixture::addFixture($contact['id'], $event['id']);
 
     static::assertSame(
-        ['de_DE', 'fr', 'en_US', 'af_ZA'],
-        [...$this->provider->getLanguages($event['id'], $participant['id'])]
+      ['de_DE', 'fr', 'en_US', 'af_ZA'],
+      [...$this->provider->getLanguages($event['id'], $participant['id'])]
     );
   }
 

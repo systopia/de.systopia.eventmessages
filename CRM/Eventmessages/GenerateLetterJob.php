@@ -53,7 +53,8 @@ class CRM_Eventmessages_GenerateLetterJob {
    */
   protected string $temp_folder;
 
-  public function __construct(string $op,
+  public function __construct(
+    string $op,
     array $participant_ids,
     int $template_id,
     string $temp_folder,
@@ -107,7 +108,7 @@ class CRM_Eventmessages_GenerateLetterJob {
     return TRUE;
   }
 
-  protected function doRun() {
+  protected function doRun(): void {
     // Load participants.
     $participants = Participant::get(FALSE)
       ->addSelect('id', 'contact_id', 'event_id', 'status_id')
@@ -115,30 +116,20 @@ class CRM_Eventmessages_GenerateLetterJob {
       ->execute();
     // Generate PDF letters for participants.
     foreach ($participants as $participant) {
-      try {
-        // Generate PDF letters.
-        $pdf = CRM_Eventmessages_GenerateLetter::generateLetterFor(
-          [
-            'participant_id' => $participant['id'],
-            'event_id' => $participant['event_id'],
-            'from' => $participant['status_id'],
-            'to' => $participant['status_id'],
-            'rule' => 0,
-            'template_id' => $this->template_id,
-          ]
-        );
-        $filename = $this->temp_folder . DIRECTORY_SEPARATOR
-          . 'eventmessages_letter_' . $participant['id'] . '.pdf';
-        file_put_contents($filename, $pdf);
-      }
-      catch (Exception $exception) {
-        // @ignoreException
-        // phpcs:disable Generic.Files.LineLength.TooLong
-        Civi::log()->notice(
-          "EventMessages.GenerateLetterJob: Error generating letter for participant [{$participant['id']}]: " . $exception->getMessage()
-        );
-        // phpcs:enable
-      }
+      // Generate PDF letters.
+      $pdf = CRM_Eventmessages_GenerateLetter::generateLetterFor(
+        [
+          'participant_id' => $participant['id'],
+          'event_id' => $participant['event_id'],
+          'from' => $participant['status_id'],
+          'to' => $participant['status_id'],
+          'rule' => 0,
+          'template_id' => $this->template_id,
+        ]
+      );
+      $filename = $this->temp_folder . DIRECTORY_SEPARATOR
+        . 'eventmessages_letter_' . $participant['id'] . '.pdf';
+      file_put_contents($filename, $pdf);
     }
   }
 

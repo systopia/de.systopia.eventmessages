@@ -100,8 +100,10 @@ class CRM_Eventmessages_GenerateLetter {
     }
     catch (Exception $ex) {
       // @ignoreException
+      /** @var int $participantId */
+      $participantId = $context['participant_id'];
       Civi::log()->warning(
-        "Couldn't generate letter for participant [{$context['participant_id']}], error was: " . $ex->getMessage()
+        "Couldn't generate letter for participant [$participantId], error was: " . $ex->getMessage()
       );
     }
 
@@ -145,6 +147,7 @@ class CRM_Eventmessages_GenerateLetter {
    *   sql query to gather the data required for generating a letter
    */
   protected static function buildDataQuery(array $context): string {
+    // @phpstan-ignore cast.int
     $participant_id = (int) $context['participant_id'];
     return "
             SELECT

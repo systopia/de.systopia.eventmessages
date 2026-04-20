@@ -18,4 +18,16 @@
     <title>Download</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/eventmessages/participant/email</path>
+    <page_callback>CRM_Eventmessages_Form_Task_ParticipantEmail</page_callback>
+    <page_callback_type>form</page_callback_type>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/eventmessages/participant/letter</path>
+    <page_callback>CRM_Eventmessages_Form_Task_ParticipantLetter</page_callback>
+    <page_callback_type>form</page_callback_type>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

@@ -27,17 +27,9 @@ use Symfony\Contracts\EventDispatcher\Event;
  * This event allows you to add custom tokens to the CiviCRM Event messages
  */
 class MessageTokens extends Event {
-  /**
-   * @var array holds the final tokens (smarty variables) */
-  protected $tokens;
-
-  /**
-   * @var array list of tokens in the current template */
-  protected $template_tokens;
-
-  /**
-   * @var string raw template data */
-  protected $template_data;
+  protected array $tokens;
+  protected ?array $template_tokens;
+  protected ?string $template_data;
 
   public function __construct() {
     $this->tokens = [];
@@ -62,8 +54,10 @@ class MessageTokens extends Event {
     $this->initTemplateTokens();
 
     $tokens = [];
-    foreach (array_keys($this->template_tokens) as $name) {
-      $tokens[$name] = $this->tokens[$name] ?? NULL;
+    if ($this->template_tokens !== NULL) {
+      foreach (array_keys($this->template_tokens) as $name) {
+        $tokens[$name] = $this->tokens[$name] ?? NULL;
+      }
     }
 
     return $tokens;

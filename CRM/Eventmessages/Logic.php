@@ -121,6 +121,7 @@ class CRM_Eventmessages_Logic {
     static $rules_cache = [];
     if (!isset($rules_cache[$event_id])) {
       $rules = [];
+      /** @var CRM_Core_DAO $query */
       $query = CRM_Core_DAO::executeQuery(
         <<<SQL
         SELECT
@@ -171,6 +172,7 @@ class CRM_Eventmessages_Logic {
    */
   public static function getAllRules($event_id) {
     $rules = [];
+    /** @var CRM_Core_DAO $query */
     $query = CRM_Core_DAO::executeQuery(
       <<<SQL
       SELECT

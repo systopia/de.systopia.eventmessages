@@ -99,8 +99,8 @@ final class EventLanguageProviderTest extends AbstractEventmessagesHeadlessTestC
     $participant = ParticipantFixture::addFixture($contact['id'], $event['id']);
 
     static::assertSame(
-        ['de_DE', 'fr', 'en_US'],
-        [...$this->provider->getLanguages($event['id'], $participant['id'])]
+      ['de_DE', 'fr', 'en_US'],
+      [...$this->provider->getLanguages($event['id'], $participant['id'])]
     );
   }
 

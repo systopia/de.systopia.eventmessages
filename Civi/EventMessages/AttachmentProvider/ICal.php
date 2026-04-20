@@ -44,6 +44,8 @@ class ICal implements AttachmentTypeInterface {
    * {@inheritDoc}
    */
   public static function buildAttachment($context, $attachment_values) {
+    $event_id = NULL;
+
     if ($context['entity_type'] == 'participant') {
       // Warm up the cache if all entity IDs are given.
       if (empty(\Civi::$statics[__CLASS__]['participants']) && isset($context['entity_ids'])) {

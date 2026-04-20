@@ -39,6 +39,7 @@ abstract class AbstractEventmessagesHeadlessTestCase extends TestCase implements
 
   public function setUpHeadless(): CiviEnvBuilder {
     return Test::headless()
+      ->install('de.systopia.mailattachment')
       ->installMe(__DIR__)
       ->apply();
   }

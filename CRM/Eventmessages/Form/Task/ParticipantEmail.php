@@ -82,18 +82,21 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
       'reset' => TRUE,
     ]);
     // add a dummy item to display the 'upcoming' message
-    $queue->createItem(new CRM_Eventmessages_SendMailJob(
-      [],
-      (int) $values['template_id'],
-      E::ts('Sending Emails %1 - %2', [
-        // keep in mind that this is showing when the _next_ task is running
-        1 => 1,
-        2 => min(self::RUNNER_BATCH_SIZE, $participant_count),
-      ])
-    ));
+    $queue->createItem(
+      new CRM_Eventmessages_SendMailJob(
+        [],
+        (int) $values['template_id'],
+        E::ts('Sending Emails %1 - %2', [
+          // keep in mind that this is showing when the _next_ task is running
+          1 => 1,
+          2 => min(self::RUNNER_BATCH_SIZE, $participant_count),
+        ])
+      )
+    );
 
     // run query to get all participants
     $participant_id_list = implode(',', $this->_participantIds);
+    /** @var CRM_Core_DAO $participant_query */
     $participant_query = CRM_Core_DAO::executeQuery(
       <<<SQL
       SELECT participant.id AS participant_id
@@ -141,24 +144,14 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
       )
     );
 
-    $context = \CRM_Utils_String::unstupifyUrl(CRM_Core_Session::singleton()->readUserContext());
-    $query = parse_url($context, PHP_URL_QUERY);
-    if (!is_string($query)) {
-      $query = '';
-    }
-    $params = [];
-    parse_str($query, $params);
-    /** @phpstan-var array<string, string> $params */
-    $qfKey = $params['qfKey'] ?? '';
+    $onEndUrl = CRM_Utils_String::unstupifyUrl(CRM_Core_Session::singleton()->readUserContext());
 
     // start a runner on the queue
     $runner = new CRM_Queue_Runner([
       'title' => E::ts('Sending %1 Event Emails', [1 => $participant_count]),
       'queue' => $queue,
       'errorMode' => CRM_Queue_Runner::ERROR_ABORT,
-      'onEndUrl' => Civi::url('civicrm/event/search?force=1')->addQuery([
-        'qfKey' => $qfKey,
-      ]),
+      'onEndUrl' => $onEndUrl,
     ]);
     $runner->runAllViaWeb();
   }
@@ -192,8 +185,9 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
   /**
    * Get the number of participants that
    *   do not have a viable email address
+   * @throws CRM_Core_Exception
    */
-  private function getNoEmailCount() {
+  private function getNoEmailCount(): ?string {
     $participant_id_list = implode(',', $this->_participantIds);
     return CRM_Core_DAO::singleValueQuery(
       <<<SQL
@@ -207,6 +201,42 @@ class CRM_Eventmessages_Form_Task_ParticipantEmail extends CRM_Event_Form_Task {
         AND email.id IS NULL
       SQL
     );
+  }
+
+  /**
+   * @throws CRM_Core_Exception
+   */
+  public function preProcess(): void {
+    $ids = CRM_Utils_Request::retrieve('participant_ids', 'String', $this, FALSE);
+
+    // If invoked from our SearchKit task, we always get comma-separated ids.
+    if ($ids !== NULL && $ids !== '') {
+
+      $parts = explode(',', $ids);
+
+      $participantIds = [];
+      foreach ($parts as $part) {
+        $id = (int) trim($part);
+        if ($id > 0) {
+          $participantIds[] = $id;
+        }
+      }
+
+      if ($participantIds === []) {
+        throw new CRM_Core_Exception('No participant IDs provided.');
+      }
+
+      // Return to SearchKit after finishing (runner/download etc.)
+      $returnUrl = CRM_Utils_Request::retrieve('returnUrl', 'String', $this, FALSE);
+      if ($returnUrl) {
+        CRM_Core_Session::singleton()->pushUserContext($returnUrl);
+      }
+
+      $this->_participantIds = $participantIds;
+      return;
+    }
+
+    parent::preProcess();
   }
 
 }
