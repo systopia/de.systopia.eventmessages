@@ -322,6 +322,10 @@ msgstr ""
 msgid "Participant Fee Level (string)"
 msgstr ""
 
+#: ang/eventmessagesSearchTasks/redirectEmail.html ang/eventmessagesSearchTasks/redirectLetter.html
+msgid "Redirecting..."
+msgstr ""
+
 #: eventmessages.php
 msgid "Send Emails (via EventMessages)"
 msgstr ""

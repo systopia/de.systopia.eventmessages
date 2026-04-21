@@ -60,4 +60,4 @@
     }, 0);
   });
 
-})(angular, CRM, CRM.ts('de.systopia.eventmessages'));
+})(angular, CRM, CRM.ts());
