@@ -16,7 +16,7 @@
 <div class="crm-block crm-form-block">
 
   {if $no_email_count}
-    <div id="help">{ts 1=$no_email_count}<b>Warning:</b> %1 participant(s) have no viable email address, an email will not be sent to them{/ts}</div>
+    <div id="help">{ts 1=$no_email_count}<strong>Warning:</strong> %1 participant(s) have no viable email address, an email will not be sent to them.{/ts}</div>
   {/if}
 
   {*  <div class="crm-section">*}

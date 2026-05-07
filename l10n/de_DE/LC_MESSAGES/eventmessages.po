@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: CRM/Eventmessages/DAO/EventMessageRule.php
 msgid "Event Message Rules"
@@ -42,7 +42,7 @@ msgstr ""
 
 #: CRM/Eventmessages/DAO/EventMessageRule.php
 msgid "Enabled"
-msgstr ""
+msgstr "Aktiviert"
 
 #: CRM/Eventmessages/DAO/EventMessageRule.php
 msgid "is this rule active"
@@ -76,7 +76,7 @@ msgstr ""
 
 #: CRM/Eventmessages/DAO/EventMessageRule.php
 msgid "Languages"
-msgstr ""
+msgstr "Sprachen"
 
 #: CRM/Eventmessages/DAO/EventMessageRule.php
 msgid "list of languages"
@@ -93,7 +93,7 @@ msgstr ""
 
 #: CRM/Eventmessages/DAO/EventMessageRule.php
 msgid "Weight"
-msgstr ""
+msgstr "Gewichtung"
 
 #: CRM/Eventmessages/DAO/EventMessageRule.php
 msgid "list of weights defining the order"
@@ -306,7 +306,7 @@ msgid ""
 "group."
 msgstr ""
 "Benutzerdefinierte Felder für Teilnehmende, welche die \"Event Message "
-"Sprachen\" Optionsgruppen verwenden"
+"Sprachen\" Optionsgruppen verwenden."
 
 #: Civi/EventMessages/Language/Provider/ParticipantLanguageProvider.php
 msgid "Participant"
@@ -318,7 +318,7 @@ msgstr "es liegt keine Beschreibung vor"
 
 #: Civi/EventMessages/MessageTokenList.php
 msgid "Contact Checksum"
-msgstr ""
+msgstr "Prüfsumme des Kontakts"
 
 #: Civi/EventMessages/MessageTokenList.php
 msgid "Participant Status"
@@ -381,6 +381,11 @@ msgstr "Teilnehmer Gebührenstufe(n) (liste/array)"
 #: Civi/EventMessages/MessageTokenList.php
 msgid "Participant Fee Level (string)"
 msgstr "Teilnehmer Gebührenstufe(n) (text/string)"
+
+#: ang/eventmessagesSearchTasks/redirectEmail.html
+#: ang/eventmessagesSearchTasks/redirectLetter.html
+msgid "Redirecting..."
+msgstr "Umleitung..."
 
 #: eventmessages.php
 msgid "Send Emails (via EventMessages)"
@@ -527,11 +532,11 @@ msgstr "Token  Liste"
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
 msgid ""
-"<b>Warning:</b> %1 participant(s) have no viable email address, an email "
-"will not be sent to them"
+"<strong>Warning:</strong> %1 participant(s) have no viable email address, an "
+"email will not be sent to them."
 msgstr ""
-"<b>Warnung:</b> %1 Teilnehmer*innen haben keine gültige E-Mail-Adresse, sie "
-"werden vom Versand ausgeschlossen."
+"<strong>Warnung:</strong> %1 Teilnehmer*innen haben keine gültige E-Mail-"
+"Adresse, sie werden vom Versand ausgeschlossen."
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
 #: templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl

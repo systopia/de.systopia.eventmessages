@@ -411,7 +411,7 @@ msgid "Token List"
 msgstr ""
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl
-msgid "<b>Warning:</b> %1 participant(s) have no viable email address, an email will not be sent to them"
+msgid "<strong>Warning:</strong> %1 participant(s) have no viable email address, an email will not be sent to them."
 msgstr ""
 
 #: templates/CRM/Eventmessages/Form/Task/ParticipantEmail.tpl templates/CRM/Eventmessages/Form/Task/ParticipantLetter.tpl
