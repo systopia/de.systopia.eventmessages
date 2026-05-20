@@ -44,12 +44,23 @@ additional token can be found at `/civicrm/eventmessages/tokenlist`.
 
 ## Known Issues
 
+### Token Support
+
 This extension can send emails whenever an event registration is created or
 updated, including regular CiviEvent registration forms. You will be able to use
 many of CiviCRM's regular token as well as some special token provided by the
 extension. However some token and other data that can be found in CiviCRM's
 default confirmation mails wont work out of the box. This particularly affects
 payment information for events with online payments and/or participant fees.
+
+### Email Sender
+
+If emails are send via this Extension to receipients that are participants of
+different events (ie. when searching with a search-kit for participants accross
+several events), then the email's sender address will be the one that as been
+added to the communication preferences of the event of the first receipient.
+That email address will be used as sender address in the emails to all other
+receipients, no matter what event they are participating in.
 
 ## Requirements
 
