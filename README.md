@@ -2,13 +2,13 @@
 
 ## Scope
 
-This extension provides an alternative way to send confirmation e-mails for
-CiviCRM Events. It creates an additional tab within CiviCRM Events that allows
-you to define different message templates to be sent based on conditions (
-including the participants status, role and preferred language). It will also
-allow you to suppress CiviCRM's regular e-mails.
+This extension provides an alternative way to send confirmation e-mail messages
+for CiviCRM Events. It creates an additional tab within the configuration of
+CiviCRM Events that allows you to define different message templates to be sent
+based on conditions (including the participants status, role and preferred
+language). It will also allow you to suppress CiviCRM's regular e-mail messages.
 
-It aims at providing an easier way to adapt event confirmation mails than
+It aims at providing an easier way to adapt event confirmation messages than
 editing the system workflow messages provided by CiviCRM.
 
 ![Screenshot](images/CiviCRM_Event_Communication.png)
@@ -36,8 +36,9 @@ one message rule. Message rules will use regular CiviCRM message templates so
 make sure to set up at least one template before defining rules.
 
 If you tick the box "Execute All Matching Rules?" all matching rules will be
-executed, and potentially multiple e-mails will be sent to the same person. If
-this is disabled, the processing will stop after the first matching rule.
+executed, and potentially multiple e-mail messagess will be sent to the same
+person. If this is disabled, the processing will stop after the first matching
+rule.
 
 You should be able to use most contact token in the message templates. A list of
 additional token can be found at `/civicrm/eventmessages/tokenlist`.
@@ -46,28 +47,29 @@ additional token can be found at `/civicrm/eventmessages/tokenlist`.
 
 ### Token Support
 
-This extension can send e-mails whenever an event registration is created or
-updated, including regular CiviEvent registration forms. You will be able to use
-many of CiviCRM's regular token as well as some special token provided by the
-extension. However some token and other data that can be found in CiviCRM's
-default confirmation mails wont work out of the box. This particularly affects
-payment information for events with online payments and/or participant fees.
+This extension can send e-mail messages whenever an event registration is
+created or updated, including regular CiviEvent registration forms. You will be
+able to use many of CiviCRM's regular tokens as well as some special tokens
+provided by the extension. However some tokens and other data that can be found
+in CiviCRM's default confirmation messages won't work out of the box. This
+particularly affects payment information for events with online payments and/or
+participant fees.
 
 ### E-Mail Sender
 
-If e-mail messages are send via this extension to recipients that are participants
-of different events (i.e. when performing a SearchKit search for participants accross
-several events), then the e-mail's sender address will be the one that has been added
-to the communication preferences of the event of the first recipient. That e-mail
-address will be used as sender address in the e-mails to all other recipients, no
-matter what event they are participating in.
+If e-mail messages are sent via this extension to recipients that are
+participants of different events (i.e. when performing a SearchKit search for
+participants accross several events), the sender address will be the one that
+has been added to the communication preferences of the event of the first
+recipient. That e-mail address will be used as sender address in the e-mail
+messages to all other recipients, no matter the event they are participating in.
 
 ## Requirements
 
-* PHP v7.0+
-* CiviCRM 5.2.x
+* PHP v8.1+
+* CiviCRM 5.81
 
 ## We need your support
 This CiviCRM extension is provided as Free and Open Source Software, and we are happy if you find it useful. However, we have put a lot of work into it (and continue to do so), much of it unpaid for. So if you benefit from our software, please consider making a financial contribution so we can continue to maintain and develop it further.
 
-If you are willing to support us in developing this CiviCRM extension and a lot of other good stuff that helps organizations around the world, please send an e-mail to info@systopia.de to get an invoice or agree a different payment method. Thank you! 
+If you are willing to support us in developing this CiviCRM extension and a lot of other good stuff that helps organizations around the world, please send an e-mail to info@systopia.de to get an invoice or agree a different payment method. Thank you!
