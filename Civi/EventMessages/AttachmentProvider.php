@@ -25,7 +25,7 @@ class AttachmentProvider implements EventSubscriberInterface {
   /**
    * {@inheritDoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       'civi.mailattachment.attachmentTypes' => 'getAttachmentTypes',
     ];
